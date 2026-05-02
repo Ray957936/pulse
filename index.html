@@ -171,6 +171,7 @@ textarea{resize:none;height:80px}
     <div id="view-record" class="view">
       <div class="section-title">📝 记录本次</div>
       <div class="dur-display" id="record-dur">--:--</div>
+      <div id="record-start-time" style="text-align:center;font-size:13px;color:var(--fg2);margin-bottom:8px"></div>
       <div class="form-group">
         <div class="input-row">
           <input type="number" id="record-min" placeholder="分钟" inputmode="numeric" min="1">
@@ -408,6 +409,17 @@ function updateRecordForm(){
   const m=Math.floor(s/60),sec=s%60;
   document.getElementById('record-dur').textContent=`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
   document.getElementById('record-min').value=m||'';
+  // Show session start time
+  const startEl=document.getElementById('record-start-time');
+  if(timerStart>0&&timerRunning===false){
+    const st=new Date(timerStart-timerElapsed);
+    startEl.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}`;
+  }else if(timerRunning){
+    const st=new Date(timerStart);
+    startEl.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}（计时中）`;
+  }else{
+    startEl.textContent=``;
+  }
 }
 
 document.getElementById('save-record-btn').onclick=async()=>{
@@ -784,9 +796,12 @@ async function renderHome(){
   let html='';
   recent.forEach(s=>{
     const d=new Date(s.startTime);
-    const dateStr=`${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-    const triggers=(s.triggers||[]).join(', ')||'未标注';
-    html+=`<div class="session-item"><div class="si-left"><div class="si-date">${dateStr}</div><div class="si-info">${triggers}</div></div><div class="si-dur">${s.duration}分</div></div>`;
+    const dateStr=`${d.getMonth()+1}月${d.getDate()}日`;
+    const timeStr=`${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    const endTime=new Date(d.getTime()+s.duration*60000);
+    const endStr=`${endTime.getHours().toString().padStart(2,'0')}:${endTime.getMinutes().toString().padStart(2,'0')}`;
+    const triggers=(s.triggers||[]).join(' · ')||'未标注';
+    html+=`<div class="session-item"><div class="si-left"><div class="si-date">${dateStr}</div><div class="si-info">${timeStr} → ${endStr} · ${s.duration}分钟</div><div style="font-size:12px;color:var(--fg2)">${triggers}</div></div></div>`;
   });
   document.getElementById('recent-sessions').innerHTML=html||'<div class="empty">暂无记录，点击计时器开始</div>';
 }
