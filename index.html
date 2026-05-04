@@ -131,6 +131,7 @@ textarea{resize:none;height:80px}
 .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--outline)}
 .btn-secondary:active{background:var(--surface2)}
 .btn-danger{background:var(--error);color:#fff;font-size:13px;padding:8px 16px;width:auto}
+.del-icon{width:28px;height:28px;border-radius:50%;border:1px solid var(--outline);background:none;color:var(--text3);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;margin-left:8px}.del-icon:active{background:var(--error);color:#fff;border-color:var(--error)}
 /* Toast */
 #toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--on-primary);padding:10px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 #toast.show{opacity:1}
@@ -246,6 +247,11 @@ textarea{resize:none;height:80px}
       <div class="goal-item" style="margin-top:8px">
         <div class="gi-label">导出数据</div>
         <button class="btn btn-secondary" id="export-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">📥 导出 JSON</button>
+      </div>
+      <div class="goal-item">
+        <div class="gi-label">导入数据</div>
+        <button class="btn btn-secondary" id="import-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">📤 导入 JSON</button>
+        <input type="file" id="import-file" accept=".json" style="display:none">
       </div>
     </div>
   </div>
@@ -428,7 +434,7 @@ async function renderCheckinHistory(){
   last7.forEach(c=>{
     const parts=['📅 '+c.date];
     checkinDims.forEach(d=>{if(c[d.key])parts.push(d.emoji+c[d.key])});
-    html+=`<div class="session-item"><div class="si-left"><div class="si-info">${parts.join(' · ')}</div></div></div>`;
+    html+=`<div class="session-item"><div class="si-left"><div class="si-info">${parts.join(' · ')}</div></div><button class="del-icon" onclick="deleteCheckin('${c.date}')">✕</button></div>`;
   });
   document.getElementById('checkin-history').innerHTML=html||'<div class="empty">暂无历史打卡</div>';
   buildCheckinForm(today);
@@ -538,6 +544,30 @@ window.adjustGoal=async function(d){goalWeekly=Math.max(0,goalWeekly+d);document
 window.adjustMinGap=async function(d){goalMinGap=Math.max(0,goalMinGap+d);document.getElementById('goal-mingap').textContent=goalMinGap;await setSetting('goalMinGap',goalMinGap)};
 document.getElementById('set-passcode-btn').onclick=async()=>{const val=document.getElementById('new-passcode').value;if(!/^\d{4}$/.test(val)){toast('请输入4位数字密码');return};await setSetting('passcode',val);document.getElementById('new-passcode').value='';toast('✅ 密码已更新')};
 document.getElementById('export-btn').onclick=async()=>{const sessions=await dbGetAll('sessions'),checkins=await dbGetAll('checkins');const data=JSON.stringify({sessions,checkins,exportedAt:new Date().toISOString()},null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pulse_export_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ 已下载')};
+window.deleteSession=async function(id){if(!confirm('确认删除这条记录？'))return;await dbDelete('sessions',id);toast('🗑 已删除');renderHome();renderStats()};
+window.deleteCheckin=async function(date){if(!confirm('确认删除 '+date+' 的打卡？'))return;await dbDelete('checkins',date);toast('🗑 已删除');renderCheckinHistory()};
+
+document.getElementById('import-btn').onclick=()=>document.getElementById('import-file').click();
+document.getElementById('import-file').onchange=async function(){
+  const file=this.files[0];if(!file)return;
+  try{
+    const text=await file.text(),data=JSON.parse(text);
+    if(!data.sessions||!data.checkins){toast('❌ 格式无效：缺少 sessions/checkins');return}
+    const existingSessions=await dbGetAll('sessions');
+    const existingKeys=new Set(existingSessions.map(s=>s.startTime+'|'+s.duration+'|'+(s.triggers||[]).join(',')));
+    let sAdded=0,cAdded=0;
+    for(const s of data.sessions){
+      const key=s.startTime+'|'+(s.duration||0)+'|'+(s.triggers||[]).join(',');
+      if(existingKeys.has(key))continue;
+      await dbPut('sessions',s);existingKeys.add(key);sAdded++;
+    }
+    for(const c of data.checkins){
+      await dbPut('checkins',c);cAdded++;
+    }
+    toast(`✅ 导入完成：${sAdded} 条记录，${cAdded} 条打卡`);
+    this.value='';renderHome();renderStats();renderCheckinHistory();
+  }catch(e){toast('❌ 文件读取失败：'+e.message);this.value=''}
+};
 
 // ═══════════════ Home ═══════════════
 async function renderHome(){
@@ -548,7 +578,7 @@ async function renderHome(){
   const avgDur=sessions.length?Math.round(sessions.reduce((a,b)=>a+(b.duration||0),0)/sessions.length):0;
   document.getElementById('quick-stats').innerHTML=`<div class="qs-card"><div class="val">${weekCount}</div><div class="label">本周</div></div><div class="qs-card"><div class="val">${monthCount}</div><div class="label">本月</div></div><div class="qs-card"><div class="val">${avgDur}min</div><div class="label">平均时长</div></div>`;
   const recent=sessions.slice(0,5);let html='';
-  recent.forEach(s=>{const d=new Date(s.startTime),dateStr=(d.getMonth()+1)+'月'+d.getDate()+'日',timeStr=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');const endTime=new Date(d.getTime()+s.duration*60000),endStr=endTime.getHours().toString().padStart(2,'0')+':'+endTime.getMinutes().toString().padStart(2,'0');const triggers=(s.triggers||[]).join(' · ')||'未标注';html+=`<div class="session-item"><div class="si-left"><div class="si-date">${dateStr}</div><div class="si-info">${timeStr} → ${endStr} · ${s.duration}分钟</div><div style="font-size:12px;color:var(--text3)">${triggers}</div></div></div>`});
+  recent.forEach(s=>{const d=new Date(s.startTime),dateStr=(d.getMonth()+1)+'月'+d.getDate()+'日',timeStr=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');const endTime=new Date(d.getTime()+s.duration*60000),endStr=endTime.getHours().toString().padStart(2,'0')+':'+endTime.getMinutes().toString().padStart(2,'0');const triggers=(s.triggers||[]).join(' · ')||'未标注';html+=`<div class="session-item"><div class="si-left"><div class="si-date">${dateStr}</div><div class="si-info">${timeStr} → ${endStr} · ${s.duration}分钟</div><div style="font-size:12px;color:var(--text3)">${triggers}</div></div><button class="del-icon" onclick="deleteSession(${s.id})">✕</button></div>`});
   document.getElementById('recent-sessions').innerHTML=html||'<div class="empty">暂无记录，点击 ▶ 开始</div>';
 }
 
