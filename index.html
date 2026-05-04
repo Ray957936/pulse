@@ -40,7 +40,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .passcode-key{width:64px;height:64px;border-radius:50%;border:1px solid var(--outline);background:var(--surface);color:var(--text);font-size:22px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
 .passcode-key:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .passcode-key.del{font-size:16px;color:var(--text3);border:none;background:none}
-#lock-info{font-size:12px;color:var(--text3);margin-top:8px}
+#lock-info{font-size:13px;color:var(--text2);margin-bottom:8px;font-weight:500}
 /* Header */
 #header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 8px;background:var(--bg)}
 #header h1{font-size:18px;font-weight:700;color:var(--primary-container);letter-spacing:-.02em}
@@ -151,9 +151,9 @@ textarea{resize:none;height:80px}
       <div id="lock-title">输入密码</div>
       <div id="lock-subtitle">数据本地加密，仅你可见</div>
     </div>
+    <div id="lock-info">🔑 默认密码：0000</div>
     <div class="passcode-dots" id="dots"></div>
     <div class="passcode-pad" id="pad"></div>
-    <div id="lock-info">默认密码：0000</div>
   </div>
 
   <div id="header"><div style="width:36px"></div><h1>Pulse</h1><button id="lock-btn">🔒</button></div>
@@ -631,7 +631,7 @@ let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2000)}
 
 // ═══════════════ Init ═══════════════
-async function init(){await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='默认密码：0000（可在设置中修改）';renderHome();
+async function init(){await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='🔑 默认密码：0000（可在设置中修改）';else document.getElementById('lock-info').style.display='none';renderHome();
   let lastActivity=Date.now();
   ['click','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e,()=>lastActivity=Date.now(),{passive:true}));
   setInterval(()=>{if(unlocked&&Date.now()-lastActivity>300000)lock()},30000);
