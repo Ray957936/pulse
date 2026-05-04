@@ -49,11 +49,11 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 /* Content */
 #content{flex:1;overflow-y:auto;padding:0 20px 100px;-webkit-overflow-scrolling:touch}
 #content::-webkit-scrollbar{width:0}
-/* Bottom Nav */
-#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--outline);display:flex;padding:6px 0 var(--safe-bottom);z-index:50;border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.04)}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;transition:all .2s}
+/* Bottom Nav - 6 items compact */
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--outline);display:flex;padding:4px 0 var(--safe-bottom);z-index:50;border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.04)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 1px;cursor:pointer;color:var(--text3);font-size:9px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;transition:all .2s;white-space:nowrap}
 .nav-item.active{color:var(--primary-container)}
-.nav-item .nicon{font-size:22px}
+.nav-item .nicon{font-size:20px}
 /* Views */
 .view{display:none}
 .view.active{display:block}
@@ -69,6 +69,14 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 #timer-btn{width:60px;height:60px;border-radius:50%;border:none;background:var(--primary);color:var(--on-primary);font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(47,99,120,.3)}
 #timer-btn:active{transform:scale(.95)}
 #timer-btn.running{background:var(--error);box-shadow:0 4px 12px rgba(186,26,26,.3)}
+/* Cancel button */
+#cancel-btn{display:none;margin-top:8px;background:none;border:1px solid var(--outline);color:var(--text3);font-size:12px;cursor:pointer;padding:6px 16px;border-radius:var(--radius-pill);transition:all .15s}
+#cancel-btn:active{background:var(--surface3);border-color:var(--error);color:var(--error)}
+#cancel-btn.visible{display:inline-block}
+/* Edit indicator */
+#edit-indicator{display:none;text-align:center;font-size:13px;color:var(--secondary);margin-bottom:8px;font-weight:600}
+#edit-cancel-btn{display:none;margin-top:8px}
+#edit-cancel-btn.visible{display:block}
 /* Cards */
 .card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
 /* Quick Stats */
@@ -83,7 +91,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .section-title{font-size:13px;font-weight:600;color:var(--text2);margin:24px 0 12px;text-transform:uppercase;letter-spacing:.05em}
 /* Sessions */
 .session-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
-.si-left{display:flex;flex-direction:column;gap:2px}
+.si-left{display:flex;flex-direction:column;gap:2px;overflow:hidden}
 .si-date{font-size:13px;color:var(--text2)}
 .si-info{font-size:14px;font-weight:500}
 .si-dur{font-size:20px;font-weight:300;color:var(--primary)}
@@ -136,11 +144,33 @@ textarea{resize:none;height:80px}
 .btn-secondary:active{background:var(--surface2)}
 .btn-danger{background:var(--error);color:#fff;font-size:13px;padding:8px 16px;width:auto}
 .del-icon{width:28px;height:28px;border-radius:50%;border:1px solid var(--outline);background:none;color:var(--text3);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;margin-left:8px}.del-icon:active{background:var(--error);color:#fff;border-color:var(--error)}
+/* History filter bar */
+.filter-bar{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:12px;margin-bottom:12px;box-shadow:var(--shadow)}
+.filter-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.filter-row:last-child, .filter-row.nc{margin-bottom:0}
+.filter-row input[type="text"],.filter-row input[type="date"]{flex:1;padding:8px 10px;font-size:13px;border-radius:var(--radius-sm)}
+.filter-row input[type="date"]{min-width:0}
+.hist-chip-row{display:flex;flex-wrap:wrap;gap:6px}
+.hist-chip{padding:6px 12px;border-radius:var(--radius-pill);border:1px solid var(--outline);background:var(--surface);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}
+.hist-chip.selected{border-color:var(--secondary);background:var(--secondary-container);color:var(--secondary)}
+.hist-chip:active{transform:scale(.96)}
+/* History item */
+.hist-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:var(--shadow)}
+.hist-item.hidden-item{opacity:.45}
+.hist-item .hi-left{flex:1;min-width:0}
+.hist-item .hi-date{font-size:12px;color:var(--text3)}
+.hist-item .hi-info{font-size:14px;font-weight:500;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-item .hi-triggers{font-size:12px;color:var(--text2)}
+.hist-item .hi-notes{font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-item .hi-actions{display:flex;gap:4px;flex-shrink:0;margin-left:8px}
+.hi-action{width:30px;height:30px;border-radius:8px;border:1px solid var(--outline);background:var(--surface);color:var(--text3);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.hi-action:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.hi-action.danger:active{background:var(--error);color:#fff;border-color:var(--error)}
 /* Toast */
 #toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--on-primary);padding:10px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 #toast.show{opacity:1}
 .empty{text-align:center;padding:32px;color:var(--text3);font-size:13px}
-@media(max-width:360px){.timer-ring{width:150px;height:150px}.timer-time .elapsed{font-size:26px}}
+@media(max-width:360px){.timer-ring{width:150px;height:150px}.timer-time .elapsed{font-size:26px}.nav-item{font-size:8px}.nav-item .nicon{font-size:18px}}
 </style>
 </head>
 <body>
@@ -167,6 +197,7 @@ textarea{resize:none;height:80px}
           <div class="timer-time"><div class="elapsed" id="timer-display">00:00</div><div class="unit" id="timer-state">就绪</div></div>
         </div>
         <button id="timer-btn">▶</button>
+        <button id="cancel-btn">取消计时</button>
         <div style="margin-top:10px">
           <button class="btn btn-secondary" id="manual-entry-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">手动输入时长</button>
         </div>
@@ -180,6 +211,7 @@ textarea{resize:none;height:80px}
     <!-- Record -->
     <div id="view-record" class="view">
       <div class="section-title">⏱ 记录本次</div>
+      <div id="edit-indicator">✏️ 编辑记录</div>
       <div class="dur-display" id="record-dur">--:--</div>
       <div id="record-start-time" style="text-align:center;font-size:13px;color:var(--text2);margin-bottom:8px"></div>
       <div class="form-group">
@@ -197,6 +229,7 @@ textarea{resize:none;height:80px}
         <textarea id="record-notes" placeholder="任何想记录的信息..."></textarea>
       </div>
       <button class="btn btn-primary" id="save-record-btn">💾 保存记录</button>
+      <button class="btn btn-secondary" id="edit-cancel-btn">取消编辑</button>
     </div>
 
     <!-- Check-in -->
@@ -219,6 +252,30 @@ textarea{resize:none;height:80px}
       <div id="correlation-grid"></div>
       <div class="section-title">📊 数据概览</div>
       <div id="insights"></div>
+    </div>
+
+    <!-- History -->
+    <div id="view-history" class="view">
+      <div class="section-title">🔍 筛选</div>
+      <div class="filter-bar">
+        <div class="filter-row">
+          <input type="text" id="hist-keyword" placeholder="搜索备注或场景..." oninput="updateHistoryFilters()">
+        </div>
+        <div class="filter-row">
+          <input type="date" id="hist-from" onchange="updateHistoryFilters()">
+          <span style="color:var(--text3);flex-shrink:0">至</span>
+          <input type="date" id="hist-to" onchange="updateHistoryFilters()">
+        </div>
+        <div class="hist-chip-row" id="hist-trigger-chips"></div>
+        <div class="filter-row nc" style="justify-content:space-between">
+          <span style="font-size:13px;color:var(--text2);font-weight:600" id="hist-count">0 条记录</span>
+          <label style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px;cursor:pointer">
+            <input type="checkbox" id="hist-show-hidden" onchange="renderHistory()" style="accent-color:var(--secondary)">
+            显示已隐藏
+          </label>
+        </div>
+      </div>
+      <div id="history-list"></div>
     </div>
 
     <!-- Goals -->
@@ -273,6 +330,7 @@ textarea{resize:none;height:80px}
     <div class="nav-item" data-view="record"><div class="nicon">✏️</div>记录</div>
     <div class="nav-item" data-view="checkin"><div class="nicon">☀️</div>状态</div>
     <div class="nav-item" data-view="stats"><div class="nicon">📊</div>统计</div>
+    <div class="nav-item" data-view="history"><div class="nicon">📋</div>历史</div>
     <div class="nav-item" data-view="goals"><div class="nicon">⚙️</div>设置</div>
   </div>
 </div>
@@ -300,7 +358,7 @@ async function loadSettings(){
   const tr=await dbGet('settings','triggers');if(tr&&tr.value)triggers=tr.value;
   document.getElementById('goal-weekly').textContent=goalWeekly;
   document.getElementById('goal-mingap').textContent=goalMinGap;
-  renderTriggerChips();updateGoalWarnings();
+  renderTriggerChips();renderHistTriggerChips();updateGoalWarnings();
 }
 async function setSetting(key,value){
   await dbPut('settings',{key,value});
@@ -341,7 +399,7 @@ document.getElementById('lock-btn').onclick=()=>{vibe();lock()};
 
 // ═══════════════ Timer ═══════════════
 let timerRunning=false,timerStart=0,timerElapsed=0,timerInterval=null;
-const timerDisplay=document.getElementById('timer-display'),timerState=document.getElementById('timer-state'),timerProgress=document.getElementById('timer-progress'),timerBtn=document.getElementById('timer-btn');
+const timerDisplay=document.getElementById('timer-display'),timerState=document.getElementById('timer-state'),timerProgress=document.getElementById('timer-progress'),timerBtn=document.getElementById('timer-btn'),cancelBtn=document.getElementById('cancel-btn');
 
 function updateTimerDisplay(){
   const s=Math.floor(timerElapsed/1000),m=Math.floor(s/60),sec=s%60;
@@ -353,21 +411,32 @@ function startTimer(){
   timerRunning=true;timerStart=Date.now()-timerElapsed;
   timerBtn.classList.add('running');timerBtn.textContent='⏸';
   timerState.textContent='计时中...';
+  cancelBtn.classList.add('visible');
   timerInterval=setInterval(()=>{timerElapsed=Date.now()-timerStart;updateTimerDisplay()},500);
+}
+function cancelTimer(){
+  timerRunning=false;clearInterval(timerInterval);
+  timerElapsed=0;updateTimerDisplay();
+  timerBtn.classList.remove('running');timerBtn.textContent='▶';
+  cancelBtn.classList.remove('visible');
+  timerState.textContent='已取消';
+  setTimeout(()=>{timerState.textContent='就绪'},2000);
 }
 function stopTimer(){
   timerRunning=false;clearInterval(timerInterval);
   timerElapsed=Date.now()-timerStart;updateTimerDisplay();
   timerBtn.classList.remove('running');timerBtn.textContent='▶';
+  cancelBtn.classList.remove('visible');
   timerState.textContent='已完成';
   navigateTo('record');updateRecordForm();
 }
 timerBtn.onclick=()=>{vibe();if(timerRunning)stopTimer();else{timerElapsed=0;updateTimerDisplay();startTimer()}};
+cancelBtn.onclick=()=>{vibe();if(timerRunning){if(confirm('取消本次计时？已记录的时间将丢弃。'))cancelTimer()}};
 document.getElementById('manual-entry-btn').onclick=()=>{vibe();timerElapsed=0;updateTimerDisplay();timerState.textContent='手动输入';navigateTo('record');updateRecordForm()};
 
 // ═══════════════ Record ═══════════════
 const defaultTriggers=['睡前','无聊','压力释放','自然冲动','刺激内容','伴侣相关','早起','运动后','饮酒后'];
-let triggers=[...defaultTriggers];
+let triggers=[...defaultTriggers],editingId=null;
 function renderTriggerChips(){
   document.getElementById('trigger-chips').innerHTML=triggers.map(t=>`<div class="chip" data-trigger="${t}">${t}</div>`).join('');
 }
@@ -378,7 +447,9 @@ function updateRecordForm(){
   document.getElementById('record-dur').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
   document.getElementById('record-min').value=m||'';
   const startEl=document.getElementById('record-start-time');
-  if(timerStart>0&&timerRunning===false){
+  if(editingId){
+    startEl.textContent='编辑模式';
+  }else if(timerStart>0&&timerRunning===false){
     const st=new Date(timerStart-timerElapsed);
     startEl.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}`;
   }else if(timerRunning){
@@ -393,13 +464,38 @@ document.getElementById('save-record-btn').onclick=async()=>{vibe();
   if(min<=0){toast('请输入时长');return}
   const selectedTriggers=[...document.querySelectorAll('#trigger-chips .chip.selected')].map(c=>c.dataset.trigger);
   const notes=document.getElementById('record-notes').value.trim();
-  const session={startTime:new Date().toISOString(),duration:min,triggers:selectedTriggers,notes};
-  await dbPut('sessions',session);
+  if(editingId){
+    const sessions=await dbGetAll('sessions');
+    const s=sessions.find(x=>x.id===editingId);
+    if(s){
+      s.duration=min;s.triggers=selectedTriggers;s.notes=notes;
+      s.startTime=s.startTime||new Date().toISOString();
+      await dbPut('sessions',s);
+      toast('✅ 已更新');
+    }
+    cancelEdit();
+  }else{
+    const session={startTime:new Date().toISOString(),duration:min,triggers:selectedTriggers,notes,hidden:false};
+    await dbPut('sessions',session);
+    toast('✅ 已保存');
+  }
   timerElapsed=0;updateTimerDisplay();timerState.textContent='就绪';
   document.querySelectorAll('#trigger-chips .chip.selected').forEach(c=>c.classList.remove('selected'));
   document.getElementById('record-notes').value='';document.getElementById('record-min').value='';
-  updateRecordForm();toast('✅ 已保存');navigateTo('home');
+  updateRecordForm();renderHome();renderHistory();
 };
+function cancelEdit(){
+  editingId=null;
+  document.getElementById('edit-indicator').style.display='none';
+  document.getElementById('edit-cancel-btn').classList.remove('visible');
+  document.getElementById('save-record-btn').textContent='💾 保存记录';
+  document.getElementById('record-start-time').textContent='';
+  document.getElementById('record-notes').value='';
+  document.getElementById('record-min').value='';
+  document.querySelectorAll('#trigger-chips .chip.selected').forEach(c=>c.classList.remove('selected'));
+  timerElapsed=0;updateTimerDisplay();
+}
+document.getElementById('edit-cancel-btn').onclick=()=>{vibe();cancelEdit();navigateTo('history')};
 
 // ═══════════════ Check-in ═══════════════
 const checkinDims=[
@@ -461,7 +557,7 @@ async function renderCheckinHistory(){
 
 // ═══════════════ Stats ═══════════════
 async function renderStats(){
-  const sessions=await dbGetAll('sessions'),checkins=await dbGetAll('checkins');
+  const sessions=(await dbGetAll('sessions')).filter(s=>!s.hidden),checkins=await dbGetAll('checkins');
   sessions.sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));
   renderCalendar(sessions,checkins);renderChart(sessions);renderCorrelation(sessions,checkins);renderInsights(sessions,checkins);
 }
@@ -553,15 +649,97 @@ function renderInsights(sessions,checkins){
   document.getElementById('insights').innerHTML=html;
 }
 
+// ═══════════════ History ═══════════════
+let historyFilters={keyword:'',dateFrom:'',dateTo:'',triggers:[]};
+function renderHistTriggerChips(){
+  const el=document.getElementById('hist-trigger-chips');if(!el)return;
+  el.innerHTML=triggers.map(t=>`<div class="hist-chip" data-trigger="${t}">${t}</div>`).join('');
+  el.onclick=e=>{if(e.target.classList.contains('hist-chip')){e.target.classList.toggle('selected');updateHistoryFilters()}};
+}
+function updateHistoryFilters(){
+  historyFilters.keyword=(document.getElementById('hist-keyword')?.value||'').trim().toLowerCase();
+  historyFilters.dateFrom=document.getElementById('hist-from')?.value||'';
+  historyFilters.dateTo=document.getElementById('hist-to')?.value||'';
+  historyFilters.triggers=[...document.querySelectorAll('#hist-trigger-chips .hist-chip.selected')].map(c=>c.dataset.trigger);
+  renderHistory();
+}
+async function renderHistory(){
+  const sessions=await dbGetAll('sessions');
+  sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+  const f=historyFilters;
+  const filtered=sessions.filter(s=>{
+    if(f.keyword&&!(s.notes||'').toLowerCase().includes(f.keyword)&&!(s.triggers||[]).some(t=>t.toLowerCase().includes(f.keyword)))return false;
+    if(f.dateFrom&&s.startTime.slice(0,10)<f.dateFrom)return false;
+    if(f.dateTo&&s.startTime.slice(0,10)>f.dateTo)return false;
+    if(f.triggers.length&&!(s.triggers||[]).some(t=>f.triggers.includes(t)))return false;
+    return true;
+  });
+  const showHidden=document.getElementById('hist-show-hidden')?.checked||false;
+  const visible=showHidden?filtered:filtered.filter(s=>!s.hidden);
+  document.getElementById('hist-count').textContent=`${visible.length} 条记录`;
+  let html='';
+  visible.forEach(s=>{
+    const d=new Date(s.startTime),dateStr=(d.getMonth()+1)+'月'+d.getDate()+'日';
+    const timeStr=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
+    const endTime=new Date(d.getTime()+s.duration*60000),endStr=endTime.getHours().toString().padStart(2,'0')+':'+endTime.getMinutes().toString().padStart(2,'0');
+    const triggersText=(s.triggers||[]).join(' · ')||'未标注';
+    const hiddenClass=s.hidden?' hidden-item':'';
+    html+=`<div class="hist-item${hiddenClass}">
+      <div class="hi-left">
+        <div class="hi-date">${dateStr} · ${timeStr} → ${endStr}</div>
+        <div class="hi-info">${s.duration}分钟</div>
+        <div class="hi-triggers">${triggersText}</div>
+        ${s.notes?`<div class="hi-notes">${s.notes}</div>`:''}
+      </div>
+      <div class="hi-actions">
+        <button class="hi-action" onclick="editSession(${s.id})" title="编辑">✏️</button>
+        ${s.hidden?`<button class="hi-action" onclick="unhideSession(${s.id})" title="恢复" style="color:var(--secondary)">👁</button>`:`<button class="hi-action" onclick="hideSession(${s.id})" title="隐藏">👁</button>`}
+        <button class="hi-action danger" onclick="deleteSession(${s.id})" title="删除">✕</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('history-list').innerHTML=html||'<div class="empty">无匹配记录</div>';
+}
+window.editSession=async function(id){
+  const sessions=await dbGetAll('sessions');
+  const s=sessions.find(x=>x.id===id);if(!s)return;
+  editingId=id;
+  timerElapsed=s.duration*60000;
+  navigateTo('record');updateRecordForm();
+  document.querySelectorAll('#trigger-chips .chip').forEach(c=>c.classList.remove('selected'));
+  (s.triggers||[]).forEach(t=>{
+    document.querySelectorAll('#trigger-chips .chip').forEach(c=>{if(c.dataset.trigger===t)c.classList.add('selected')});
+  });
+  document.getElementById('record-notes').value=s.notes||'';
+  document.getElementById('record-min').value=s.duration||'';
+  document.getElementById('save-record-btn').textContent='💾 更新记录';
+  document.getElementById('edit-indicator').style.display='block';
+  document.getElementById('edit-cancel-btn').classList.add('visible');
+  document.getElementById('record-start-time').textContent='编辑 · '+(s.startTime||'').slice(0,10);
+};
+window.hideSession=async function(id){
+  const sessions=await dbGetAll('sessions');
+  const s=sessions.find(x=>x.id===id);if(!s)return;
+  if(!confirm('隐藏这条记录？它将不会出现在统计中，但可以在历史页恢复。'))return;
+  s.hidden=true;await dbPut('sessions',s);
+  toast('已隐藏');renderHome();renderHistory();renderStats();
+};
+window.unhideSession=async function(id){
+  const sessions=await dbGetAll('sessions');
+  const s=sessions.find(x=>x.id===id);if(!s)return;
+  s.hidden=false;await dbPut('sessions',s);
+  toast('已恢复');renderHistory();renderStats();
+};
+
 // ═══════════════ Goals ═══════════════
 function renderTriggerManage(){
   document.getElementById('trigger-manage').innerHTML=triggers.map((t,i)=>`<div class="session-item" style="margin-bottom:4px"><div class="si-left"><div class="si-info">${t}</div></div><button class="del-icon" onclick="removeTrigger(${i})">✕</button></div>`).join('');
 }
-window.removeTrigger=async function(i){triggers.splice(i,1);await setSetting('triggers',[...triggers]);renderTriggerChips();renderTriggerManage();toast('已删除')};
-document.getElementById('add-trigger-btn').onclick=async()=>{const v=document.getElementById('new-trigger').value.trim();if(!v){toast('请输入名称');return};if(triggers.includes(v)){toast('已存在');return};if(triggers.length>=20){toast('最多20个');return};triggers.push(v);await setSetting('triggers',[...triggers]);document.getElementById('new-trigger').value='';renderTriggerChips();renderTriggerManage();toast('✅ 已添加')};
-document.getElementById('reset-triggers-btn').onclick=async()=>{if(!confirm('恢复默认触发场景？'))return;triggers=[...defaultTriggers];await setSetting('triggers',[...triggers]);renderTriggerChips();renderTriggerManage();toast('✅ 已恢复默认')};
+window.removeTrigger=async function(i){triggers.splice(i,1);await setSetting('triggers',[...triggers]);renderTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('已删除')};
+document.getElementById('add-trigger-btn').onclick=async()=>{const v=document.getElementById('new-trigger').value.trim();if(!v){toast('请输入名称')};if(triggers.includes(v)){toast('已存在');return};if(triggers.length>=20){toast('最多20个');return};triggers.push(v);await setSetting('triggers',[...triggers]);document.getElementById('new-trigger').value='';renderTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('✅ 已添加')};
+document.getElementById('reset-triggers-btn').onclick=async()=>{if(!confirm('恢复默认触发场景？'))return;triggers=[...defaultTriggers];await setSetting('triggers',[...triggers]);renderTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('✅ 已恢复默认')};
 async function updateGoalWarnings(){
-  const sessions=await dbGetAll('sessions'),now=new Date(),weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
+  const sessions=(await dbGetAll('sessions')).filter(s=>!s.hidden),now=new Date(),weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
   const weekCount=sessions.filter(s=>new Date(s.startTime)>=weekAgo).length;
   let warn='';if(weekCount>goalWeekly)warn=`⚠️ 本周已 ${weekCount} 次，超过目标 ${goalWeekly} 次`;
   document.getElementById('goal-warning').innerHTML=warn?`<div class="goal-warn">${warn}</div>`:'';
@@ -570,7 +748,7 @@ window.adjustGoal=async function(d){goalWeekly=Math.max(0,goalWeekly+d);document
 window.adjustMinGap=async function(d){goalMinGap=Math.max(0,goalMinGap+d);document.getElementById('goal-mingap').textContent=goalMinGap;await setSetting('goalMinGap',goalMinGap)};
 document.getElementById('set-passcode-btn').onclick=async()=>{const val=document.getElementById('new-passcode').value;if(!/^\d{4}$/.test(val)){toast('请输入4位数字密码');return};await setSetting('passcode',val);document.getElementById('new-passcode').value='';toast('✅ 密码已更新')};
 document.getElementById('export-btn').onclick=async()=>{const sessions=await dbGetAll('sessions'),checkins=await dbGetAll('checkins');const data=JSON.stringify({sessions,checkins,exportedAt:new Date().toISOString()},null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pulse_export_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ 已下载')};
-window.deleteSession=async function(id){if(!confirm('确认删除这条记录？'))return;await dbDelete('sessions',id);toast('🗑 已删除');renderHome();renderStats()};
+window.deleteSession=async function(id){if(!confirm('确认删除这条记录？删除后不可恢复。'))return;await dbDelete('sessions',id);toast('🗑 已删除');renderHome();renderStats();renderHistory()};
 window.deleteCheckin=async function(date){if(!confirm('确认删除 '+date+' 的打卡？'))return;await dbDelete('checkins',date);toast('🗑 已删除');renderCheckinHistory()};
 
 document.getElementById('import-btn').onclick=()=>document.getElementById('import-file').click();
@@ -585,19 +763,20 @@ document.getElementById('import-file').onchange=async function(){
     for(const s of data.sessions){
       const key=s.startTime+'|'+(s.duration||0)+'|'+(s.triggers||[]).join(',');
       if(existingKeys.has(key))continue;
+      if(s.hidden===undefined)s.hidden=false;
       await dbPut('sessions',s);existingKeys.add(key);sAdded++;
     }
     for(const c of data.checkins){
       await dbPut('checkins',c);cAdded++;
     }
     toast(`✅ 导入完成：${sAdded} 条记录，${cAdded} 条打卡`);
-    this.value='';renderHome();renderStats();renderCheckinHistory();
+    this.value='';renderHome();renderStats();renderCheckinHistory();renderHistory();
   }catch(e){toast('❌ 文件读取失败：'+e.message);this.value=''}
 };
 
 // ═══════════════ Home ═══════════════
 async function renderHome(){
-  const sessions=await dbGetAll('sessions');sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+  const sessions=(await dbGetAll('sessions')).filter(s=>!s.hidden);sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
   const checkins=await dbGetAll('checkins');
   const checkinDates=new Set(checkins.map(c=>c.date));
   const today=new Date();let streak=0;const d=new Date(today);
@@ -621,8 +800,13 @@ function navigateTo(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.querySelector('[data-view="'+view+'"]').classList.add('active');
-  if(view==='home')renderHome();else if(view==='stats')renderStats();else if(view==='checkin')renderCheckinHistory();else if(view==='goals'){updateGoalWarnings();renderTriggerManage()};
+  const navItem=document.querySelector('[data-view="'+view+'"]');
+  if(navItem)navItem.classList.add('active');
+  if(view==='home')renderHome();
+  else if(view==='stats')renderStats();
+  else if(view==='checkin')renderCheckinHistory();
+  else if(view==='history'){renderHistTriggerChips();renderHistory();if(!editingId){cancelEdit()}}
+  else if(view==='goals'){updateGoalWarnings();renderTriggerManage()};
 }
 document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>{vibe();navigateTo(item.dataset.view)}});
 
