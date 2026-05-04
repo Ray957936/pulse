@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#f7fafb">
@@ -240,6 +241,13 @@ textarea{resize:none;height:80px}
         </div>
       </div>
       <div id="goal-warning"></div>
+      <div class="section-title" style="margin-top:20px">🏷 触发场景</div>
+      <div id="trigger-manage"></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input type="text" id="new-trigger" placeholder="新场景名称" maxlength="10" style="flex:1;border-radius:8px">
+        <button class="btn btn-secondary" id="add-trigger-btn" style="width:auto;font-size:12px;padding:8px 14px;min-height:auto;white-space:nowrap">＋ 添加</button>
+      </div>
+      <button class="btn btn-secondary" id="reset-triggers-btn" style="margin-top:8px;width:auto;font-size:11px;padding:6px 12px;min-height:auto">↺ 恢复默认</button>
       <div class="section-title" style="margin-top:24px">🔐 安全</div>
       <div class="goal-item">
         <div class="gi-label">修改密码</div>
@@ -280,15 +288,19 @@ function dbGetAll(store){return new Promise(r=>{const t=db.transaction(store,'re
 function dbGet(store,key){return new Promise(r=>{const t=db.transaction(store,'readonly').objectStore(store);t.get(key).onsuccess=e=>r(e.target.result)})}
 function dbDelete(store,key){return new Promise(r=>{const t=db.transaction(store,'readwrite').objectStore(store);t.delete(key);t.transaction.oncomplete=()=>r()})}
 
+// ═══════════════ Helpers ═══════════════
+function vibe(){navigator.vibrate?.(8)}
+
 // ═══════════════ Settings ═══════════════
 let passcode='0000',goalWeekly=7,goalMinGap=0;
 async function loadSettings(){
   const s=await dbGet('settings','passcode');if(s)passcode=s.value;
   const gw=await dbGet('settings','goalWeekly');if(gw)goalWeekly=gw.value;
   const gm=await dbGet('settings','goalMinGap');if(gm)goalMinGap=gm.value;
+  const tr=await dbGet('settings','triggers');if(tr&&tr.value)triggers=tr.value;
   document.getElementById('goal-weekly').textContent=goalWeekly;
   document.getElementById('goal-mingap').textContent=goalMinGap;
-  updateGoalWarnings();
+  renderTriggerChips();updateGoalWarnings();
 }
 async function setSetting(key,value){
   await dbPut('settings',{key,value});
@@ -307,7 +319,7 @@ function buildPassPad(){
     btn.className='passcode-key'+(k==='del'?' del':'');
     btn.textContent=k==='del'?'⌫':k;
     if(k===''){btn.style.visibility='hidden';pad.appendChild(btn);return}
-    btn.onclick=()=>{
+    btn.onclick=()=>{vibe();
       if(k==='del')passInput=passInput.slice(0,-1);
       else passInput+=k;
       if(passInput.length>4)passInput=passInput.slice(-4);
@@ -325,7 +337,7 @@ function updateDots(){dotsEl.querySelectorAll('.passcode-dot').forEach((d,i)=>d.
 function shakeDots(){dotsEl.querySelectorAll('.passcode-dot').forEach(d=>{d.classList.add('error');setTimeout(()=>d.classList.remove('error'),400)})}
 function unlock(){lockEl.classList.add('hidden');unlocked=true}
 function lock(){lockEl.classList.remove('hidden');unlocked=false;passInput='';updateDots()}
-document.getElementById('lock-btn').onclick=lock;
+document.getElementById('lock-btn').onclick=()=>{vibe();lock()};
 
 // ═══════════════ Timer ═══════════════
 let timerRunning=false,timerStart=0,timerElapsed=0,timerInterval=null;
@@ -350,12 +362,15 @@ function stopTimer(){
   timerState.textContent='已完成';
   navigateTo('record');updateRecordForm();
 }
-timerBtn.onclick=()=>{if(timerRunning)stopTimer();else{timerElapsed=0;updateTimerDisplay();startTimer()}};
-document.getElementById('manual-entry-btn').onclick=()=>{timerElapsed=0;updateTimerDisplay();timerState.textContent='手动输入';navigateTo('record');updateRecordForm()};
+timerBtn.onclick=()=>{vibe();if(timerRunning)stopTimer();else{timerElapsed=0;updateTimerDisplay();startTimer()}};
+document.getElementById('manual-entry-btn').onclick=()=>{vibe();timerElapsed=0;updateTimerDisplay();timerState.textContent='手动输入';navigateTo('record');updateRecordForm()};
 
 // ═══════════════ Record ═══════════════
-const triggers=['睡前','无聊','压力释放','自然冲动','刺激内容','伴侣相关','早起','运动后','饮酒后'];
-document.getElementById('trigger-chips').innerHTML=triggers.map(t=>`<div class="chip" data-trigger="${t}">${t}</div>`).join('');
+const defaultTriggers=['睡前','无聊','压力释放','自然冲动','刺激内容','伴侣相关','早起','运动后','饮酒后'];
+let triggers=[...defaultTriggers];
+function renderTriggerChips(){
+  document.getElementById('trigger-chips').innerHTML=triggers.map(t=>`<div class="chip" data-trigger="${t}">${t}</div>`).join('');
+}
 document.getElementById('trigger-chips').onclick=e=>{if(e.target.classList.contains('chip'))e.target.classList.toggle('selected')};
 document.getElementById('record-min').oninput=function(){const m=parseInt(this.value)||0;timerElapsed=m*60000;updateRecordForm()};
 function updateRecordForm(){
@@ -371,7 +386,7 @@ function updateRecordForm(){
     startEl.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}（计时中）`;
   }else{startEl.textContent=''}
 }
-document.getElementById('save-record-btn').onclick=async()=>{
+document.getElementById('save-record-btn').onclick=async()=>{vibe();
   const minInput=document.getElementById('record-min');
   let min=parseInt(minInput.value)||0;
   if(timerElapsed>0&&min===0)min=Math.round(timerElapsed/60000);
@@ -415,7 +430,7 @@ function buildCheckinForm(today){
     };
   });
 }
-document.getElementById('save-checkin-btn').onclick=async()=>{
+document.getElementById('save-checkin-btn').onclick=async()=>{vibe();
   const today=new Date().toISOString().slice(0,10);
   const data={date:today};
   checkinDims.forEach(dim=>{
@@ -502,9 +517,10 @@ function renderChart(sessions){
 function renderCorrelation(sessions,checkins){
   if(sessions.length<2||checkins.length<2){document.getElementById('correlation-grid').innerHTML='<div class="empty">需要更多数据</div>';return}
   const dims=checkinDims,results={};dims.forEach(d=>{results[d.key]={highFreq:[],lowFreq:[]}});
+  const checkinMap=new Map(checkins.map(c=>[c.date,c]));
   sessions.forEach(s=>{
     const sDate=s.startTime.slice(0,10),nextDay=new Date(sDate);nextDay.setDate(nextDay.getDate()+1);
-    const nd=nextDay.toISOString().slice(0,10),checkin=checkins.find(c=>c.date===nd);if(!checkin)return;
+    const nd=nextDay.toISOString().slice(0,10),checkin=checkinMap.get(nd);if(!checkin)return;
     const sDateObj=new Date(sDate),threeDaysAgo=new Date(sDateObj);threeDaysAgo.setDate(threeDaysAgo.getDate()-2);
     const freq=sessions.filter(o=>{const oDate=o.startTime.slice(0,10);return oDate>=threeDaysAgo.toISOString().slice(0,10)&&oDate<=sDate}).length;
     dims.forEach(d=>{if(checkin[d.key]){if(freq>=2)results[d.key].highFreq.push(checkin[d.key]);else results[d.key].lowFreq.push(checkin[d.key])}});
@@ -538,6 +554,12 @@ function renderInsights(sessions,checkins){
 }
 
 // ═══════════════ Goals ═══════════════
+function renderTriggerManage(){
+  document.getElementById('trigger-manage').innerHTML=triggers.map((t,i)=>`<div class="session-item" style="margin-bottom:4px"><div class="si-left"><div class="si-info">${t}</div></div><button class="del-icon" onclick="removeTrigger(${i})">✕</button></div>`).join('');
+}
+window.removeTrigger=async function(i){triggers.splice(i,1);await setSetting('triggers',[...triggers]);renderTriggerChips();renderTriggerManage();toast('已删除')};
+document.getElementById('add-trigger-btn').onclick=async()=>{const v=document.getElementById('new-trigger').value.trim();if(!v){toast('请输入名称');return};if(triggers.includes(v)){toast('已存在');return};if(triggers.length>=20){toast('最多20个');return};triggers.push(v);await setSetting('triggers',[...triggers]);document.getElementById('new-trigger').value='';renderTriggerChips();renderTriggerManage();toast('✅ 已添加')};
+document.getElementById('reset-triggers-btn').onclick=async()=>{if(!confirm('恢复默认触发场景？'))return;triggers=[...defaultTriggers];await setSetting('triggers',[...triggers]);renderTriggerChips();renderTriggerManage();toast('✅ 已恢复默认')};
 async function updateGoalWarnings(){
   const sessions=await dbGetAll('sessions'),now=new Date(),weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
   const weekCount=sessions.filter(s=>new Date(s.startTime)>=weekAgo).length;
@@ -600,9 +622,9 @@ function navigateTo(view){
   document.getElementById('view-'+view).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.querySelector('[data-view="'+view+'"]').classList.add('active');
-  if(view==='home')renderHome();else if(view==='stats')renderStats();else if(view==='checkin')renderCheckinHistory();else if(view==='goals')updateGoalWarnings();
+  if(view==='home')renderHome();else if(view==='stats')renderStats();else if(view==='checkin')renderCheckinHistory();else if(view==='goals'){updateGoalWarnings();renderTriggerManage()};
 }
-document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>navigateTo(item.dataset.view)});
+document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>{vibe();navigateTo(item.dataset.view)}});
 
 // ═══════════════ Toast ═══════════════
 let toastTimer;
