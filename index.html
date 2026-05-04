@@ -71,6 +71,9 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 /* Cards */
 .card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
 /* Quick Stats */
+#streak-bar{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,rgba(38,104,100,.1),rgba(47,99,120,.08));border:1px solid var(--secondary-container);border-radius:var(--radius);padding:12px;margin:12px 0;font-size:14px;font-weight:500;color:var(--secondary)}
+#streak-bar .icon{font-size:20px}
+#streak-bar.hidden{display:none}
 #quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
 .qs-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
 .qs-card .val{font-size:28px;font-weight:500;color:var(--primary);letter-spacing:-.02em}
@@ -167,6 +170,7 @@ textarea{resize:none;height:80px}
           <button class="btn btn-secondary" id="manual-entry-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">手动输入时长</button>
         </div>
       </div>
+      <div id="streak-bar" class="hidden"><span class="icon">🔥</span><span id="streak-text"></span></div>
       <div id="quick-stats"></div>
       <div class="section-title">📋 最近记录</div>
       <div id="recent-sessions"></div>
@@ -479,7 +483,7 @@ function renderCalendar(sessions,checkins){
 }
 function renderChart(sessions){
   const canvas=document.getElementById('chart');if(!canvas)return;
-  const ctx=canvas.getContext('2d'),W=canvas.parentElement.clientWidth-32;canvas.width=W;canvas.height=168;
+  const ctx=canvas.getContext('2d'),W=canvas.parentElement.clientWidth-32,dpr=window.devicePixelRatio||1;canvas.width=W*dpr;canvas.height=168*dpr;canvas.style.width=W+'px';canvas.style.height='168px';ctx.scale(dpr,dpr);
   if(sessions.length===0){ctx.fillStyle='#71787c';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,84);return}
   const d0=new Date(sessions[0].startTime),dn=new Date(sessions[sessions.length-1].startTime);
   const cur=new Date(d0);cur.setDate(cur.getDate()-cur.getDay());
@@ -572,6 +576,14 @@ document.getElementById('import-file').onchange=async function(){
 // ═══════════════ Home ═══════════════
 async function renderHome(){
   const sessions=await dbGetAll('sessions');sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+  const checkins=await dbGetAll('checkins');
+  const checkinDates=new Set(checkins.map(c=>c.date));
+  const today=new Date();let streak=0;const d=new Date(today);
+  if(!checkinDates.has(d.toISOString().slice(0,10)))d.setDate(d.getDate()-1);
+  while(checkinDates.has(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}
+  const streakEl=document.getElementById('streak-bar'),streakTxt=document.getElementById('streak-text');
+  if(streak>0){streakEl.classList.remove('hidden');streakTxt.textContent=`连续打卡 ${streak} 天`}
+  else streakEl.classList.add('hidden');
   const now=new Date(),weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
   const weekCount=sessions.filter(s=>new Date(s.startTime)>=weekAgo).length;
   const monthCount=sessions.filter(s=>{const d=new Date(s.startTime);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).length;
@@ -597,7 +609,11 @@ let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2000)}
 
 // ═══════════════ Init ═══════════════
-async function init(){await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='默认密码：0000（可在设置中修改）';renderHome()}
+async function init(){await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='默认密码：0000（可在设置中修改）';renderHome();
+  let lastActivity=Date.now();
+  ['click','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e,()=>lastActivity=Date.now(),{passive:true}));
+  setInterval(()=>{if(unlocked&&Date.now()-lastActivity>300000)lock()},30000);
+}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/pulse/sw.js');
 init();
 </script>
