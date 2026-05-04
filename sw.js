@@ -1,4 +1,4 @@
-const CACHE='pulse-v2';
+const CACHE='pulse-v3';
 const URLS=['/pulse/','/pulse/index.html','/pulse/manifest.json'];
 
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(URLS)).then(()=>self.skipWaiting()))});

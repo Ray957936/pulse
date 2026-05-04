@@ -4,178 +4,182 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f7fafb">
 <title>Pulse</title>
 <link rel="manifest" href="/pulse/manifest.json">
 <link rel="apple-touch-icon" href="/pulse/icons/icon-192.png">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#252525;--fg:#e0e0e0;--fg2:#999;
-  --accent:#f0a050;--accent2:#e08030;--green:#50c878;--red:#e05050;
-  --blue:#5090e0;--purple:#a060e0;--teal:#40b0a0;
-  --radius:12px;--radius-sm:8px;--safe-bottom:env(safe-area-inset-bottom,16px);
+  --bg:#f7fafb;--surface:#ffffff;--surface2:#f1f4f5;--surface3:#e5e9ea;
+  --primary:#2f6378;--primary-container:#4a7c92;--on-primary:#ffffff;
+  --secondary:#266864;--secondary-container:#abece6;--on-secondary:#ffffff;
+  --text:#181c1d;--text2:#41484c;--text3:#71787c;
+  --outline:#c0c7cc;--outline2:#d7dadb;--error:#ba1a1a;
+  --radius:12px;--radius-sm:8px;--radius-pill:9999px;
+  --shadow:0 4px 20px rgba(0,0,0,.04);
+  --safe-bottom:env(safe-area-inset-bottom,16px);
 }
-html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--fg);-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;user-select:none}
 #app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative}
-/* Lock Screen */
-#lock{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:24px}
+/* Lock */
+#lock{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:32px}
 #lock.hidden{display:none}
-#lock-icon{font-size:48px}
-#lock-title{font-size:18px;color:var(--fg2)}
+#lock-hero{display:flex;flex-direction:column;align-items:center;gap:12px}
+#lock-icon{width:64px;height:64px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid var(--outline)}
+#lock-title{font-size:22px;font-weight:600;letter-spacing:-.02em}
+#lock-subtitle{font-size:14px;color:var(--text2)}
 .passcode-dots{display:flex;gap:16px}
-.passcode-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--fg2);transition:all .2s}
-.passcode-dot.filled{background:var(--accent);border-color:var(--accent)}
-.passcode-dot.error{background:var(--red);border-color:var(--red);animation:shake .4s}
+.passcode-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--outline);background:transparent;transition:all .2s}
+.passcode-dot.filled{background:var(--primary);border-color:var(--primary)}
+.passcode-dot.error{background:var(--error);border-color:var(--error);animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.passcode-pad{display:grid;grid-template-columns:repeat(3,64px);gap:12px}
-.passcode-key{width:64px;height:64px;border-radius:50%;border:1px solid var(--bg3);background:var(--bg2);color:var(--fg);font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
-.passcode-key:active{background:var(--accent);color:#000}
-.passcode-key.del{font-size:16px;color:var(--fg2)}
-#lock-info{font-size:12px;color:var(--fg2);margin-top:8px}
+.passcode-pad{display:grid;grid-template-columns:repeat(3,64px);gap:16px 24px;justify-content:center}
+.passcode-key{width:64px;height:64px;border-radius:50%;border:1px solid var(--outline);background:var(--surface);color:var(--text);font-size:22px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.passcode-key:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.passcode-key.del{font-size:16px;color:var(--text3);border:none;background:none}
+#lock-info{font-size:12px;color:var(--text3);margin-top:8px}
 /* Header */
-#header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 8px}
-#header h1{font-size:20px;font-weight:700;letter-spacing:2px;background:linear-gradient(135deg,var(--accent),#f0c080);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-#header-spacer{width:40px}
+#header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 8px;background:var(--bg)}
+#header h1{font-size:18px;font-weight:700;color:var(--primary-container);letter-spacing:-.02em}
+#lock-btn{background:none;border:1px solid var(--outline);border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+#lock-btn:active{background:var(--surface3)}
 /* Content */
 #content{flex:1;overflow-y:auto;padding:0 20px 100px;-webkit-overflow-scrolling:touch}
+#content::-webkit-scrollbar{width:0}
 /* Bottom Nav */
-#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg2);border-top:1px solid var(--bg3);display:flex;padding:8px 0 var(--safe-bottom);z-index:50}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;cursor:pointer;color:var(--fg2);font-size:11px;transition:all .2s}
-.nav-item.active{color:var(--accent)}
-.nav-item svg{width:22px;height:22px}
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--outline);display:flex;padding:6px 0 var(--safe-bottom);z-index:50;border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.04)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;transition:all .2s}
+.nav-item.active{color:var(--primary-container)}
+.nav-item .nicon{font-size:22px}
 /* Views */
 .view{display:none}
 .view.active{display:block}
 /* Timer */
-#timer-area{display:flex;flex-direction:column;align-items:center;padding:24px 0 16px}
-.timer-ring{position:relative;width:200px;height:200px;margin-bottom:20px}
+#timer-area{display:flex;flex-direction:column;align-items:center;padding:20px 0}
+.timer-ring{position:relative;width:180px;height:180px;margin-bottom:16px}
 .timer-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.timer-ring .bg{fill:none;stroke:var(--bg3);stroke-width:6}
-.timer-ring .fg{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+.timer-ring .bg{fill:none;stroke:var(--surface3);stroke-width:6}
+.timer-ring .fg{fill:none;stroke:var(--primary);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
 .timer-time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.timer-time .elapsed{font-size:36px;font-weight:300;font-variant-numeric:tabular-nums}
-.timer-time .unit{font-size:13px;color:var(--fg2);margin-top:2px}
-#timer-btn{width:64px;height:64px;border-radius:50%;border:none;background:var(--accent);color:#000;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.timer-time .elapsed{font-size:32px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.timer-time .unit{font-size:12px;color:var(--text2);margin-top:2px}
+#timer-btn{width:60px;height:60px;border-radius:50%;border:none;background:var(--primary);color:var(--on-primary);font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(47,99,120,.3)}
 #timer-btn:active{transform:scale(.95)}
-#timer-btn.running{background:var(--red);color:#fff}
-#timer-btn svg{width:28px;height:28px}
+#timer-btn.running{background:var(--error);box-shadow:0 4px 12px rgba(186,26,26,.3)}
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
 /* Quick Stats */
-#quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
-.qs-card{background:var(--bg2);border-radius:var(--radius);padding:14px;text-align:center}
-.qs-card .val{font-size:24px;font-weight:600;color:var(--accent)}
-.qs-card .label{font-size:11px;color:var(--fg2);margin-top:4px}
-/* Recent Sessions */
-.section-title{font-size:14px;font-weight:600;color:var(--fg2);margin:20px 0 10px;text-transform:uppercase;letter-spacing:1px}
-.session-item{background:var(--bg2);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+#quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.qs-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
+.qs-card .val{font-size:28px;font-weight:500;color:var(--primary);letter-spacing:-.02em}
+.qs-card .label{font-size:10px;font-weight:600;color:var(--text2);margin-top:4px;letter-spacing:.05em;text-transform:uppercase}
+/* Section */
+.section-title{font-size:13px;font-weight:600;color:var(--text2);margin:24px 0 12px;text-transform:uppercase;letter-spacing:.05em}
+/* Sessions */
+.session-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 .si-left{display:flex;flex-direction:column;gap:2px}
-.si-date{font-size:13px;color:var(--fg2)}
-.si-info{font-size:15px;font-weight:500}
-.si-dur{font-size:20px;font-weight:300;color:var(--accent)}
-/* Record Form */
+.si-date{font-size:13px;color:var(--text2)}
+.si-info{font-size:14px;font-weight:500}
+.si-dur{font-size:20px;font-weight:300;color:var(--primary)}
+/* Form */
 .form-group{margin-bottom:16px}
-.form-label{font-size:13px;font-weight:600;color:var(--fg2);margin-bottom:8px;display:block}
-.input-row{display:flex;gap:10px;align-items:center}
-.input-row input{flex:1}
-input[type="text"],input[type="number"],textarea{width:100%;background:var(--bg3);border:1px solid transparent;border-radius:var(--radius-sm);padding:12px;color:var(--fg);font-size:15px;outline:none;transition:border .2s}
-input:focus,textarea:focus{border-color:var(--accent)}
+.form-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;display:block;letter-spacing:.05em;text-transform:uppercase}
+input[type="text"],input[type="number"],textarea{width:100%;background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px;color:var(--text);font-size:14px;outline:none;transition:border .2s}
+input:focus,textarea:focus{border-color:var(--primary)}
 textarea{resize:none;height:80px}
-.dur-display{font-size:28px;font-weight:300;color:var(--accent);text-align:center;padding:16px;background:var(--bg2);border-radius:var(--radius)}
-/* Tags / Chips */
+.dur-display{font-size:40px;font-weight:500;color:var(--primary);text-align:center;padding:20px;letter-spacing:-.03em}
+/* Chips */
 .chip-row{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:8px 16px;border-radius:20px;border:1px solid var(--bg3);background:var(--bg2);color:var(--fg2);font-size:13px;cursor:pointer;transition:all .2s}
-.chip.selected{border-color:var(--accent);background:rgba(240,160,80,.15);color:var(--accent)}
+.chip{padding:8px 16px;border-radius:var(--radius-pill);border:1px solid var(--outline);background:var(--surface);color:var(--text2);font-size:13px;cursor:pointer;transition:all .2s}
+.chip.selected{border-color:var(--secondary);background:var(--secondary-container);color:var(--secondary)}
 .chip:active{transform:scale(.96)}
-/* Rating Stars */
+/* Rating */
 .rating-row{display:flex;gap:12px;justify-content:center}
-.rating-dot{width:40px;height:40px;border-radius:50%;border:2px solid var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s}
-.rating-dot.selected{border-color:var(--accent);background:var(--accent);color:#000}
-/* Calendar Heatmap */
+.rating-dot{width:44px;height:44px;border-radius:50%;border:2px solid var(--outline);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s}
+.rating-dot.selected{border-color:var(--primary);background:var(--primary);color:var(--on-primary)}
+/* Calendar */
 #calendar{display:flex;flex-direction:column;gap:2px;overflow-x:auto;padding:8px 0}
 .cal-row{display:flex;gap:2px;align-items:center}
-.cal-label{width:32px;font-size:10px;color:var(--fg2);text-align:right;padding-right:4px}
-.cal-day{width:14px;height:14px;border-radius:2px;background:var(--bg3);cursor:pointer;transition:all .15s;position:relative}
-.cal-day[data-level="1"]{background:rgba(240,160,80,.3)}
-.cal-day[data-level="2"]{background:rgba(240,160,80,.6)}
-.cal-day[data-level="3"]{background:var(--accent)}
-.cal-day[data-checkin="1"]{box-shadow:inset 0 0 0 1px var(--green)}
-.cal-month-labels{display:flex;gap:2px;padding-left:36px;margin-bottom:4px;font-size:10px;color:var(--fg2)}
-.cal-month-labels span{width:16px;text-align:center}
+.cal-label{width:28px;font-size:9px;color:var(--text2);text-align:right;padding-right:4px;font-weight:600}
+.cal-day{width:13px;height:13px;border-radius:2px;background:var(--surface3);cursor:pointer;transition:all .15s}
+.cal-day[data-level="1"]{background:rgba(47,99,120,.3)}
+.cal-day[data-level="2"]{background:rgba(47,99,120,.6)}
+.cal-day[data-level="3"]{background:var(--primary)}
+.cal-day[data-checkin="1"]{box-shadow:inset 0 0 0 1.5px var(--secondary)}
+.cal-month-labels{display:flex;gap:2px;padding-left:32px;margin-bottom:4px;font-size:9px;color:var(--text3)}
+.cal-month-labels span{width:15px;text-align:center}
 /* Chart */
-#chart-container{background:var(--bg2);border-radius:var(--radius);padding:16px;margin:12px 0;height:200px;position:relative}
+#chart-container{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;margin:12px 0;height:200px}
 #correlation-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
-.corr-card{background:var(--bg2);border-radius:var(--radius-sm);padding:12px;text-align:center}
-.corr-card .title{font-size:11px;color:var(--fg2)}
+.corr-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px;text-align:center}
+.corr-card .title{font-size:11px;color:var(--text2)}
 .corr-card .value{font-size:18px;font-weight:600;margin-top:4px}
 .corr-card .insight{font-size:11px;margin-top:4px}
 /* Goals */
-.goal-item{background:var(--bg2);border-radius:var(--radius);padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.gi-label{font-size:14px;color:var(--fg2)}
-.gi-val{font-size:24px;font-weight:600;display:flex;align-items:center;gap:12px}
-.gi-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--bg3);background:none;color:var(--fg);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.gi-btn:active{background:var(--accent);color:#000}
-.goal-warn{background:rgba(224,80,80,.1);border:1px solid var(--red);border-radius:var(--radius-sm);padding:12px;margin-top:8px;font-size:13px;color:var(--red)}
+.goal-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.gi-label{font-size:14px;color:var(--text2)}
+.gi-val{font-size:24px;font-weight:500;display:flex;align-items:center;gap:12px}
+.gi-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--outline);background:var(--surface);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.gi-btn:active{background:var(--primary);color:var(--on-primary)}
+.goal-warn{background:rgba(186,26,26,.08);border:1px solid var(--error);border-radius:var(--radius-sm);padding:12px;margin-top:8px;font-size:13px;color:var(--error)}
 /* Buttons */
-.btn{padding:14px 24px;border-radius:var(--radius);border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;text-align:center}
-.btn-primary{background:var(--accent);color:#000}
-.btn-primary:active{background:var(--accent2)}
-.btn-secondary{background:var(--bg2);color:var(--fg);border:1px solid var(--bg3)}
-.btn-secondary:active{background:var(--bg3)}
-.btn-danger{background:var(--red);color:#fff;font-size:13px;padding:8px 16px;width:auto}
+.btn{padding:12px 20px;border-radius:var(--radius-sm);border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;text-align:center}
+.btn-primary{background:var(--primary);color:var(--on-primary);min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-primary:active{background:var(--primary-container)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--outline)}
+.btn-secondary:active{background:var(--surface2)}
+.btn-danger{background:var(--error);color:#fff;font-size:13px;padding:8px 16px;width:auto}
 /* Toast */
-#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+#toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--on-primary);padding:10px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 #toast.show{opacity:1}
-/* No data */
-.empty{text-align:center;padding:40px;color:var(--fg2);font-size:14px}
-/* Scrollbar */
-#content::-webkit-scrollbar{width:0}
-/* Responsive timer for smaller screens */
-@media(max-width:360px){.timer-ring{width:160px;height:160px}.timer-time .elapsed{font-size:28px}}
+.empty{text-align:center;padding:32px;color:var(--text3);font-size:13px}
+@media(max-width:360px){.timer-ring{width:150px;height:150px}.timer-time .elapsed{font-size:26px}}
 </style>
 </head>
 <body>
 <div id="app">
-  <!-- Lock Screen -->
   <div id="lock">
-    <div id="lock-icon">🔒</div>
-    <div id="lock-title">输入密码</div>
+    <div id="lock-hero">
+      <div id="lock-icon">🔒</div>
+      <div id="lock-title">输入密码</div>
+      <div id="lock-subtitle">数据本地加密，仅你可见</div>
+    </div>
     <div class="passcode-dots" id="dots"></div>
     <div class="passcode-pad" id="pad"></div>
-    <div id="lock-info">默认密码: 0000</div>
+    <div id="lock-info">默认密码：0000</div>
   </div>
 
-  <!-- Header -->
-  <div id="header"><div id="header-spacer"></div><h1>Pulse</h1><button id="lock-btn" style="background:none;border:none;font-size:20px;cursor:pointer;padding:4px">🔒</button></div>
+  <div id="header"><div style="width:36px"></div><h1>Pulse</h1><button id="lock-btn">🔒</button></div>
 
-  <!-- Content -->
   <div id="content">
-    <!-- Home View -->
+    <!-- Home -->
     <div id="view-home" class="view active">
       <div id="timer-area">
         <div class="timer-ring">
           <svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" id="timer-progress" cx="50" cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7"/></svg>
           <div class="timer-time"><div class="elapsed" id="timer-display">00:00</div><div class="unit" id="timer-state">就绪</div></div>
         </div>
-        <button id="timer-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
-        <div style="margin-top:12px">
-          <button class="btn btn-secondary" id="manual-entry-btn" style="width:auto;font-size:13px;padding:8px 20px">手动输入时长</button>
+        <button id="timer-btn">▶</button>
+        <div style="margin-top:10px">
+          <button class="btn btn-secondary" id="manual-entry-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">手动输入时长</button>
         </div>
       </div>
       <div id="quick-stats"></div>
-      <div class="section-title">最近记录</div>
+      <div class="section-title">📋 最近记录</div>
       <div id="recent-sessions"></div>
     </div>
 
-    <!-- Record View -->
+    <!-- Record -->
     <div id="view-record" class="view">
-      <div class="section-title">📝 记录本次</div>
+      <div class="section-title">⏱ 记录本次</div>
       <div class="dur-display" id="record-dur">--:--</div>
-      <div id="record-start-time" style="text-align:center;font-size:13px;color:var(--fg2);margin-bottom:8px"></div>
+      <div id="record-start-time" style="text-align:center;font-size:13px;color:var(--text2);margin-bottom:8px"></div>
       <div class="form-group">
-        <div class="input-row">
-          <input type="number" id="record-min" placeholder="分钟" inputmode="numeric" min="1">
-          <span style="color:var(--fg2)">分钟</span>
+        <div style="display:flex;gap:10px;align-items:center">
+          <input type="number" id="record-min" placeholder="分钟" inputmode="numeric" min="1" style="flex:1">
+          <span style="color:var(--text2);font-size:14px">分钟</span>
         </div>
       </div>
       <div class="form-group">
@@ -184,36 +188,36 @@ textarea{resize:none;height:80px}
       </div>
       <div class="form-group">
         <div class="form-label">备注</div>
-        <textarea id="record-notes" placeholder="可选：任何想记录的信息..."></textarea>
+        <textarea id="record-notes" placeholder="任何想记录的信息..."></textarea>
       </div>
-      <button class="btn btn-primary" id="save-record-btn">保存记录</button>
+      <button class="btn btn-primary" id="save-record-btn">💾 保存记录</button>
     </div>
 
-    <!-- Check-in View -->
+    <!-- Check-in -->
     <div id="view-checkin" class="view">
       <div class="section-title">🌅 今日状态</div>
-      <div id="checkin-date" style="color:var(--fg2);font-size:13px;margin-bottom:16px"></div>
+      <div id="checkin-date" style="color:var(--text2);font-size:13px;margin-bottom:16px"></div>
       <div id="checkin-form"></div>
-      <button class="btn btn-primary" id="save-checkin-btn" style="margin-top:16px">保存状态</button>
+      <button class="btn btn-primary" id="save-checkin-btn" style="margin-top:16px">💾 保存状态</button>
       <div class="section-title" style="margin-top:24px">历史打卡</div>
       <div id="checkin-history"></div>
     </div>
 
-    <!-- Stats View -->
+    <!-- Stats -->
     <div id="view-stats" class="view">
-      <div class="section-title">📊 日历热力图</div>
+      <div class="section-title">🗓 日历热力图</div>
       <div id="calendar"></div>
       <div class="section-title">📈 频率趋势</div>
       <div id="chart-container"><canvas id="chart" style="width:100%;height:100%"></canvas></div>
-      <div class="section-title">🔗 频率 × 状态相关性</div>
+      <div class="section-title">🔗 相关性分析</div>
       <div id="correlation-grid"></div>
-      <div class="section-title">📋 数据分析</div>
+      <div class="section-title">📊 数据概览</div>
       <div id="insights"></div>
     </div>
 
-    <!-- Goals View -->
+    <!-- Goals -->
     <div id="view-goals" class="view">
-      <div class="section-title">🎯 目标设置</div>
+      <div class="section-title">🎯 目标</div>
       <div class="goal-item">
         <div class="gi-label">每周上限</div>
         <div class="gi-val">
@@ -235,24 +239,23 @@ textarea{resize:none;height:80px}
       <div class="goal-item">
         <div class="gi-label">修改密码</div>
         <div style="display:flex;gap:8px">
-          <input type="text" id="new-passcode" placeholder="4位数字" maxlength="4" inputmode="numeric" pattern="\d{4}" style="width:120px">
-          <button class="btn btn-secondary" id="set-passcode-btn" style="width:auto;font-size:13px;padding:8px 16px">设置</button>
+          <input type="text" id="new-passcode" placeholder="4位数字" maxlength="4" inputmode="numeric" pattern="\d{4}" style="width:120px;border-radius:8px">
+          <button class="btn btn-secondary" id="set-passcode-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">设置</button>
         </div>
       </div>
       <div class="goal-item" style="margin-top:8px">
         <div class="gi-label">导出数据</div>
-        <button class="btn btn-secondary" id="export-btn" style="width:auto;font-size:13px;padding:8px 16px">导出 JSON</button>
+        <button class="btn btn-secondary" id="export-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">📥 导出 JSON</button>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Nav -->
   <div id="nav">
-    <div class="nav-item active" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>首页</span></div>
-    <div class="nav-item" data-view="record"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>记录</span></div>
-    <div class="nav-item" data-view="checkin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg><span>状态</span></div>
-    <div class="nav-item" data-view="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>统计</span></div>
-    <div class="nav-item" data-view="goals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>设置</span></div>
+    <div class="nav-item active" data-view="home"><div class="nicon">🏠</div>首页</div>
+    <div class="nav-item" data-view="record"><div class="nicon">✏️</div>记录</div>
+    <div class="nav-item" data-view="checkin"><div class="nicon">☀️</div>状态</div>
+    <div class="nav-item" data-view="stats"><div class="nicon">📊</div>统计</div>
+    <div class="nav-item" data-view="goals"><div class="nicon">⚙️</div>设置</div>
   </div>
 </div>
 <div id="toast"></div>
@@ -261,30 +264,14 @@ textarea{resize:none;height:80px}
 // ═══════════════ Database ═══════════════
 const DB_NAME='pulse_db',DB_VER=1;
 let db;
-
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const req=indexedDB.open(DB_NAME,DB_VER);
-    req.onupgradeneeded=e=>{
-      const d=e.target.result;
-      if(!d.objectStoreNames.contains('sessions')) d.createObjectStore('sessions',{keyPath:'id',autoIncrement:true});
-      if(!d.objectStoreNames.contains('checkins')) d.createObjectStore('checkins',{keyPath:'date'});
-      if(!d.objectStoreNames.contains('settings')) d.createObjectStore('settings',{keyPath:'key'});
-    };
-    req.onsuccess=e=>{db=e.target.result;resolve(db)};
-    req.onerror=e=>reject(e);
-  });
-}
-
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VER);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('sessions'))d.createObjectStore('sessions',{keyPath:'id',autoIncrement:true});if(!d.objectStoreNames.contains('checkins'))d.createObjectStore('checkins',{keyPath:'date'});if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'key'})};req.onsuccess=e=>{db=e.target.result;resolve(db)};req.onerror=e=>reject(e)})}
 function dbPut(store,data){return new Promise(r=>{const t=db.transaction(store,'readwrite').objectStore(store);t.put(data);t.transaction.oncomplete=()=>r()})}
-function dbGetAll(store){return new Promise(r=>{const t=db.transaction(store,'readonly').objectStore(store);const req=t.getAll();req.onsuccess=()=>r(req.result)})}
-function dbGet(store,key){return new Promise(r=>{const t=db.transaction(store,'readonly').objectStore(store);const req=t.get(key);req.onsuccess=()=>r(req.result)})}
+function dbGetAll(store){return new Promise(r=>{const t=db.transaction(store,'readonly').objectStore(store);t.getAll().onsuccess=e=>r(e.target.result)})}
+function dbGet(store,key){return new Promise(r=>{const t=db.transaction(store,'readonly').objectStore(store);t.get(key).onsuccess=e=>r(e.target.result)})}
 function dbDelete(store,key){return new Promise(r=>{const t=db.transaction(store,'readwrite').objectStore(store);t.delete(key);t.transaction.oncomplete=()=>r()})}
 
 // ═══════════════ Settings ═══════════════
-let passcode='0000';
-let goalWeekly=7,goalMinGap=0;
-
+let passcode='0000',goalWeekly=7,goalMinGap=0;
 async function loadSettings(){
   const s=await dbGet('settings','passcode');if(s)passcode=s.value;
   const gw=await dbGet('settings','goalWeekly');if(gw)goalWeekly=gw.value;
@@ -293,7 +280,6 @@ async function loadSettings(){
   document.getElementById('goal-mingap').textContent=goalMinGap;
   updateGoalWarnings();
 }
-
 async function setSetting(key,value){
   await dbPut('settings',{key,value});
   if(key==='passcode')passcode=value;
@@ -301,25 +287,23 @@ async function setSetting(key,value){
   else if(key==='goalMinGap')goalMinGap=value;
 }
 
-// ═══════════════ Lock Screen ═══════════════
+// ═══════════════ Lock ═══════════════
 let passInput='',unlocked=false;
 const dotsEl=document.getElementById('dots'),lockEl=document.getElementById('lock');
-
 function buildPassPad(){
   const pad=document.getElementById('pad');
-  const keys=['1','2','3','4','5','6','7','8','9','','0','del'];
-  keys.forEach((k,i)=>{
+  ['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k=>{
     const btn=document.createElement('div');
     btn.className='passcode-key'+(k==='del'?' del':'');
     btn.textContent=k==='del'?'⌫':k;
     if(k===''){btn.style.visibility='hidden';pad.appendChild(btn);return}
     btn.onclick=()=>{
-      if(k==='del'){passInput=passInput.slice(0,-1)}
-      else{passInput+=k}
+      if(k==='del')passInput=passInput.slice(0,-1);
+      else passInput+=k;
       if(passInput.length>4)passInput=passInput.slice(-4);
       updateDots();
       if(passInput.length===4){
-        if(passInput===passcode){unlock()}
+        if(passInput===passcode)unlock();
         else{shakeDots();passInput='';updateDots()}
       }
     };
@@ -327,89 +311,47 @@ function buildPassPad(){
   });
   for(let i=0;i<4;i++){const d=document.createElement('div');d.className='passcode-dot';dotsEl.appendChild(d)}
 }
-
-function updateDots(){
-  dotsEl.querySelectorAll('.passcode-dot').forEach((d,i)=>{
-    d.classList.toggle('filled',i<passInput.length);
-  });
-}
-
-function shakeDots(){
-  dotsEl.querySelectorAll('.passcode-dot').forEach(d=>{d.classList.add('error');setTimeout(()=>d.classList.remove('error'),400)});
-}
-
-function unlock(){
-  lockEl.classList.add('hidden');unlocked=true;
-}
-
-function lock(){
-  lockEl.classList.remove('hidden');unlocked=false;passInput='';updateDots();
-}
-
+function updateDots(){dotsEl.querySelectorAll('.passcode-dot').forEach((d,i)=>d.classList.toggle('filled',i<passInput.length))}
+function shakeDots(){dotsEl.querySelectorAll('.passcode-dot').forEach(d=>{d.classList.add('error');setTimeout(()=>d.classList.remove('error'),400)})}
+function unlock(){lockEl.classList.add('hidden');unlocked=true}
+function lock(){lockEl.classList.remove('hidden');unlocked=false;passInput='';updateDots()}
 document.getElementById('lock-btn').onclick=lock;
 
 // ═══════════════ Timer ═══════════════
 let timerRunning=false,timerStart=0,timerElapsed=0,timerInterval=null;
-const timerDisplay=document.getElementById('timer-display');
-const timerState=document.getElementById('timer-state');
-const timerProgress=document.getElementById('timer-progress');
-const timerBtn=document.getElementById('timer-btn');
+const timerDisplay=document.getElementById('timer-display'),timerState=document.getElementById('timer-state'),timerProgress=document.getElementById('timer-progress'),timerBtn=document.getElementById('timer-btn');
 
 function updateTimerDisplay(){
-  const s=Math.floor(timerElapsed/1000);
-  const m=Math.floor(s/60),sec=s%60;
-  timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-  // Progress ring (max 30min = 1800s)
-  const max=1800;
-  const progress=Math.min(s/max,1);
-  const circumference=282.7;
+  const s=Math.floor(timerElapsed/1000),m=Math.floor(s/60),sec=s%60;
+  timerDisplay.textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  const max=1800,progress=Math.min(s/max,1),circumference=282.7;
   timerProgress.style.strokeDashoffset=circumference*(1-progress);
 }
-
 function startTimer(){
   timerRunning=true;timerStart=Date.now()-timerElapsed;
-  timerBtn.classList.add('running');timerBtn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  timerBtn.classList.add('running');timerBtn.textContent='⏸';
   timerState.textContent='计时中...';
-  timerInterval=setInterval(()=>{
-    timerElapsed=Date.now()-timerStart;
-    updateTimerDisplay();
-  },500);
+  timerInterval=setInterval(()=>{timerElapsed=Date.now()-timerStart;updateTimerDisplay()},500);
 }
-
 function stopTimer(){
   timerRunning=false;clearInterval(timerInterval);
-  timerElapsed=Date.now()-timerStart;
-  updateTimerDisplay();
-  timerBtn.classList.remove('running');timerBtn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  timerElapsed=Date.now()-timerStart;updateTimerDisplay();
+  timerBtn.classList.remove('running');timerBtn.textContent='▶';
   timerState.textContent='已完成';
-  // Navigate to record view
-  navigateTo('record');
-  updateRecordForm();
+  navigateTo('record');updateRecordForm();
 }
-
 timerBtn.onclick=()=>{if(timerRunning)stopTimer();else{timerElapsed=0;updateTimerDisplay();startTimer()}};
+document.getElementById('manual-entry-btn').onclick=()=>{timerElapsed=0;updateTimerDisplay();timerState.textContent='手动输入';navigateTo('record');updateRecordForm()};
 
-document.getElementById('manual-entry-btn').onclick=()=>{
-  timerElapsed=0;updateTimerDisplay();timerState.textContent='手动输入';navigateTo('record');updateRecordForm();
-};
-
-// ═══════════════ Record View ═══════════════
+// ═══════════════ Record ═══════════════
 const triggers=['睡前','无聊','压力释放','自然冲动','刺激内容','伴侣相关','早起','运动后','饮酒后'];
 document.getElementById('trigger-chips').innerHTML=triggers.map(t=>`<div class="chip" data-trigger="${t}">${t}</div>`).join('');
 document.getElementById('trigger-chips').onclick=e=>{if(e.target.classList.contains('chip'))e.target.classList.toggle('selected')};
-
-document.getElementById('record-min').oninput=function(){
-  const m=parseInt(this.value)||0;
-  timerElapsed=m*60000;
-  updateRecordForm();
-};
-
+document.getElementById('record-min').oninput=function(){const m=parseInt(this.value)||0;timerElapsed=m*60000;updateRecordForm()};
 function updateRecordForm(){
-  const s=Math.floor(timerElapsed/1000);
-  const m=Math.floor(s/60),sec=s%60;
-  document.getElementById('record-dur').textContent=`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  const s=Math.floor(timerElapsed/1000),m=Math.floor(s/60),sec=s%60;
+  document.getElementById('record-dur').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
   document.getElementById('record-min').value=m||'';
-  // Show session start time
   const startEl=document.getElementById('record-start-time');
   if(timerStart>0&&timerRunning===false){
     const st=new Date(timerStart-timerElapsed);
@@ -417,63 +359,44 @@ function updateRecordForm(){
   }else if(timerRunning){
     const st=new Date(timerStart);
     startEl.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}（计时中）`;
-  }else{
-    startEl.textContent=``;
-  }
+  }else{startEl.textContent=''}
 }
-
 document.getElementById('save-record-btn').onclick=async()=>{
   const minInput=document.getElementById('record-min');
   let min=parseInt(minInput.value)||0;
   if(timerElapsed>0&&min===0)min=Math.round(timerElapsed/60000);
   if(min<=0){toast('请输入时长');return}
-
   const selectedTriggers=[...document.querySelectorAll('#trigger-chips .chip.selected')].map(c=>c.dataset.trigger);
   const notes=document.getElementById('record-notes').value.trim();
-
-  const session={
-    startTime:new Date().toISOString(),
-    duration:min,
-    triggers:selectedTriggers,
-    notes
-  };
+  const session={startTime:new Date().toISOString(),duration:min,triggers:selectedTriggers,notes};
   await dbPut('sessions',session);
-
-  // Reset
   timerElapsed=0;updateTimerDisplay();timerState.textContent='就绪';
   document.querySelectorAll('#trigger-chips .chip.selected').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('record-notes').value='';
-  document.getElementById('record-min').value='';
-  updateRecordForm();
-
-  toast('✅ 已保存');
-  navigateTo('home');
+  document.getElementById('record-notes').value='';document.getElementById('record-min').value='';
+  updateRecordForm();toast('✅ 已保存');navigateTo('home');
 };
 
-// ═══════════════ Check-in View ═══════════════
+// ═══════════════ Check-in ═══════════════
 const checkinDims=[
-  {key:'energy',label:'精力',emoji:'⚡',color:'var(--accent)'},
-  {key:'focus',label:'专注',emoji:'🎯',color:'var(--blue)'},
-  {key:'mood',label:'情绪',emoji:'😊',color:'var(--green)'},
-  {key:'sleep',label:'睡眠',emoji:'😴',color:'var(--purple)'}
+  {key:'energy',label:'精力',emoji:'⚡',color:'var(--primary)'},
+  {key:'focus',label:'专注',emoji:'🎯',color:'var(--secondary)'},
+  {key:'mood',label:'情绪',emoji:'😊',color:'#416363'},
+  {key:'sleep',label:'睡眠',emoji:'😴',color:'var(--primary-container)'}
 ];
-
 function buildCheckinForm(today){
   const existing=window._checkinCache?.[today]||{};
-  document.getElementById('checkin-date').textContent=`📅 ${today}`;
+  document.getElementById('checkin-date').textContent='📅 '+today;
   let html='';
   checkinDims.forEach(dim=>{
     html+=`<div class="form-group"><div class="form-label">${dim.emoji} ${dim.label}</div><div class="rating-row">`;
     for(let i=1;i<=5;i++){
       const sel=existing[dim.key]===i?'selected':'';
-      html+=`<div class="rating-dot ${sel}" data-dim="${dim.key}" data-val="${i}" style="--accent:${dim.color}">${i}</div>`;
+      html+=`<div class="rating-dot ${sel}" data-dim="${dim.key}" data-val="${i}">${i}</div>`;
     }
-    html+=`</div></div>`;
+    html+='</div></div>';
   });
   html+=`<div class="form-group"><div class="form-label">💬 备注</div><textarea id="checkin-notes" placeholder="可选...">${existing.notes||''}</textarea></div>`;
   document.getElementById('checkin-form').innerHTML=html;
-
-  // Click handlers
   document.querySelectorAll('#checkin-form .rating-dot').forEach(dot=>{
     dot.onclick=function(){
       const dim=this.dataset.dim;
@@ -482,7 +405,6 @@ function buildCheckinForm(today){
     };
   });
 }
-
 document.getElementById('save-checkin-btn').onclick=async()=>{
   const today=new Date().toISOString().slice(0,10);
   const data={date:today};
@@ -491,29 +413,21 @@ document.getElementById('save-checkin-btn').onclick=async()=>{
     data[dim.key]=sel?parseInt(sel.dataset.val):null;
   });
   data.notes=document.getElementById('checkin-notes')?.value?.trim()||'';
-
   if(!data.energy&&!data.focus&&!data.mood&&!data.sleep){toast('请至少评一项');return}
-
   await dbPut('checkins',data);
-  window._checkinCache=window._checkinCache||{};
-  window._checkinCache[today]=data;
-  toast('✅ 已保存');
-  await renderCheckinHistory();
+  window._checkinCache=window._checkinCache||{};window._checkinCache[today]=data;
+  toast('✅ 已保存');await renderCheckinHistory();
 };
-
 async function renderCheckinHistory(){
   const checkins=await dbGetAll('checkins');
   checkins.sort((a,b)=>b.date.localeCompare(a.date));
-  window._checkinCache={};
-  checkins.forEach(c=>window._checkinCache[c.date]=c);
-
+  window._checkinCache={};checkins.forEach(c=>window._checkinCache[c.date]=c);
   const today=new Date().toISOString().slice(0,10);
   const last7=checkins.filter(c=>c.date!==today).slice(0,7);
-
   let html='';
   last7.forEach(c=>{
-    const parts=[`📅 ${c.date}`];
-    checkinDims.forEach(d=>{if(c[d.key])parts.push(`${d.emoji}${c[d.key]}`)});
+    const parts=['📅 '+c.date];
+    checkinDims.forEach(d=>{if(c[d.key])parts.push(d.emoji+c[d.key])});
     html+=`<div class="session-item"><div class="si-left"><div class="si-info">${parts.join(' · ')}</div></div></div>`;
   });
   document.getElementById('checkin-history').innerHTML=html||'<div class="empty">暂无历史打卡</div>';
@@ -522,325 +436,138 @@ async function renderCheckinHistory(){
 
 // ═══════════════ Stats ═══════════════
 async function renderStats(){
-  const sessions=await dbGetAll('sessions');
-  const checkins=await dbGetAll('checkins');
+  const sessions=await dbGetAll('sessions'),checkins=await dbGetAll('checkins');
   sessions.sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));
-
-  // Calendar heatmap
-  renderCalendar(sessions,checkins);
-  // Chart
-  renderChart(sessions);
-  // Correlation
-  renderCorrelation(sessions,checkins);
-  // Insights
-  renderInsights(sessions,checkins);
+  renderCalendar(sessions,checkins);renderChart(sessions);renderCorrelation(sessions,checkins);renderInsights(sessions,checkins);
 }
-
 function renderCalendar(sessions,checkins){
-  const now=new Date();
-  const endDate=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  const startDate=new Date(endDate);startDate.setDate(startDate.getDate()-83); // 12 weeks
-
-  // Count sessions per day
-  const dayCount={};
-  sessions.forEach(s=>{
-    const d=s.startTime.slice(0,10);
-    dayCount[d]=(dayCount[d]||0)+1;
-  });
+  const now=new Date(),endDate=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const startDate=new Date(endDate);startDate.setDate(startDate.getDate()-83);
+  const dayCount={};sessions.forEach(s=>{const d=s.startTime.slice(0,10);dayCount[d]=(dayCount[d]||0)+1});
   const checkinDays=new Set(checkins.map(c=>c.date));
-
-  // Build weeks
   const weeks=[];
   let d=new Date(startDate);d.setDate(d.getDate()-d.getDay());
   while(d<=endDate){
     const week=[];
     for(let i=0;i<7;i++){
-      const ds=d.toISOString().slice(0,10);
-      const count=dayCount[ds]||0;
-      let level=0;
-      if(count>=3)level=3;else if(count===2)level=2;else if(count===1)level=1;
-      week.push({date:ds,level,hasCheckin:checkinDays.has(ds)});
-      d.setDate(d.getDate()+1);
+      const ds=d.toISOString().slice(0,10),count=dayCount[ds]||0;
+      let level=0;if(count>=3)level=3;else if(count===2)level=2;else if(count===1)level=1;
+      week.push({date:ds,level,hasCheckin:checkinDays.has(ds)});d.setDate(d.getDate()+1);
     }
     weeks.push(week);
   }
-
-  // Render
   const days=['日','一','二','三','四','五','六'];
-  let html='';
-  // Month labels (simplified)
-  html+='<div class="cal-month-labels">';
-  for(let i=0;i<weeks.length;i++){
-    const mid=weeks[i][3]; // Thursday
-    if(mid&&mid.date.endsWith('-01')||mid&&new Date(mid.date).getDate()<=7)html+=`<span>${parseInt(mid.date.slice(5,7))}月</span>`;
-    else html+='<span></span>';
-  }
+  let html='<div class="cal-month-labels">';
+  for(let i=0;i<weeks.length;i++){const mid=weeks[i][3];if(mid&&(mid.date.endsWith('-01')||new Date(mid.date).getDate()<=7))html+=`<span>${parseInt(mid.date.slice(5,7))}月</span>`;else html+='<span></span>'}
   html+='</div>';
-
   for(let row=0;row<7;row++){
     html+=`<div class="cal-row"><span class="cal-label">${days[row]}</span>`;
     weeks.forEach(week=>{
       const day=week[row];
       if(!day){html+='<div class="cal-day" style="visibility:hidden"></div>';return}
-      const attrs=`data-level="${day.level}"${day.hasCheckin?' data-checkin="1"':''}`;
-      html+=`<div class="cal-day" ${attrs} title="${day.date}: ${day.level>0?day.level+'次':''}${day.hasCheckin?' ✅':''}"></div>`;
+      html+=`<div class="cal-day" data-level="${day.level}"${day.hasCheckin?' data-checkin="1"':''} title="${day.date}"></div>`;
     });
     html+='</div>';
   }
   document.getElementById('calendar').innerHTML=html;
 }
-
 function renderChart(sessions){
-  const canvas=document.getElementById('chart');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  const W=canvas.parentElement.clientWidth-32;
-  canvas.width=W;canvas.height=168;
-
-  // Group by week
-  const weekCounts=[];
-  if(sessions.length===0){ctx.fillStyle='#999';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,84);return}
-
-  const d0=new Date(sessions[0].startTime);
-  const dn=new Date(sessions[sessions.length-1].startTime);
+  const canvas=document.getElementById('chart');if(!canvas)return;
+  const ctx=canvas.getContext('2d'),W=canvas.parentElement.clientWidth-32;canvas.width=W;canvas.height=168;
+  if(sessions.length===0){ctx.fillStyle='#71787c';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,84);return}
+  const d0=new Date(sessions[0].startTime),dn=new Date(sessions[sessions.length-1].startTime);
   const cur=new Date(d0);cur.setDate(cur.getDate()-cur.getDay());
   const end=new Date(dn);end.setDate(end.getDate()+6-end.getDay());
-
+  const weekCounts=[];
   while(cur<=end){
     let count=0;
-    for(let i=0;i<7;i++){
-      const ds=new Date(cur);ds.setDate(ds.getDate()+i);
-      const key=ds.toISOString().slice(0,10);
-      count+=sessions.filter(s=>s.startTime.startsWith(key)).length;
-    }
-    weekCounts.push(count);
-    cur.setDate(cur.getDate()+7);
+    for(let i=0;i<7;i++){const ds=new Date(cur);ds.setDate(ds.getDate()+i);const key=ds.toISOString().slice(0,10);count+=sessions.filter(s=>s.startTime.startsWith(key)).length}
+    weekCounts.push(count);cur.setDate(cur.getDate()+7);
   }
-
-  // Draw
-  const maxVal=Math.max(...weekCounts,goalWeekly);
-  const barW=Math.max(8,(W-weekCounts.length*4)/weekCounts.length-4);
-  const H=168;
-
+  const maxVal=Math.max(...weekCounts,goalWeekly),barW=Math.max(8,(W-weekCounts.length*4)/weekCounts.length-4),H=168;
   ctx.clearRect(0,0,W,H);
-  // Goal line
-  if(goalWeekly>0){
-    const goalY=H-20-(goalWeekly/maxVal*130);
-    ctx.strokeStyle='var(--red)';ctx.setLineDash([4,4]);ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(0,goalY);ctx.lineTo(W,goalY);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle='var(--red)';ctx.font='10px sans-serif';ctx.fillText(`目标:${goalWeekly}`,4,goalY-4);
-  }
-
-  weekCounts.forEach((v,i)=>{
-    const x=4+i*(barW+4);
-    const barH=v/maxVal*130;
-    const y=H-20-barH;
-    const color=v>goalWeekly?'var(--red)':'var(--accent)';
-    ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,barW,barH,3);ctx.fill();
-    if(i%4===0){ctx.fillStyle='var(--fg2)';ctx.font='9px sans-serif';ctx.fillText((i+1),x,170)}
-  });
+  if(goalWeekly>0){const goalY=H-20-(goalWeekly/maxVal*130);ctx.strokeStyle='#ba1a1a';ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,goalY);ctx.lineTo(W,goalY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ba1a1a';ctx.font='10px sans-serif';ctx.fillText(`目标:${goalWeekly}`,4,goalY-4)}
+  weekCounts.forEach((v,i)=>{const x=4+i*(barW+4),barH=v/maxVal*130,y=H-20-barH;ctx.fillStyle=v>goalWeekly?'#ba1a1a':'#2f6378';ctx.beginPath();ctx.roundRect(x,y,barW,barH,3);ctx.fill();if(i%4===0){ctx.fillStyle='#71787c';ctx.font='9px sans-serif';ctx.fillText((i+1),x,170)}});
 }
-
 function renderCorrelation(sessions,checkins){
-  if(sessions.length<2||checkins.length<2){
-    document.getElementById('correlation-grid').innerHTML='<div class="empty">需要更多数据来分析相关性</div>';
-    return;
-  }
-
-  // For each dimension, find sessions followed by checkins next day
-  const dims=checkinDims;
-  const results={};
-  dims.forEach(d=>{results[d.key]={highFreq:[],lowFreq:[]}});
-
-  // Calculate frequency for each session day (sessions in past 3 days)
+  if(sessions.length<2||checkins.length<2){document.getElementById('correlation-grid').innerHTML='<div class="empty">需要更多数据</div>';return}
+  const dims=checkinDims,results={};dims.forEach(d=>{results[d.key]={highFreq:[],lowFreq:[]}});
   sessions.forEach(s=>{
-    const sDate=s.startTime.slice(0,10);
-    const nextDay=new Date(sDate);nextDay.setDate(nextDay.getDate()+1);
-    const nd=nextDay.toISOString().slice(0,10);
-    const checkin=checkins.find(c=>c.date===nd);
-    if(!checkin)return;
-
-    // Count sessions in past 3 days including this one
-    const sDateObj=new Date(sDate);
-    const threeDaysAgo=new Date(sDateObj);threeDaysAgo.setDate(threeDaysAgo.getDate()-2);
-    const freq=sessions.filter(o=>{
-      const oDate=o.startTime.slice(0,10);
-      return oDate>=threeDaysAgo.toISOString().slice(0,10)&&oDate<=sDate;
-    }).length;
-
-    dims.forEach(d=>{
-      if(checkin[d.key]){
-        if(freq>=2)results[d.key].highFreq.push(checkin[d.key]);
-        else results[d.key].lowFreq.push(checkin[d.key]);
-      }
-    });
+    const sDate=s.startTime.slice(0,10),nextDay=new Date(sDate);nextDay.setDate(nextDay.getDate()+1);
+    const nd=nextDay.toISOString().slice(0,10),checkin=checkins.find(c=>c.date===nd);if(!checkin)return;
+    const sDateObj=new Date(sDate),threeDaysAgo=new Date(sDateObj);threeDaysAgo.setDate(threeDaysAgo.getDate()-2);
+    const freq=sessions.filter(o=>{const oDate=o.startTime.slice(0,10);return oDate>=threeDaysAgo.toISOString().slice(0,10)&&oDate<=sDate}).length;
+    dims.forEach(d=>{if(checkin[d.key]){if(freq>=2)results[d.key].highFreq.push(checkin[d.key]);else results[d.key].lowFreq.push(checkin[d.key])}});
   });
-
   let html='';
   dims.forEach(d=>{
-    const r=results[d.key];
-    const hiAvg=r.highFreq.length?r.highFreq.reduce((a,b)=>a+b,0)/r.highFreq.length:0;
-    const loAvg=r.lowFreq.length?r.lowFreq.reduce((a,b)=>a+b,0)/r.lowFreq.length:0;
-    const diff=hiAvg-loAvg;
-    const color=diff>0.5?'var(--green)':diff<-0.5?'var(--red)':'var(--fg2)';
-    const insight=diff>0.5?'高频时 ↑':diff<-0.5?'高频时 ↓':'影响不大';
-    html+=`<div class="corr-card"><div class="title">${d.emoji} ${d.label}</div>
-      <div class="value" style="color:${color}">${diff>0?'+':''}${diff.toFixed(1)}</div>
-      <div class="insight" style="color:${color}">${insight}</div></div>`;
+    const r=results[d.key],hiAvg=r.highFreq.length?r.highFreq.reduce((a,b)=>a+b,0)/r.highFreq.length:0,loAvg=r.lowFreq.length?r.lowFreq.reduce((a,b)=>a+b,0)/r.lowFreq.length:0,diff=hiAvg-loAvg;
+    const color=diff>0.5?'#266864':diff<-0.5?'#ba1a1a':'#71787c',insight=diff>0.5?'高频时 ↑':diff<-0.5?'高频时 ↓':'影响不大';
+    html+=`<div class="corr-card"><div class="title">${d.emoji} ${d.label}</div><div class="value" style="color:${color}">${diff>0?'+':''}${diff.toFixed(1)}</div><div class="insight" style="color:${color}">${insight}</div></div>`;
   });
   document.getElementById('correlation-grid').innerHTML=html;
 }
-
 function renderInsights(sessions,checkins){
   if(sessions.length<2){document.getElementById('insights').innerHTML='<div class="empty">需要更多数据</div>';return}
-
-  // Average interval
-  const dates=sessions.map(s=>new Date(s.startTime.slice(0,10)));
-  dates.sort((a,b)=>a-b);
-  const intervals=[];
-  for(let i=1;i<dates.length;i++)intervals.push((dates[i]-dates[i-1])/(86400000));
-  const avgInterval=intervals.reduce((a,b)=>a+b,0)/intervals.length;
+  const dates=sessions.map(s=>new Date(s.startTime.slice(0,10)));dates.sort((a,b)=>a-b);
+  const intervals=[];for(let i=1;i<dates.length;i++)intervals.push((dates[i]-dates[i-1])/86400000);
+  const avgInterval=intervals.length?intervals.reduce((a,b)=>a+b,0)/intervals.length:0;
   const avgDuration=sessions.reduce((a,b)=>a+(b.duration||0),0)/sessions.length;
-
-  // Top triggers
-  const triggerCount={};
-  sessions.forEach(s=>{(s.triggers||[]).forEach(t=>{triggerCount[t]=(triggerCount[t]||0)+1})});
+  const triggerCount={};sessions.forEach(s=>{(s.triggers||[]).forEach(t=>{triggerCount[t]=(triggerCount[t]||0)+1})});
   const topTriggers=Object.entries(triggerCount).sort((a,b)=>b[1]-a[1]).slice(0,3);
-
-  // 7-day count
-  const now=new Date();
-  const weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
+  const now=new Date(),weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
   const weekCount=sessions.filter(s=>new Date(s.startTime)>=weekAgo).length;
-
-  let html=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div class="corr-card"><div class="title">平均间隔</div><div class="value">${avgInterval.toFixed(1)} 天</div></div>
-      <div class="corr-card"><div class="title">平均时长</div><div class="value">${Math.round(avgDuration)} 分钟</div></div>
-      <div class="corr-card"><div class="title">近7天</div><div class="value" style="color:${weekCount>goalWeekly?'var(--red)':'var(--accent)'}">${weekCount} 次</div></div>
-      <div class="corr-card"><div class="title">总计</div><div class="value">${sessions.length} 次</div></div>
-    </div>`;
-
-  if(topTriggers.length){
-    html+=`<div style="margin-top:12px;font-size:13px;color:var(--fg2)">常见触发：${topTriggers.map(([t,c])=>`${t}(${c}次)`).join(' · ')}</div>`;
-  }
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div class="corr-card"><div class="title">平均间隔</div><div class="value">${avgInterval.toFixed(1)} 天</div></div>
+    <div class="corr-card"><div class="title">平均时长</div><div class="value">${Math.round(avgDuration)} 分钟</div></div>
+    <div class="corr-card"><div class="title">近7天</div><div class="value" style="color:${weekCount>goalWeekly?'#ba1a1a':'#2f6378'}">${weekCount} 次</div></div>
+    <div class="corr-card"><div class="title">总计</div><div class="value">${sessions.length} 次</div></div>
+  </div>`;
+  if(topTriggers.length)html+=`<div style="margin-top:12px;font-size:13px;color:var(--text2)">常见触发：${topTriggers.map(([t,c])=>`${t}(${c}次)`).join(' · ')}</div>`;
   document.getElementById('insights').innerHTML=html;
 }
 
 // ═══════════════ Goals ═══════════════
 async function updateGoalWarnings(){
-  const sessions=await dbGetAll('sessions');
-  const now=new Date();
-  const weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
+  const sessions=await dbGetAll('sessions'),now=new Date(),weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
   const weekCount=sessions.filter(s=>new Date(s.startTime)>=weekAgo).length;
-
-  let warn='';
-  if(weekCount>goalWeekly)warn=`⚠️ 本周已 ${weekCount} 次，超过目标 ${goalWeekly} 次`;
-  if(warn)document.getElementById('goal-warning').innerHTML=`<div class="goal-warn">${warn}</div>`;
-  else document.getElementById('goal-warning').innerHTML='';
+  let warn='';if(weekCount>goalWeekly)warn=`⚠️ 本周已 ${weekCount} 次，超过目标 ${goalWeekly} 次`;
+  document.getElementById('goal-warning').innerHTML=warn?`<div class="goal-warn">${warn}</div>`:'';
 }
-
-window.adjustGoal=async function(d){
-  goalWeekly=Math.max(0,goalWeekly+d);
-  document.getElementById('goal-weekly').textContent=goalWeekly;
-  await setSetting('goalWeekly',goalWeekly);
-  updateGoalWarnings();
-  renderStats();
-};
-
-window.adjustMinGap=async function(d){
-  goalMinGap=Math.max(0,goalMinGap+d);
-  document.getElementById('goal-mingap').textContent=goalMinGap;
-  await setSetting('goalMinGap',goalMinGap);
-};
-
-document.getElementById('set-passcode-btn').onclick=async()=>{
-  const val=document.getElementById('new-passcode').value;
-  if(!/^\d{4}$/.test(val)){toast('请输入4位数字密码');return}
-  await setSetting('passcode',val);
-  document.getElementById('new-passcode').value='';
-  toast('✅ 密码已更新');
-};
-
-document.getElementById('export-btn').onclick=async()=>{
-  const sessions=await dbGetAll('sessions');
-  const checkins=await dbGetAll('checkins');
-  const data=JSON.stringify({sessions,checkins,exportedAt:new Date().toISOString()},null,2);
-  const blob=new Blob([data],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`pulse_export_${new Date().toISOString().slice(0,10)}.json`;a.click();
-  toast('✅ 已下载');
-};
+window.adjustGoal=async function(d){goalWeekly=Math.max(0,goalWeekly+d);document.getElementById('goal-weekly').textContent=goalWeekly;await setSetting('goalWeekly',goalWeekly);updateGoalWarnings();renderStats()};
+window.adjustMinGap=async function(d){goalMinGap=Math.max(0,goalMinGap+d);document.getElementById('goal-mingap').textContent=goalMinGap;await setSetting('goalMinGap',goalMinGap)};
+document.getElementById('set-passcode-btn').onclick=async()=>{const val=document.getElementById('new-passcode').value;if(!/^\d{4}$/.test(val)){toast('请输入4位数字密码');return};await setSetting('passcode',val);document.getElementById('new-passcode').value='';toast('✅ 密码已更新')};
+document.getElementById('export-btn').onclick=async()=>{const sessions=await dbGetAll('sessions'),checkins=await dbGetAll('checkins');const data=JSON.stringify({sessions,checkins,exportedAt:new Date().toISOString()},null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pulse_export_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ 已下载')};
 
 // ═══════════════ Home ═══════════════
 async function renderHome(){
-  const sessions=await dbGetAll('sessions');
-  sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
-
-  // Quick stats
-  const now=new Date();
-  const weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
+  const sessions=await dbGetAll('sessions');sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+  const now=new Date(),weekAgo=new Date(now);weekAgo.setDate(weekAgo.getDate()-6);
   const weekCount=sessions.filter(s=>new Date(s.startTime)>=weekAgo).length;
-  const monthCount=sessions.filter(s=>{
-    const d=new Date(s.startTime);
-    return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
-  }).length;
+  const monthCount=sessions.filter(s=>{const d=new Date(s.startTime);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).length;
   const avgDur=sessions.length?Math.round(sessions.reduce((a,b)=>a+(b.duration||0),0)/sessions.length):0;
-
-  document.getElementById('quick-stats').innerHTML=`
-    <div class="qs-card"><div class="val">${weekCount}</div><div class="label">本周</div></div>
-    <div class="qs-card"><div class="val">${monthCount}</div><div class="label">本月</div></div>
-    <div class="qs-card"><div class="val">${avgDur}min</div><div class="label">平均时长</div></div>
-  `;
-
-  // Recent sessions
-  const recent=sessions.slice(0,5);
-  let html='';
-  recent.forEach(s=>{
-    const d=new Date(s.startTime);
-    const dateStr=`${d.getMonth()+1}月${d.getDate()}日`;
-    const timeStr=`${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-    const endTime=new Date(d.getTime()+s.duration*60000);
-    const endStr=`${endTime.getHours().toString().padStart(2,'0')}:${endTime.getMinutes().toString().padStart(2,'0')}`;
-    const triggers=(s.triggers||[]).join(' · ')||'未标注';
-    html+=`<div class="session-item"><div class="si-left"><div class="si-date">${dateStr}</div><div class="si-info">${timeStr} → ${endStr} · ${s.duration}分钟</div><div style="font-size:12px;color:var(--fg2)">${triggers}</div></div></div>`;
-  });
-  document.getElementById('recent-sessions').innerHTML=html||'<div class="empty">暂无记录，点击计时器开始</div>';
+  document.getElementById('quick-stats').innerHTML=`<div class="qs-card"><div class="val">${weekCount}</div><div class="label">本周</div></div><div class="qs-card"><div class="val">${monthCount}</div><div class="label">本月</div></div><div class="qs-card"><div class="val">${avgDur}min</div><div class="label">平均时长</div></div>`;
+  const recent=sessions.slice(0,5);let html='';
+  recent.forEach(s=>{const d=new Date(s.startTime),dateStr=(d.getMonth()+1)+'月'+d.getDate()+'日',timeStr=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');const endTime=new Date(d.getTime()+s.duration*60000),endStr=endTime.getHours().toString().padStart(2,'0')+':'+endTime.getMinutes().toString().padStart(2,'0');const triggers=(s.triggers||[]).join(' · ')||'未标注';html+=`<div class="session-item"><div class="si-left"><div class="si-date">${dateStr}</div><div class="si-info">${timeStr} → ${endStr} · ${s.duration}分钟</div><div style="font-size:12px;color:var(--text3)">${triggers}</div></div></div>`});
+  document.getElementById('recent-sessions').innerHTML=html||'<div class="empty">暂无记录，点击 ▶ 开始</div>';
 }
 
 // ═══════════════ Navigation ═══════════════
 function navigateTo(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelector(`#view-${view}`).classList.add('active');
+  document.getElementById('view-'+view).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.querySelector(`[data-view="${view}"]`).classList.add('active');
-
-  if(view==='home')renderHome();
-  else if(view==='stats')renderStats();
-  else if(view==='checkin')renderCheckinHistory();
-  else if(view==='goals')updateGoalWarnings();
+  document.querySelector('[data-view="'+view+'"]').classList.add('active');
+  if(view==='home')renderHome();else if(view==='stats')renderStats();else if(view==='checkin')renderCheckinHistory();else if(view==='goals')updateGoalWarnings();
 }
-
-document.querySelectorAll('.nav-item').forEach(item=>{
-  item.onclick=()=>navigateTo(item.dataset.view);
-});
+document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>navigateTo(item.dataset.view)});
 
 // ═══════════════ Toast ═══════════════
 let toastTimer;
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove('show'),2000);
-}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2000)}
 
 // ═══════════════ Init ═══════════════
-async function init(){
-  await openDB();
-  await loadSettings();
-  buildPassPad();
-  if(passcode==='0000')document.getElementById('lock-info').textContent='默认密码: 0000（可在设置中修改）';
-  renderHome();
-}
-
+async function init(){await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='默认密码：0000（可在设置中修改）';renderHome()}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/pulse/sw.js');
 init();
 </script>
