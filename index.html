@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#eef1f4">
 <title>Pulse</title>
 <link rel="manifest" href="/pulse/manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <link rel="apple-touch-icon" href="/pulse/icons/icon-192.png">
 <style>
 :root{color-scheme:light;--bg:#eef1f4;--surface:#ffffff;--surface2:#e8ebef;--surface3:#dce0e5;--primary:#1e4d5c;--primary-container:#2d6b7e;--on-primary:#ffffff;--secondary:#3d6b5c;--secondary-container:#d2ece3;--on-secondary:#ffffff;--text:#1a1d21;--text2:#535861;--text3:#89919b;--outline:#d5d9de;--outline2:#e6e9ed;--error:#d4513d;--error-light:rgba(212,81,61,.08);--gold:#b87a28;--gold-bg:rgba(184,122,40,.08);--radius:16px;--radius-sm:10px;--radius-pill:9999px;--shadow:0 1px 3px rgba(0,0,0,.04),0 3px 16px rgba(0,0,0,.05);--shadow-lg:0 2px 6px rgba(0,0,0,.04),0 6px 24px rgba(0,0,0,.08);--safe-bottom:env(safe-area-inset-bottom,16px);--transition-speed:.25s}
@@ -203,9 +204,15 @@ textarea{resize:none;height:80px}
 .cal-row{display:flex;gap:2px;align-items:center}
 .cal-label{width:28px;font-size:10px;color:var(--text2);text-align:right;padding-right:6px;font-weight:600}
 .cal-day{width:14px;height:14px;border-radius:3px;background:var(--surface3);cursor:pointer}
-.cal-day[data-level="1"]{background:rgba(30,77,92,.25)}.cal-day[data-level="2"]{background:rgba(30,77,92,.55)}.cal-day[data-level="3"]{background:var(--primary)}
+.cal-day[data-level="0"]{background:var(--surface3)}.cal-day[data-level="1"]{background:rgba(30,77,92,.15)}.cal-day[data-level="2"]{background:rgba(30,77,92,.3)}.cal-day[data-level="3"]{background:rgba(30,77,92,.5)}.cal-day[data-level="4"]{background:rgba(30,77,92,.7)}.cal-day[data-level="5"]{background:var(--primary)}.cal-day.today{border:2px solid var(--error);box-shadow:0 0 0 2px var(--surface)}
 .cal-day[data-checkin="1"]{box-shadow:inset 0 0 0 2px var(--secondary)}
 .cal-month-labels{display:flex;gap:2px;padding-left:32px;margin-bottom:6px;font-size:10px;color:var(--text3)}
+.chart-toggle{display:flex;gap:4px;margin-bottom:10px}
+.ct-btn{flex:1;padding:8px;border:1.5px solid var(--outline);background:var(--surface);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;border-radius:var(--radius-sm);text-align:center;transition:all .15s}
+.ct-btn.active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.heat-matrix{display:grid;grid-template-columns:40px repeat(4,1fr);gap:4px;text-align:center;font-size:12px;align-items:center;margin-top:8px}
+.heat-matrix .hm-label{font-weight:600;color:var(--text2);font-size:11px}
+.heat-matrix .hm-cell{padding:10px 4px;border-radius:6px;font-weight:600;font-size:13px;transition:all .2s}
 .cal-month-labels span{width:15px;text-align:center}
 #chart-container{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:20px;margin:14px 0;height:220px;box-shadow:var(--shadow)}
 #correlation-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
@@ -343,7 +350,7 @@ textarea{resize:none;height:80px}
     <div id="view-stats" class="view">
       <div class="section-title">🏆 成就</div><div class="achievement-grid" id="achievement-grid"></div>
       <div class="section-title">🗓 日历热力图</div><div id="calendar"></div>
-      <div class="section-title">📈 频率趋势</div><div id="chart-container"><canvas id="chart" style="width:100%;height:100%"></canvas></div>
+      <div class="section-title">📈 频率趋势</div><div class="chart-toggle" id="chart-toggle"><button class="ct-btn active" data-period="week">周</button><button class="ct-btn" data-period="month">月</button><button class="ct-btn" data-period="year">年</button></div><div id="chart-container"><canvas id="chart" style="width:100%;height:100%"></canvas></div>
       <div class="section-title">🔗 相关性分析</div><div id="correlation-grid"></div>
       <div class="section-title">📊 数据概览</div><div id="insights"></div>
     </div>
@@ -615,9 +622,73 @@ document.getElementById('save-checkin-btn').onclick=async()=>{vibe();const td3=n
 async function renderCheckinHistory(){const cs=await dbGetAll('checkins');cs.sort((a,b)=>b.date.localeCompare(a.date));window._checkinCache={};cs.forEach(c=>window._checkinCache[c.date]=c);const td3=new Date().toISOString().slice(0,10),l7=cs.filter(c=>c.date!==td3).slice(0,7);let h='';l7.forEach(c=>{const p=['📅 '+c.date];checkinDims.forEach(d=>{if(c[d.key])p.push(d.emoji+c[d.key])});h+=`<div class="session-item"><div class="si-left"><div class="si-info">${p.join(' · ')}</div></div><button class="del-icon" onclick="deleteCheckin('${c.date}')">✕</button></div>`});document.getElementById('checkin-history').innerHTML=h||'<div class="empty">暂无历史打卡</div>';buildCheckinForm(td3)}
 
 async function renderStats(){const ss=(await dbGetAll('sessions')).filter(s=>!s.hidden),cs=await dbGetAll('checkins');ss.sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));renderAchievements();renderCalendar(ss,cs);renderChart(ss);renderCorrelation(ss,cs);renderInsights(ss,cs)}
-function renderCalendar(ss,cs){const n=new Date(),ed=new Date(n.getFullYear(),n.getMonth(),n.getDate()),sd=new Date(ed);sd.setDate(sd.getDate()-83);const dc={};ss.forEach(s=>{dc[s.startTime.slice(0,10)]=(dc[s.startTime.slice(0,10)]||0)+1});const cd3=new Set(cs.map(c=>c.date)),wks=[];let d=new Date(sd);d.setDate(d.getDate()-d.getDay());while(d<=ed){const w=[];for(let i=0;i<7;i++){const ds=d.toISOString().slice(0,10),c=dc[ds]||0;let lv=0;if(c>=3)lv=3;else if(c===2)lv=2;else if(c===1)lv=1;w.push({date:ds,level:lv,hasCheckin:cd3.has(ds)});d.setDate(d.getDate()+1)}wks.push(w)}const days=['日','一','二','三','四','五','六'];let h='<div class="cal-month-labels">';for(let i=0;i<wks.length;i++){const mid=wks[i][3];if(mid&&(mid.date.endsWith('-01')||new Date(mid.date).getDate()<=7))h+=`<span>${parseInt(mid.date.slice(5,7))}月</span>`;else h+='<span></span>'}h+='</div>';for(let row=0;row<7;row++){h+=`<div class="cal-row"><span class="cal-label">${days[row]}</span>`;wks.forEach(w=>{const day=w[row];if(!day){h+='<div class="cal-day" style="visibility:hidden"></div>';return}h+=`<div class="cal-day" data-level="${day.level}"${day.hasCheckin?' data-checkin="1"':''} title="${day.date}"></div>`});h+='</div>'}document.getElementById('calendar').innerHTML=h}
-function renderChart(ss){const cv=document.getElementById('chart');if(!cv)return;const ctx=cv.getContext('2d'),W=cv.parentElement.clientWidth-32,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=168*dpr;cv.style.width=W+'px';cv.style.height='168px';ctx.scale(dpr,dpr);if(!ss.length){ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--text3');ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,84);return}const d0=new Date(ss[0].startTime),dn=new Date(ss[ss.length-1].startTime),cur=new Date(d0);cur.setDate(cur.getDate()-cur.getDay());const end=new Date(dn);end.setDate(end.getDate()+6-end.getDay()),wcs=[];while(cur<=end){let c=0;for(let i=0;i<7;i++){const ds=new Date(cur);ds.setDate(ds.getDate()+i);c+=ss.filter(s=>s.startTime.startsWith(ds.toISOString().slice(0,10))).length}wcs.push(c);cur.setDate(cur.getDate()+7)}const cap=getCurrentWeeklyCap(ss),mv=Math.max(...wcs,cap===Infinity?goalWeekly:cap),bw=Math.max(8,(W-wcs.length*4)/wcs.length-4),H=168;ctx.clearRect(0,0,W,H);if(cap!==Infinity&&cap>0){const gy=H-20-(cap/mv*130);ctx.strokeStyle=getComputedStyle(document.body).getPropertyValue('--error');ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();ctx.setLineDash([])}wcs.forEach((v,i)=>{const x=4+i*(bw+4),bh=v/mv*130,y=H-20-bh;ctx.fillStyle=v>(cap===Infinity?goalWeekly:cap)?getComputedStyle(document.body).getPropertyValue('--error'):getComputedStyle(document.body).getPropertyValue('--primary');ctx.beginPath();ctx.roundRect(x,y,bw,bh,3);ctx.fill();if(i%4===0){ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--text3');ctx.font='9px sans-serif';ctx.fillText((i+1),x,170)}})}
-function renderCorrelation(ss,cs){if(ss.length<2||cs.length<2){document.getElementById('correlation-grid').innerHTML='<div class="empty">需要更多数据</div>';return}const dims=checkinDims,res={};dims.forEach(d=>{res[d.key]={hi:[],lo:[]}});const cm=new Map(cs.map(c=>[c.date,c]));ss.forEach(s=>{const sd2=s.startTime.slice(0,10),nd=new Date(sd2);nd.setDate(nd.getDate()+1);const c=cm.get(nd.toISOString().slice(0,10));if(!c)return;const tda=new Date(sd2);tda.setDate(tda.getDate()-2);const f=ss.filter(o=>{const od=o.startTime.slice(0,10);return od>=tda.toISOString().slice(0,10)&&od<=sd2}).length;dims.forEach(d=>{if(c[d.key]){if(f>=2)res[d.key].hi.push(c[d.key]);else res[d.key].lo.push(c[d.key])}})});const sec=getComputedStyle(document.body).getPropertyValue('--secondary'),err=getComputedStyle(document.body).getPropertyValue('--error'),tx3=getComputedStyle(document.body).getPropertyValue('--text3');let h='';dims.forEach(d=>{const r=res[d.key],ha=r.hi.length?r.hi.reduce((a,b)=>a+b,0)/r.hi.length:0,la=r.lo.length?r.lo.reduce((a,b)=>a+b,0)/r.lo.length:0,df=ha-la,cl=df>0.5?sec:df<-0.5?err:tx3;h+=`<div class="corr-card"><div class="title">${d.emoji} ${d.label}</div><div class="value" style="color:${cl}">${df>0?'+':''}${df.toFixed(1)}</div><div class="insight" style="color:${cl}">${df>0.5?'高频时 ↑':df<-0.5?'高频时 ↓':'影响不大'}</div></div>`});document.getElementById('correlation-grid').innerHTML=h}
+function renderCalendar(ss,cs){const n=new Date(),ed=new Date(n.getFullYear(),n.getMonth(),n.getDate()),sd=new Date(ed);sd.setDate(sd.getDate()-83);const tn2=ed.toISOString().slice(0,10);const dc={};ss.forEach(s=>{dc[s.startTime.slice(0,10)]=(dc[s.startTime.slice(0,10)]||0)+1});const cd3=new Set(cs.map(c=>c.date)),wks=[];let d=new Date(sd);d.setDate(d.getDate()-d.getDay());while(d<=ed){const w=[];for(let i=0;i<7;i++){const ds=d.toISOString().slice(0,10),c=dc[ds]||0;let lv=0;if(c>=5)lv=5;else if(c>=4)lv=4;else if(c>=3)lv=3;else if(c>=2)lv=2;else if(c>=1)lv=1;w.push({date:ds,level:lv,hasCheckin:cd3.has(ds)});d.setDate(d.getDate()+1)}wks.push(w)}const days=['日','一','二','三','四','五','六'];let h='<div class="cal-month-labels">';for(let i=0;i<wks.length;i++){const mid=wks[i][3];if(mid&&(mid.date.endsWith('-01')||new Date(mid.date).getDate()<=7))h+=`<span>${parseInt(mid.date.slice(5,7))}月</span>`;else h+='<span></span>'}h+='</div>';for(let row=0;row<7;row++){h+=`<div class="cal-row"><span class="cal-label">${days[row]}</span>`;wks.forEach(w=>{const day=w[row];if(!day){h+='<div class="cal-day" style="visibility:hidden"></div>';return}h+=`<div class="cal-day${day.date===tn2?' today':''}" data-level="${day.level}"${day.hasCheckin?' data-checkin="1"':''} title="${day.date}"></div>`});h+='</div>'}document.getElementById('calendar').innerHTML=h}
+
+let chartPeriod='week',chartInstance=null,chartLegendFilter=[];
+// Chart toggle
+document.getElementById('chart-toggle').onclick=e=>{const b=e.target.closest('.ct-btn');if(!b)return;chartPeriod=b.dataset.period;document.querySelectorAll('.ct-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');dbGetAll('sessions').then(ss=>renderChart(ss.filter(s=>!s.hidden)))};
+
+function renderChart(ss){
+  const cv=document.getElementById('chart');if(!cv)return;
+  if(chartInstance){chartInstance.destroy();chartInstance=null}
+  const W=cv.parentElement.clientWidth,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=200*dpr;cv.style.width=W+'px';cv.style.height='200px';
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  if(!ss.length){ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--text3');ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,100);return}
+  // Build datasets based on period
+  const labels=[];const data=[];
+  if(chartPeriod==='week'){
+    const now=new Date();for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);labels.push((d.getMonth()+1)+'/'+d.getDate());data.push(ss.filter(s=>s.startTime.startsWith(d.toISOString().slice(0,10))).length)}
+  }else if(chartPeriod==='month'){
+    const now=new Date();for(let i=29;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);labels.push((d.getMonth()+1)+'/'+d.getDate());data.push(ss.filter(s=>s.startTime.startsWith(d.toISOString().slice(0,10))).length)}
+  }else{
+    const now=new Date();for(let i=11;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push((d.getMonth()+1)+'月');const ym=d.toISOString().slice(0,7);data.push(ss.filter(s=>s.startTime.startsWith(ym)).length)}
+  }
+  // Build datasets per trigger (filterable)
+  const cap=getCurrentWeeklyCap(ss);const triggerSet=new Set();ss.forEach(s=>{(s.triggers||[]).forEach(t=>triggerSet.add(t))});
+  const topTriggers=[...triggerSet].filter(t=>!chartLegendFilter.includes(t)).slice(0,5);
+  const colors=['#1e4d5c','#d4513d','#3d6b5c','#b87a28','#6db8c7'];
+  const datasets=[{label:'总计',data,borderColor:'#1e4d5c',backgroundColor:'rgba(30,77,92,.08)',borderWidth:2,tension:.4,fill:true,pointRadius:chartPeriod==='year'?4:2,pointHoverRadius:6}];
+  topTriggers.forEach((t,i)=>{const td=[];labels.forEach((_,j)=>{const ds=chartPeriod==='week'?new Date(Date.now()-(6-j)*86400000).toISOString().slice(0,10):chartPeriod==='month'?new Date(Date.now()-(29-j)*86400000).toISOString().slice(0,10):new Date(new Date().getFullYear(),new Date().getMonth()-(11-j),1).toISOString().slice(0,7);td.push(ss.filter(s=>s.startTime.startsWith(ds)&&(s.triggers||[]).includes(t)).length)});datasets.push({label:t,data:td,borderColor:colors[(i+1)%colors.length],borderWidth:1.5,tension:.4,fill:false,pointRadius:1,pointHoverRadius:5,borderDash:[4,2]})});
+  chartInstance=new Chart(ctx,{type:'line',data:{labels,datasets},options:{responsive:false,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'top',labels:{boxWidth:12,boxHeight:12,padding:14,font:{size:11},usePointStyle:true,color:getComputedStyle(document.body).getPropertyValue('--text2')},onClick:(e,item)=>{const name=item.text;if(chartLegendFilter.includes(name))chartLegendFilter=chartLegendFilter.filter(x=>x!==name);else chartLegendFilter.push(name);renderChart(ss)}}},scales:{x:{ticks:{font:{size:10},color:getComputedStyle(document.body).getPropertyValue('--text3'),maxTicksLimit:chartPeriod==='year'?12:7},grid:{display:false}},y:{beginAtZero:true,ticks:{stepSize:1,font:{size:10},color:getComputedStyle(document.body).getPropertyValue('--text3')},grid:{color:getComputedStyle(document.body).getPropertyValue('--outline')+'44'}}}}})}
+
+
+function renderCorrelation(ss,cs){
+  if(ss.length<2||cs.length<2){document.getElementById('correlation-grid').innerHTML='<div class="empty">需要更多数据</div>';return}
+  const dims=checkinDims,n=dims.length;
+  // Build correlation matrix: for each pair of check-in dimensions
+  const matrix=Array.from({length:n},()=>Array(n).fill(0));
+  const counts=Array.from({length:n},()=>Array(n).fill(0));
+  const vals=dims.map(()=>[]);
+  const checkinMap=new Map(cs.map(c=>[c.date,c]));
+  ss.forEach(s=>{
+    const sd2=s.startTime.slice(0,10),nd=new Date(sd2);nd.setDate(nd.getDate()+1);
+    const c=checkinMap.get(nd.toISOString().slice(0,10));if(!c)return;
+    dims.forEach((d,i)=>{if(c[d.key]!==undefined)vals[i].push(c[d.key])});
+  });
+  // Simple correlation: average values
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+    if(i===j){matrix[i][j]=1;continue}
+    const a=vals[i],b=vals[j];if(!a.length||!b.length)continue;
+    const minLen=Math.min(a.length,b.length);let sum=0;
+    for(let k=0;k<minLen;k++){sum+=Math.abs(a[k]-b[k])}
+    const avgDiff=sum/minLen;matrix[i][j]=Math.max(0,1-avgDiff/2);
+  }
+  // Render heat matrix
+  let h='<div class="heat-matrix"><div></div>';
+  dims.forEach(d=>h+=`<div class="hm-label">${d.emoji}</div>`);
+  for(let i=0;i<n;i++){
+    h+=`<div class="hm-label">${dims[i].emoji}</div>`;
+    for(let j=0;j<n;j++){
+      const v=matrix[i][j],intensity=Math.round(v*100);
+      const bg=i===j?'var(--surface2)':`rgba(30,77,92,${v*.3})`;
+      const color=v>0.6?'var(--on-primary)':'var(--text)';
+      h+=`<div class="hm-cell" style="background:${bg};color:${color}" title="${dims[i].label}↔${dims[j].label}: ${intensity}%">${i===j?'●':intensity+'%'}</div>`;
+    }
+  }
+  h+='</div>';
+  document.getElementById('correlation-grid').innerHTML=h;
+}
+
 function renderInsights(ss,cs){if(ss.length<2){document.getElementById('insights').innerHTML='<div class="empty">需要更多数据</div>';return}const dates=ss.map(s=>new Date(s.startTime.slice(0,10)));dates.sort((a,b)=>a-b);const ivs=[];for(let i=1;i<dates.length;i++)ivs.push((dates[i]-dates[i-1])/86400000);const ai=ivs.length?ivs.reduce((a,b)=>a+b,0)/ivs.length:0,ad=ss.reduce((a,b)=>a+(b.duration||0),0)/ss.length,tc={};ss.forEach(s=>{(s.triggers||[]).forEach(t=>{tc[t]=(tc[t]||0)+1})});const tt=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,3),n=new Date(),wa=new Date(n);wa.setDate(wa.getDate()-6);const wk=ss.filter(s=>new Date(s.startTime)>=wa).length,cap=getCurrentWeeklyCap(ss),pri=getComputedStyle(document.body).getPropertyValue('--primary'),err2=getComputedStyle(document.body).getPropertyValue('--error');let h=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="corr-card"><div class="title">平均间隔</div><div class="value">${ai.toFixed(1)} 天</div></div><div class="corr-card"><div class="title">平均时长</div><div class="value">${Math.round(ad)} 分钟</div></div><div class="corr-card"><div class="title">近7天</div><div class="value" style="color:${wk>(cap===Infinity?goalWeekly:cap)?err2:pri}">${wk} 次</div></div><div class="corr-card"><div class="title">总计</div><div class="value">${ss.length} 次</div></div></div>`;if(tt.length)h+=`<div style="margin-top:14px;font-size:14px;color:var(--text2)">常见触发：${tt.map(([t,c])=>`${t}(${c}次)`).join(' · ')}</div>`;document.getElementById('insights').innerHTML=h}
 function computeRiskHours(ss){if(ss.length<5)return[];const hc=new Array(24).fill(0);ss.forEach(s=>{hc[new Date(s.startTime).getHours()]++});const avg=hc.reduce((a,b)=>a+b,0)/24,t=Math.max(avg*1.5,2),rh=[];hc.forEach((c,h)=>{if(c>=t)rh.push(h)});return rh.sort((a,b)=>a-b)}
 function scheduleRiskCheck(){if(nextRiskTimeout){clearTimeout(nextRiskTimeout);nextRiskTimeout=null}if(!riskWarnEnabled)return;dbGetAll('sessions').then(ss=>{const rh=computeRiskHours(ss.filter(s=>!s.hidden));if(!rh.length)return;const n=new Date(),ch=n.getHours(),cm2=n.getMinutes();let nh=null;for(const h of rh){if(h>ch||(h===ch&&cm2<55)){nh=h;break}}if(nh===null&&rh.length)nh=rh[0];if(nh===null)return;let tgt=new Date(n);tgt.setHours(nh,0,0,0);if(tgt<=n)tgt.setDate(tgt.getDate()+1);const delay=tgt-n;if(delay>86400000)return;nextRiskTimeout=setTimeout(()=>{showRiskWarning(rh);scheduleRiskCheck()},delay)})}
