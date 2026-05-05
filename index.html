@@ -255,6 +255,25 @@ textarea{resize:none;height:80px}
 .reward-reminder.visible{display:block}
 .toggle-row{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);cursor:pointer;padding:4px 0}
 .toggle-row input[type="checkbox"]{accent-color:var(--secondary);width:20px;height:20px}
+/* Voice button */
+.voice-btn{position:absolute;right:10px;bottom:10px;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--outline);background:var(--surface);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:2}
+.voice-btn:active{background:var(--surface2)}
+.voice-btn.listening{background:var(--error);color:#fff;border-color:var(--error);animation:voicePulse 1s infinite}
+@keyframes voicePulse{0%,100%{box-shadow:0 0 0 0 rgba(212,81,61,.4)}50%{box-shadow:0 0 0 10px rgba(212,81,61,0)}}
+.voice-hint{display:none;position:absolute;left:12px;right:52px;bottom:12px;font-size:12px;color:var(--text3);pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.voice-hint.show{display:block}
+/* Slider */
+.range-group{display:flex;align-items:center;gap:10px;padding:4px 0}
+.range-group input[type="range"]{flex:1;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--surface3);outline:none;padding:0;border:none}
+.range-group input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--primary);cursor:pointer;box-shadow:0 2px 6px rgba(30,77,92,.2);border:none}
+.range-value{min-width:32px;text-align:center;font-size:18px;font-weight:600;color:var(--primary);font-variant-numeric:tabular-nums}
+/* Fixed footer on record page */
+.view-footer{position:sticky;bottom:0;left:0;right:0;background:var(--bg);padding:10px 0 calc(env(safe-area-inset-bottom,16px)+70px);z-index:10;display:flex;gap:10px}
+/* Trigger reorder arrows */
+.tr-arrows{display:flex;gap:2px;flex-shrink:0}
+.tr-arrow{width:24px;height:24px;border-radius:4px;border:1px solid var(--outline);background:none;color:var(--text3);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.tr-arrow:active{background:var(--surface2)}
+
 @media(max-width:360px){.timer-ring{width:190px;height:190px}.timer-time .elapsed{font-size:52px}.nav-item{font-size:9px}.nav-item .nicon{font-size:20px}}
 </style>
 </head>
@@ -286,7 +305,7 @@ textarea{resize:none;height:80px}
       </div>
       <div id="quick-record-section">
         <button class="btn btn-secondary" id="qr-toggle" style="width:100%">⚡ 快速记录</button>
-        <div id="qr-form"><div class="chip-row" id="qr-trigger-chips"></div><div class="qr-row"><input type="number" id="qr-duration" placeholder="分钟" min="1"><div class="template-chips" id="qr-template-chips"></div></div><textarea id="qr-notes" placeholder="备注..."></textarea><div style="display:flex;gap:10px"><button class="btn btn-primary" id="qr-save-btn" style="min-height:40px;font-size:14px;flex:1">💾 保存</button><button class="btn btn-secondary" id="qr-save-template-btn" style="width:auto;font-size:12px;padding:10px 16px;min-height:40px">📌 存为模板</button></div></div>
+        <div id="qr-form"><div class="chip-row" id="qr-trigger-chips"></div><div class="qr-row"><input type="number" id="qr-duration" placeholder="分钟" min="1"><div class="template-chips" id="qr-template-chips"></div></div><div style="position:relative"><textarea id="qr-notes" placeholder="备注..." style="padding-right:44px"></textarea><button class="voice-btn" id="voice-btn-qr" title="语音输入">🎤</button><span class="voice-hint" id="voice-hint-qr"></span></div><div style="display:flex;gap:10px"><button class="btn btn-primary" id="qr-save-btn" style="min-height:40px;font-size:14px;flex:1">💾 保存</button><button class="btn btn-secondary" id="qr-save-template-btn" style="width:auto;font-size:12px;padding:10px 16px;min-height:40px">📌 存为模板</button></div></div>
       </div>
       <div class="quick-actions">
         <div class="qa-btn" id="qa-start-btn"><div class="qa-icon">▶</div><div class="qa-label">开始计时</div></div>
@@ -311,8 +330,8 @@ textarea{resize:none;height:80px}
       <div class="form-group"><div class="form-label">触发场景（可多选）</div><div class="chip-row" id="trigger-chips"></div></div>
       <div class="template-chips" id="record-template-chips" style="margin-bottom:10px"></div>
       <div class="trigger-tip" id="trigger-tip"></div>
-      <div class="form-group"><div class="form-label">备注</div><textarea id="record-notes" placeholder="任何想记录的信息..."></textarea></div>
-      <button class="btn btn-primary" id="save-record-btn">💾 保存记录</button><button class="btn btn-secondary" id="edit-cancel-btn">取消编辑</button>
+      <div class="form-group"><div class="form-label">备注</div><div style="position:relative"><textarea id="record-notes" placeholder="任何想记录的信息..." style="padding-right:44px"></textarea><button class="voice-btn" id="voice-btn-record" title="语音输入">🎤</button><span class="voice-hint" id="voice-hint-record"></span></div></div>
+      <div class="view-footer"><button class="btn btn-primary" id="save-record-btn" style="flex:1">💾 保存记录</button><button class="btn btn-secondary" id="edit-cancel-btn" style="flex:1">取消编辑</button></div>
     </div>
 
     <div id="view-checkin" class="view">
@@ -339,7 +358,7 @@ textarea{resize:none;height:80px}
       <div class="section-title">🎯 目标模式</div><div class="goal-mode-selector" id="goal-mode-selector"><button class="gms-btn active" data-mode="simple">简单</button><button class="gms-btn" data-mode="staircase">阶梯递减</button><button class="gms-btn" data-mode="clean_days">连续戒断</button></div>
       <div id="goal-settings-area"></div>
       <div class="section-title" style="margin-top:12px">⏱ 最小间隔</div>
-      <div class="goal-item"><div class="gi-label">最小间隔（天）</div><div class="gi-val"><button class="gi-btn" onclick="adjustMinGap(-1)">−</button><span id="goal-mingap">0</span><button class="gi-btn" onclick="adjustMinGap(1)">+</button></div></div>
+      <div class="goal-item" style="flex-direction:column;align-items:stretch;gap:10px"><div class="gi-label">最小间隔（天）</div><div class="range-group"><input type="range" id="mingap-slider" min="0" max="30" value="0" oninput="sliderMinGap(this.value)"><span class="range-value" id="goal-mingap">0</span><button class="gi-btn" onclick="adjustMinGap(-1)" style="flex-shrink:0">−</button><button class="gi-btn" onclick="adjustMinGap(1)" style="flex-shrink:0">+</button></div></div>
       <div id="goal-warning"></div>
       <div class="section-title">📋 记录模板</div><div id="template-list"></div><button class="btn btn-secondary" id="reset-templates-btn" style="margin-top:8px;width:auto;font-size:12px;padding:8px 14px;min-height:auto">↺ 清空模板</button>
       <div class="section-title">🎁 正向奖励</div><div id="reward-list"></div>
@@ -375,6 +394,15 @@ function dbGet(s,k){return new Promise(r=>{const t=db.transaction(s,'readonly').
 function dbDelete(s,k){return new Promise(r=>{const t=db.transaction(s,'readwrite').objectStore(s);t.delete(k);t.transaction.oncomplete=()=>r()})}
 function vibe(){navigator.vibrate?.(8)}
 
+// Voice input
+let voiceRec=null,voiceTarget=null,voiceHint=null;
+function initVoice(){if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){document.querySelectorAll('.voice-btn').forEach(b=>b.style.display='none');return}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;voiceRec=new SR();voiceRec.lang='zh-CN';voiceRec.interimResults=true;voiceRec.continuous=false;voiceRec.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;if(voiceTarget){voiceTarget.value+=t;voiceTarget.dispatchEvent(new Event('input'))}if(voiceHint)voiceHint.textContent=t};voiceRec.onerror=()=>{stopVoice()};voiceRec.onend=()=>{stopVoice()}}
+function startVoice(targetId,hintId){if(!voiceRec){toast('浏览器不支持语音输入');return}const t=document.getElementById(targetId);if(!t)return;voiceTarget=t;voiceHint=document.getElementById(hintId);if(voiceHint)voiceHint.classList.add('show');const btn=document.getElementById('voice-btn-'+targetId.split('-').pop());if(btn)btn.classList.add('listening');try{voiceRec.start()}catch(e){}}
+function stopVoice(){if(voiceRec)try{voiceRec.stop()}catch(e){}voiceTarget=null;if(voiceHint)voiceHint.classList.remove('show');document.querySelectorAll('.voice-btn').forEach(b=>b.classList.remove('listening'))}
+document.getElementById('voice-btn-record').onclick=()=>{voiceRec&&voiceTarget?stopVoice():startVoice('record-notes','voice-hint-record')};
+document.getElementById('voice-btn-qr').onclick=()=>{voiceRec&&voiceTarget?stopVoice():startVoice('qr-notes','voice-hint-qr')};
+
+
 let passcode='0000',goalWeekly=7,goalMinGap=0,goalMode='simple',staircaseGoals=[{week:1,cap:7},{week:2,cap:5},{week:3,cap:3},{week:4,cap:2}],cleanDaysTarget=30,staircaseStartDate=null;
 let interceptionEnabled=true,riskWarnEnabled=false,immersiveMode=false,unlockedAchievements=[],rewards=[],templates=[],theme='system';
 
@@ -394,7 +422,7 @@ async function loadSettings(){
   const tm=(await dbGet('settings','templates'))?.value;if(tm)templates=tm;
   theme=(await dbGet('settings','theme'))?.value||'system';
   if(theme==='system')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=theme;
-  updateThemeBtn();document.getElementById('goal-mingap').textContent=goalMinGap;
+  updateThemeBtn();document.getElementById('goal-mingap').textContent=goalMinGap;const mgs2=document.getElementById('mingap-slider');if(mgs2)mgs2.value=goalMinGap;
   document.getElementById('interception-enabled').checked=interceptionEnabled;
   document.getElementById('risk-warn-enabled').checked=riskWarnEnabled;
   document.getElementById('immersive-mode').checked=immersiveMode;
@@ -414,7 +442,7 @@ function getStaircaseInfo(){if(goalMode!=='staircase'||!staircaseStartDate)retur
 function renderGoalModeUI(){document.querySelectorAll('.gms-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===goalMode))}
 function renderGoalSettings(){
   const a=document.getElementById('goal-settings-area');if(!a)return;
-  if(goalMode==='simple')a.innerHTML=`<div class="goal-item"><div class="gi-label">每周上限</div><div class="gi-val"><button class="gi-btn" onclick="adjustGoal(-1)">−</button><span id="goal-weekly">${goalWeekly}</span><button class="gi-btn" onclick="adjustGoal(1)">+</button></div></div>`;
+  if(goalMode==='simple')a.innerHTML=`<div class="goal-item" style="flex-direction:column;align-items:stretch;gap:10px"><div class="gi-label">每周上限</div><div class="range-group"><input type="range" id="goal-slider" min="0" max="20" value="${goalWeekly}" oninput="sliderGoal(this.value)"><span class="range-value" id="goal-weekly">${goalWeekly}</span><button class="gi-btn" onclick="adjustGoal(-1)" style="flex-shrink:0">−</button><button class="gi-btn" onclick="adjustGoal(1)" style="flex-shrink:0">+</button></div></div>`;
   else if(goalMode==='staircase'){let h='';const si=getStaircaseInfo();staircaseGoals.sort((a,b)=>a.week-b.week).forEach((g,i)=>{h+=`<div class="stair-row"><span class="stair-label${si&&g.week===si.currentWeek?' active':''}">第${g.week}周</span><input type="number" value="${g.cap}" min="0" max="99" onchange="updateStairCap(${i},this.value)" style="width:56px"><span style="font-size:13px;color:var(--text3)">次</span>${staircaseGoals.length>1?`<button class="stair-del" onclick="removeStairWeek(${i})">×</button>`:''}</div>`});if(si)h+=`<div style="font-size:12px;color:var(--text3);margin:8px 0">当前：第${si.currentWeek}周（${si.startDate} 开始）</div>`;h+=`<button class="btn btn-secondary" id="add-stair-btn" style="margin-top:6px;width:auto;font-size:12px;padding:8px 16px;min-height:auto">＋ 添加周</button>`;if(staircaseStartDate)h+=`<button class="btn btn-secondary" id="reset-stair-btn" style="margin-top:6px;margin-left:8px;width:auto;font-size:12px;padding:8px 16px;min-height:auto">↺ 重置起点</button>`;a.innerHTML=h;document.getElementById('add-stair-btn')?.addEventListener('click',()=>{staircaseGoals.push({week:staircaseGoals.length+1,cap:staircaseGoals[staircaseGoals.length-1]?.cap||3});saveStaircase()});document.getElementById('reset-stair-btn')?.addEventListener('click',()=>{staircaseStartDate=new Date().toISOString().slice(0,10);setSetting('staircaseStartDate',staircaseStartDate);renderGoalSettings();toast('✅ 已重置')})}
   else if(goalMode==='clean_days')a.innerHTML=`<div class="goal-item"><div class="gi-label">戒断目标</div><div style="display:flex;align-items:center;gap:12px"><input type="number" id="clean-days-input" value="${cleanDaysTarget}" min="1" max="365" style="width:75px;text-align:center;border-radius:8px" onchange="updateCleanDaysTarget(this.value)"><span style="font-size:15px;color:var(--text2)">天</span></div></div>`;
 }
@@ -614,15 +642,20 @@ window.addReward=function(){const d=parseInt(document.getElementById('new-reward
 window.removeReward=function(i){rewards.splice(i,1);dbPut('settings',{key:'rewards',value:[...rewards]});renderRewardList();toast('已删除')};
 document.getElementById('add-reward-btn').onclick=()=>addReward();document.getElementById('reset-rewards-btn').onclick=async()=>{if(!confirm('恢复默认？'))return;rewards=[...defaultRewards];await dbPut('settings',{key:'rewards',value:[...rewards]});renderRewardList();toast('✅ 已恢复')}
 
-function renderTriggerManage(){document.getElementById('trigger-manage').innerHTML=triggers.map((t,i)=>`<div class="session-item" style="margin-bottom:6px"><div class="si-left"><div class="si-info" id="trigger-name-${i}">${t}</div></div><div style="display:flex;gap:6px"><button class="del-icon" style="width:30px;height:30px;font-size:13px" onclick="editTriggerStart(${i})">✏️</button><button class="del-icon" onclick="removeTrigger(${i})">✕</button></div></div>`).join('')}
+
+window.moveTrigger=async function(i,dir){const ni=i+dir;if(ni<0||ni>=triggers.length)return;[triggers[i],triggers[ni]]=[triggers[ni],triggers[i]];await setSetting('triggers',[...triggers]);renderTriggerChips();renderQRTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('已移动')};
+`.innerHTML=triggers.map((t,i)=>`<div class="session-item" style="margin-bottom:6px"><div class="si-left"><div class="si-info" id="trigger-name-${i}">${t}</div></div><div style="display:flex;gap:4px;align-items:center"><div class="tr-arrows"><button class="tr-arrow" onclick="moveTrigger(${i},-1)" ${i===0?'disabled':''}>▲</button><button class="tr-arrow" onclick="moveTrigger(${i},1)" ${i===triggers.length-1?'disabled':''}>▼</button></div><button class="del-icon" style="width:30px;height:30px;font-size:13px" onclick="editTriggerStart(${i})">✏️</button><button class="del-icon" onclick="removeTrigger(${i})">✕</button></div></div>`)
 window.editTriggerStart=function(i){const el=document.getElementById('trigger-name-'+i),old=triggers[i];el.innerHTML=`<input type="text" id="edit-trigger-${i}" value="${old}" maxlength="10" style="padding:6px 10px;font-size:14px;border-radius:8px;width:130px"><button class="btn btn-secondary" style="width:auto;font-size:12px;padding:6px 12px;min-height:auto;margin-left:6px" onclick="saveTriggerEdit(${i})">保存</button>`;document.getElementById('edit-trigger-'+i).focus()};
 window.saveTriggerEdit=async function(i){const v=document.getElementById('edit-trigger-'+i).value.trim();if(!v){toast('名称不能为空');return};if(triggers.some((t,j)=>t===v&&j!==i)){toast('已存在');return};triggers[i]=v;await setSetting('triggers',[...triggers]);renderTriggerChips();renderQRTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('✅ 已更新')};
 window.removeTrigger=async function(i){triggers.splice(i,1);await setSetting('triggers',[...triggers]);renderTriggerChips();renderQRTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('已删除')};
 document.getElementById('add-trigger-btn').onclick=async()=>{const v=document.getElementById('new-trigger').value.trim();if(!v){toast('请输入名称')};if(triggers.includes(v)){toast('已存在');return};if(triggers.length>=20){toast('最多20个');return};triggers.push(v);await setSetting('triggers',[...triggers]);document.getElementById('new-trigger').value='';renderTriggerChips();renderQRTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('✅ 已添加')};
 document.getElementById('reset-triggers-btn').onclick=async()=>{if(!confirm('恢复默认？'))return;triggers=[...defaultTriggers];await setSetting('triggers',[...triggers]);renderTriggerChips();renderQRTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('✅ 已恢复')};
 async function updateGoalWarnings(){const ss=(await dbGetAll('sessions')).filter(s=>!s.hidden),n=new Date(),wa=new Date(n);wa.setDate(wa.getDate()-6);const wk=ss.filter(s=>new Date(s.startTime)>=wa).length,cap=getCurrentWeeklyCap(ss);let w='';if(cap!==Infinity&&wk>cap)w=`⚠️ 本周已 ${wk} 次，超过目标 ${cap} 次`;document.getElementById('goal-warning').innerHTML=w?`<div class="goal-warn">${w}</div>`:''}
-window.adjustGoal=async function(d){goalWeekly=Math.max(0,goalWeekly+d);document.getElementById('goal-weekly').textContent=goalWeekly;await setSetting('goalWeekly',goalWeekly);updateGoalWarnings();renderStats()};
-window.adjustMinGap=async function(d){goalMinGap=Math.max(0,goalMinGap+d);document.getElementById('goal-mingap').textContent=goalMinGap;await setSetting('goalMinGap',goalMinGap)};
+window.adjustGoal=async function(d){goalWeekly=Math.max(0,goalWeekly+d);document.getElementById('goal-weekly').textContent=goalWeekly;const gs=document.getElementById('goal-slider');if(gs)gs.value=goalWeekly;await setSetting('goalWeekly',goalWeekly);updateGoalWarnings();renderStats()};
+
+window.sliderGoal=function(v){const n=parseInt(v);goalWeekly=n;document.getElementById('goal-weekly').textContent=n;setSetting('goalWeekly',goalWeekly)}
+window.sliderMinGap=function(v){const n=parseInt(v);goalMinGap=n;document.getElementById('goal-mingap').textContent=n;setSetting('goalMinGap',goalMinGap)}
+window.adjustMinGap=async function(d){goalMinGap=Math.max(0,goalMinGap+d);document.getElementById('goal-mingap').textContent=goalMinGap;document.getElementById('mingap-slider').value=goalMinGap;await setSetting('goalMinGap',goalMinGap)};
 document.getElementById('set-passcode-btn').onclick=async()=>{const v=document.getElementById('new-passcode').value;if(!/^\d{4}$/.test(v)){toast('请输入4位数字密码');return};await setSetting('passcode',v);document.getElementById('new-passcode').value='';toast('✅ 密码已更新')};
 document.getElementById('export-btn').onclick=async()=>{const ss=await dbGetAll('sessions'),cs=await dbGetAll('checkins'),d=JSON.stringify({sessions:ss,checkins:cs,exportedAt:new Date().toISOString()},null,2),bl=new Blob([d],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='pulse_export_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ 已下载')};
 window.deleteSession=async function(id){if(!confirm('确认永久删除？'))return;await dbDelete('sessions',id);toast('🗑 已删除');renderHome();renderStats();renderHistory()};
@@ -653,7 +686,7 @@ document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>{vibe();n
 
 let ttmr;function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(ttmr);ttmr=setTimeout(()=>e.classList.remove('show'),2000)}
 
-async function init(){await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='🔑 默认密码：0000（可在设置中修改）';else document.getElementById('lock-info').style.display='none';await renderHome();if(riskWarnEnabled)scheduleRiskCheck();let la=Date.now();['click','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e,()=>la=Date.now(),{passive:true}));setInterval(()=>{if(unlocked&&Date.now()-la>300000)lock()},30000)}
+async function init(){initVoice();await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='🔑 默认密码：0000（可在设置中修改）';else document.getElementById('lock-info').style.display='none';await renderHome();if(riskWarnEnabled)scheduleRiskCheck();let la=Date.now();['click','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e,()=>la=Date.now(),{passive:true}));setInterval(()=>{if(unlocked&&Date.now()-la>300000)lock()},30000)}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/pulse/sw.js');init();
 </script>
 </body>
