@@ -18,14 +18,12 @@
   --secondary:#266864;--secondary-container:#abece6;--on-secondary:#ffffff;
   --text:#181c1d;--text2:#41484c;--text3:#71787c;
   --outline:#c0c7cc;--outline2:#d7dadb;--error:#ba1a1a;
-  --gold:#c7852a;--gold-bg:rgba(199,133,42,.1);
+  --gold:#c7852a;--gold-bg:rgba(199,133,42,.1);--warn-bg:rgba(186,26,26,.06);
   --radius:12px;--radius-sm:8px;--radius-pill:9999px;
-  --shadow:0 4px 20px rgba(0,0,0,.04);
-  --safe-bottom:env(safe-area-inset-bottom,16px);
+  --shadow:0 4px 20px rgba(0,0,0,.04);--safe-bottom:env(safe-area-inset-bottom,16px);
 }
 html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;user-select:none}
 #app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative}
-/* Lock */
 #lock{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:32px}
 #lock.hidden{display:none}
 #lock-hero{display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -42,7 +40,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .passcode-key:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .passcode-key.del{font-size:16px;color:var(--text3);border:none;background:none}
 #lock-info{font-size:13px;color:var(--text2);margin-bottom:8px;font-weight:500}
-/* Interception Overlay */
 #interception{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:90;padding:20px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 #interception.hidden{display:none}
 .interception-card{background:var(--surface);border-radius:var(--radius);padding:24px 20px;width:100%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.12);text-align:center;display:flex;flex-direction:column;gap:16px;animation:popIn .3s ease}
@@ -60,7 +57,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .int-btns .int-proceed:active{background:var(--surface2)}
 .int-btns .int-resist{background:var(--secondary);color:var(--on-secondary)}
 .int-btns .int-resist:active{background:#1d524f}
-/* Celebration Overlay */
 #celebration{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:200;opacity:0;transition:opacity .4s;pointer-events:none}
 #celebration.show{opacity:1;animation:celebrate .8s ease}
 @keyframes celebrate{0%{transform:translateX(-50%) scale(.3);opacity:0}60%{transform:translateX(-50%) scale(1.08)}100%{transform:translateX(-50%) scale(1);opacity:1}}
@@ -68,26 +64,19 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .celebration-card .cel-icon{font-size:40px}
 .celebration-card .cel-title{font-size:17px;font-weight:700;color:var(--secondary);margin:6px 0}
 .celebration-card .cel-desc{font-size:13px;color:var(--text2)}
-/* Header */
 #header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 8px;background:var(--bg)}
 #header h1{font-size:18px;font-weight:700;color:var(--primary-container);letter-spacing:-.02em}
 #lock-btn{background:none;border:1px solid var(--outline);border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 #lock-btn:active{background:var(--surface3)}
-/* Risk Warning Bar */
 #risk-bar{display:none;background:linear-gradient(135deg,rgba(186,26,26,.1),rgba(186,26,26,.06));border:1px solid rgba(186,26,26,.2);border-radius:var(--radius-sm);padding:10px 14px;margin:0 20px 8px;font-size:12px;color:var(--error);text-align:center;font-weight:500}
 #risk-bar.visible{display:block}
-/* Content */
 #content{flex:1;overflow-y:auto;padding:0 20px 100px;-webkit-overflow-scrolling:touch}
 #content::-webkit-scrollbar{width:0}
-/* Bottom Nav */
 #nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--outline);display:flex;padding:4px 0 var(--safe-bottom);z-index:50;border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.04)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 1px;cursor:pointer;color:var(--text3);font-size:9px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;transition:all .2s;white-space:nowrap}
 .nav-item.active{color:var(--primary-container)}
 .nav-item .nicon{font-size:20px}
-/* Views */
-.view{display:none}
-.view.active{display:block}
-/* Timer */
+.view{display:none}.view.active{display:block}
 #timer-area{display:flex;flex-direction:column;align-items:center;padding:20px 0}
 .timer-ring{position:relative;width:180px;height:180px;margin-bottom:16px}
 .timer-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
@@ -102,40 +91,52 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 #cancel-btn{display:none;margin-top:8px;background:none;border:1px solid var(--outline);color:var(--text3);font-size:12px;cursor:pointer;padding:6px 16px;border-radius:var(--radius-pill);transition:all .15s}
 #cancel-btn:active{background:var(--surface3);border-color:var(--error);color:var(--error)}
 #cancel-btn.visible{display:inline-block}
-/* Progress Section (Home) */
-.progress-section{background:linear-gradient(135deg,var(--surface),rgba(38,104,100,.03));border:1px solid var(--secondary-container);border-radius:var(--radius);padding:16px;margin:12px 0;box-shadow:var(--shadow)}
-.progress-section .ps-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px}
-.progress-section .ps-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}
-.progress-section .ps-value{font-size:36px;font-weight:300;color:var(--secondary);letter-spacing:-.03em;line-height:1}
-.progress-section .ps-unit{font-size:13px;color:var(--text2);margin-left:2px;font-weight:400}
-.progress-section .ps-sub{font-size:11px;color:var(--text3)}
-.progress-bar-bg{height:5px;background:var(--surface3);border-radius:3px;margin:6px 0;overflow:hidden}
-.progress-bar-fg{height:100%;background:linear-gradient(90deg,var(--secondary),var(--secondary-container));border-radius:3px;transition:width .5s ease}
-.progress-milestones{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:2px}
-.progress-milestones span.reached{color:var(--secondary);font-weight:700}
-.progress-compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.pc-item{text-align:center;padding:8px 6px;background:var(--surface2);border-radius:var(--radius-sm)}
-.pc-item .pc-val{font-size:18px;font-weight:500;color:var(--text)}
-.pc-item .pc-label{font-size:10px;color:var(--text2);margin-top:2px}
-.pc-item .pc-change{font-size:11px;font-weight:700;margin-top:2px}
-.pc-down{color:var(--secondary)}.pc-up{color:var(--error)}.pc-flat{color:var(--text3)}
-/* Reward reminder */
-.reward-reminder{display:none;background:var(--gold-bg);border:1px solid var(--gold);border-radius:var(--radius-sm);padding:10px 14px;margin:8px 0;font-size:12px;color:var(--gold);text-align:center;font-weight:500}
-.reward-reminder.visible{display:block}
-/* Achievement grid */
-.achievement-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.achievement-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px 6px;text-align:center;transition:all .3s}
-.achievement-item.locked{opacity:.3;filter:grayscale(1)}
-.achievement-item.unlocked{border-color:var(--secondary);background:var(--secondary-container)}
-.achievement-item.new-unlock{border-color:var(--gold);background:var(--gold-bg);animation:popIn .5s ease}
-.achievement-item .ach-icon{font-size:28px;margin-bottom:2px}
-.achievement-item .ach-name{font-size:11px;font-weight:600}
-.achievement-item .ach-desc{font-size:10px;color:var(--text3);margin-top:2px}
+/* Progress Section */
+.progress-section{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;margin:12px 0;box-shadow:var(--shadow)}
+.progress-section .ps-row{margin-bottom:14px}
+.progress-section .ps-row:last-child{margin-bottom:0}
+.ps-row .ps-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.ps-row .ps-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.03em}
+.ps-row .ps-value{font-size:13px;font-weight:600}
+.ps-row .ps-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.progress-bar{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin:4px 0}
+.progress-bar .pb-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.pb-fill.weekly{background:linear-gradient(90deg,var(--primary),var(--primary-container))}
+.pb-fill.weekly.warn{background:linear-gradient(90deg,#d4883e,#c7852a)}
+.pb-fill.weekly.danger{background:linear-gradient(90deg,var(--error),#d44)}
+.pb-fill.clean{background:linear-gradient(90deg,var(--secondary),var(--secondary-container))}
+/* Goal mode selector */
+.goal-mode-selector{display:flex;background:var(--surface2);border-radius:var(--radius-sm);padding:3px;margin-bottom:16px}
+.gms-btn{flex:1;padding:10px 6px;border:none;background:transparent;color:var(--text3);font-size:12px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .2s;white-space:nowrap}
+.gms-btn.active{background:var(--surface);color:var(--primary);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+/* Staircase editor */
+.stair-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px 12px;background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm)}
+.stair-row .stair-label{font-size:12px;color:var(--text2);flex-shrink:0;min-width:36px}
+.stair-row .stair-label.active{color:var(--secondary);font-weight:600}
+.stair-row input{width:50px;padding:6px 8px;font-size:13px;text-align:center;border-radius:6px}
+.stair-row .stair-del{width:24px;height:24px;border-radius:50%;border:1px solid var(--outline);background:none;color:var(--text3);font-size:12px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.stair-row .stair-del:active{background:var(--error);color:#fff}
+/* Progress section */
+.progress-section{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;margin:12px 0;box-shadow:var(--shadow)}
+.progress-section .ps-row{margin-bottom:14px}
+.progress-section .ps-row:last-child{margin-bottom:0}
+.ps-row .ps-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.ps-row .ps-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.03em}
+.ps-row .ps-value{font-size:13px;font-weight:600}
+.ps-row .ps-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.progress-bar{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin:4px 0}
+.progress-bar .pb-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.pb-fill.weekly{background:linear-gradient(90deg,var(--primary),var(--primary-container))}
+.pb-fill.weekly.warn{background:linear-gradient(90deg,#d4883e,#c7852a)}
+.pb-fill.weekly.danger{background:linear-gradient(90deg,var(--error),#d44)}
+.pb-fill.clean{background:linear-gradient(90deg,var(--secondary),var(--secondary-container))}
+/* Limit alert bar on home */
+#limit-alert{display:none;background:var(--warn-bg);border:1px solid rgba(186,26,26,.25);border-radius:var(--radius-sm);padding:10px 14px;margin:8px 0;font-size:12px;color:var(--error);font-weight:500;text-align:center}
+#limit-alert.visible{display:block}
 /* Edit indicator */
 #edit-indicator{display:none;text-align:center;font-size:13px;color:var(--secondary);margin-bottom:8px;font-weight:600}
 #edit-cancel-btn{display:none;margin-top:8px}
 #edit-cancel-btn.visible{display:block}
-/* Trigger Tip on Record page */
 .trigger-tip{display:none;background:var(--secondary-container);border:1px solid var(--secondary);border-radius:var(--radius-sm);padding:14px;margin-top:12px;font-size:13px;color:var(--secondary);line-height:1.6}
 .trigger-tip.visible{display:block}
 .trigger-tip .tt-label{font-size:11px;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
@@ -144,9 +145,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .trigger-tip .tt-alt li{margin:2px 0;font-size:13px}
 .trigger-tip .tt-resist{display:inline-block;margin-top:10px;background:var(--secondary);color:var(--on-secondary);border:none;padding:8px 18px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;cursor:pointer}
 .trigger-tip .tt-resist:active{opacity:.8}
-/* Cards */
 .card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
-/* Quick Stats */
 #streak-bar{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,rgba(38,104,100,.1),rgba(47,99,120,.08));border:1px solid var(--secondary-container);border-radius:var(--radius);padding:12px;margin:12px 0;font-size:14px;font-weight:500;color:var(--secondary)}
 #streak-bar .icon{font-size:20px}
 #streak-bar.hidden{display:none}
@@ -154,31 +153,25 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .qs-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:var(--shadow)}
 .qs-card .val{font-size:28px;font-weight:500;color:var(--primary);letter-spacing:-.02em}
 .qs-card .label{font-size:10px;font-weight:600;color:var(--text2);margin-top:4px;letter-spacing:.05em;text-transform:uppercase}
-/* Section */
 .section-title{font-size:13px;font-weight:600;color:var(--text2);margin:24px 0 12px;text-transform:uppercase;letter-spacing:.05em}
-/* Sessions */
 .session-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 .si-left{display:flex;flex-direction:column;gap:2px;overflow:hidden}
 .si-date{font-size:13px;color:var(--text2)}
 .si-info{font-size:14px;font-weight:500}
 .si-dur{font-size:20px;font-weight:300;color:var(--primary)}
-/* Form */
 .form-group{margin-bottom:16px}
 .form-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;display:block;letter-spacing:.05em;text-transform:uppercase}
 input[type="text"],input[type="number"],textarea{width:100%;background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px;color:var(--text);font-size:14px;outline:none;transition:border .2s}
 input:focus,textarea:focus{border-color:var(--primary)}
 textarea{resize:none;height:80px}
 .dur-display{font-size:40px;font-weight:500;color:var(--primary);text-align:center;padding:20px;letter-spacing:-.03em}
-/* Chips */
 .chip-row{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:8px 16px;border-radius:var(--radius-pill);border:1px solid var(--outline);background:var(--surface);color:var(--text2);font-size:13px;cursor:pointer;transition:all .2s}
 .chip.selected{border-color:var(--secondary);background:var(--secondary-container);color:var(--secondary)}
 .chip:active{transform:scale(.96)}
-/* Rating */
 .rating-row{display:flex;gap:12px;justify-content:center}
 .rating-dot{width:44px;height:44px;border-radius:50%;border:2px solid var(--outline);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s}
 .rating-dot.selected{border-color:var(--primary);background:var(--primary);color:var(--on-primary)}
-/* Calendar */
 #calendar{display:flex;flex-direction:column;gap:2px;overflow-x:auto;padding:8px 0}
 .cal-row{display:flex;gap:2px;align-items:center}
 .cal-label{width:28px;font-size:9px;color:var(--text2);text-align:right;padding-right:4px;font-weight:600}
@@ -189,21 +182,18 @@ textarea{resize:none;height:80px}
 .cal-day[data-checkin="1"]{box-shadow:inset 0 0 0 1.5px var(--secondary)}
 .cal-month-labels{display:flex;gap:2px;padding-left:32px;margin-bottom:4px;font-size:9px;color:var(--text3)}
 .cal-month-labels span{width:15px;text-align:center}
-/* Chart */
 #chart-container{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;margin:12px 0;height:200px}
 #correlation-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
 .corr-card{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px;text-align:center}
 .corr-card .title{font-size:11px;color:var(--text2)}
 .corr-card .value{font-size:18px;font-weight:600;margin-top:4px}
 .corr-card .insight{font-size:11px;margin-top:4px}
-/* Goals */
 .goal-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .gi-label{font-size:14px;color:var(--text2)}
 .gi-val{font-size:24px;font-weight:500;display:flex;align-items:center;gap:12px}
 .gi-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--outline);background:var(--surface);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .gi-btn:active{background:var(--primary);color:var(--on-primary)}
 .goal-warn{background:rgba(186,26,26,.08);border:1px solid var(--error);border-radius:var(--radius-sm);padding:12px;margin-top:8px;font-size:13px;color:var(--error)}
-/* Buttons */
 .btn{padding:12px 20px;border-radius:var(--radius-sm);border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;text-align:center}
 .btn-primary{background:var(--primary);color:var(--on-primary);min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px}
 .btn-primary:active{background:var(--primary-container)}
@@ -211,17 +201,15 @@ textarea{resize:none;height:80px}
 .btn-secondary:active{background:var(--surface2)}
 .btn-danger{background:var(--error);color:#fff;font-size:13px;padding:8px 16px;width:auto}
 .del-icon{width:28px;height:28px;border-radius:50%;border:1px solid var(--outline);background:none;color:var(--text3);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;margin-left:8px}.del-icon:active{background:var(--error);color:#fff;border-color:var(--error)}
-/* History filter bar */
 .filter-bar{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:12px;margin-bottom:12px;box-shadow:var(--shadow)}
 .filter-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
-.filter-row:last-child, .filter-row.nc{margin-bottom:0}
+.filter-row:last-child,.filter-row.nc{margin-bottom:0}
 .filter-row input[type="text"],.filter-row input[type="date"]{flex:1;padding:8px 10px;font-size:13px;border-radius:var(--radius-sm)}
 .filter-row input[type="date"]{min-width:0}
 .hist-chip-row{display:flex;flex-wrap:wrap;gap:6px}
 .hist-chip{padding:6px 12px;border-radius:var(--radius-pill);border:1px solid var(--outline);background:var(--surface);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s}
 .hist-chip.selected{border-color:var(--secondary);background:var(--secondary-container);color:var(--secondary)}
 .hist-chip:active{transform:scale(.96)}
-/* History item */
 .hist-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;box-shadow:var(--shadow)}
 .hist-item.hidden-item{opacity:.45}
 .hist-item .hi-left{flex:1;min-width:0}
@@ -233,22 +221,28 @@ textarea{resize:none;height:80px}
 .hi-action{width:30px;height:30px;border-radius:8px;border:1px solid var(--outline);background:var(--surface);color:var(--text3);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .hi-action:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .hi-action.danger:active{background:var(--error);color:#fff;border-color:var(--error)}
-/* Settings - intervention editor */
 .intv-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
 .intv-item .intv-trigger{font-size:13px;font-weight:600;margin-bottom:6px;color:var(--primary)}
 .intv-item .intv-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
 .intv-item input{flex:1;font-size:12px;padding:8px 10px}
 .intv-item .intv-alt-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .intv-item .intv-alt-tag{font-size:11px;padding:3px 10px;border-radius:var(--radius-pill);background:var(--secondary-container);color:var(--secondary);display:flex;align-items:center;gap:4px;cursor:default}
-.intv-item .intv-alt-tag .rm{font-size:10px;cursor:pointer;opacity:.6}.intv-item .intv-alt-tag .rm:hover{opacity:1}
-/* Reward item */
+.intv-item .intv-alt-tag .rm{font-size:10px;cursor:pointer;opacity:.6}
 .reward-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .reward-item .rw-info{font-size:13px;color:var(--text)}
 .reward-item .rw-info strong{color:var(--secondary)}
-/* Toast */
+.achievement-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.achievement-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:12px 6px;text-align:center;transition:all .3s}
+.achievement-item.locked{opacity:.3;filter:grayscale(1)}
+.achievement-item.unlocked{border-color:var(--secondary);background:var(--secondary-container)}
+.achievement-item .ach-icon{font-size:28px;margin-bottom:2px}
+.achievement-item .ach-name{font-size:11px;font-weight:600}
+.achievement-item .ach-desc{font-size:10px;color:var(--text3);margin-top:2px}
 #toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--on-primary);padding:10px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 #toast.show{opacity:1}
 .empty{text-align:center;padding:32px;color:var(--text3);font-size:13px}
+.reward-reminder{display:none;background:var(--gold-bg);border:1px solid var(--gold);border-radius:var(--radius-sm);padding:10px 14px;margin:8px 0;font-size:12px;color:var(--gold);text-align:center;font-weight:500}
+.reward-reminder.visible{display:block}
 .toggle-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer}
 .toggle-row input[type="checkbox"]{accent-color:var(--secondary);width:18px;height:18px}
 @media(max-width:360px){.timer-ring{width:150px;height:150px}.timer-time .elapsed{font-size:26px}.nav-item{font-size:8px}.nav-item .nicon{font-size:18px}}
@@ -256,147 +250,89 @@ textarea{resize:none;height:80px}
 </head>
 <body>
 <div id="app">
-  <div id="lock">
-    <div id="lock-hero"><div id="lock-icon">🔒</div><div id="lock-title">输入密码</div><div id="lock-subtitle">数据本地加密，仅你可见</div></div>
-    <div id="lock-info">🔑 默认密码：0000</div>
-    <div class="passcode-dots" id="dots"></div><div class="passcode-pad" id="pad"></div>
-  </div>
-
-  <div id="interception" class="hidden">
-    <div class="interception-card">
-      <div class="int-icon">⏳</div>
-      <div class="int-stats" id="int-stats"></div>
-      <div class="int-msg" id="int-msg">等一等，你真的需要记录吗？</div>
-      <div class="int-alt" id="int-alt"></div>
-      <div class="int-btns">
-        <button class="int-proceed" id="int-proceed-btn">继续记录</button>
-        <button class="int-resist" id="int-resist-btn">✋ 我决定克制</button>
-      </div>
-    </div>
-  </div>
-
+  <div id="lock"><div id="lock-hero"><div id="lock-icon">🔒</div><div id="lock-title">输入密码</div><div id="lock-subtitle">数据本地加密，仅你可见</div></div><div id="lock-info">🔑 默认密码：0000</div><div class="passcode-dots" id="dots"></div><div class="passcode-pad" id="pad"></div></div>
+  <div id="interception" class="hidden"><div class="interception-card"><div class="int-icon">⏳</div><div class="int-stats" id="int-stats"></div><div class="int-msg" id="int-msg">等一等，你真的需要记录吗？</div><div class="int-alt" id="int-alt"></div><div class="int-btns"><button class="int-proceed" id="int-proceed-btn">继续记录</button><button class="int-resist" id="int-resist-btn">✋ 我决定克制</button></div></div></div>
   <div id="header"><div style="width:36px"></div><h1>Pulse</h1><button id="lock-btn">🔒</button></div>
-
   <div id="risk-bar"></div>
   <div id="celebration"></div>
-  <div id="reward-reminder" class="reward-reminder"></div>
 
   <div id="content">
-    <!-- Home -->
     <div id="view-home" class="view active">
       <div id="timer-area">
-        <div class="timer-ring">
-          <svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" id="timer-progress" cx="50" cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7"/></svg>
-          <div class="timer-time"><div class="elapsed" id="timer-display">00:00</div><div class="unit" id="timer-state">就绪</div></div>
-        </div>
-        <button id="timer-btn">▶</button>
-        <button id="cancel-btn">取消计时</button>
+        <div class="timer-ring"><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="45"/><circle class="fg" id="timer-progress" cx="50" cy="50" r="45" stroke-dasharray="282.7" stroke-dashoffset="282.7"/></svg><div class="timer-time"><div class="elapsed" id="timer-display">00:00</div><div class="unit" id="timer-state">就绪</div></div></div>
+        <button id="timer-btn">▶</button><button id="cancel-btn">取消计时</button>
         <div style="margin-top:10px"><button class="btn btn-secondary" id="manual-entry-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">手动输入时长</button></div>
       </div>
-      <!-- Progress Section -->
+      <div id="limit-alert"></div>
+      <div id="reward-reminder" class="reward-reminder"></div>
       <div id="progress-section" class="progress-section" style="display:none">
-        <div class="ps-top">
-          <div><div class="ps-label">🛡 已戒断</div></div>
-          <div><span class="ps-value" id="days-since">0</span><span class="ps-unit">天</span></div>
-        </div>
-        <div class="progress-bar-bg"><div class="progress-bar-fg" id="progress-bar" style="width:0%"></div></div>
-        <div class="progress-milestones" id="progress-milestones"></div>
-        <div class="ps-sub">最长纪录：<strong id="longest-record">0</strong> 天</div>
-        <div class="progress-compare">
-          <div class="pc-item"><div class="pc-label">本周 vs 上周</div><div class="pc-val" id="week-compare-val">--</div><div class="pc-change" id="week-compare-change"></div></div>
-          <div class="pc-item"><div class="pc-label">本月 vs 上月</div><div class="pc-val" id="month-compare-val">--</div><div class="pc-change" id="month-compare-change"></div></div>
-        </div>
+        <div class="ps-row"><div class="ps-header"><span class="ps-label">📊 本周进度</span><span class="ps-value" id="weekly-progress-val">--</span></div><div class="progress-bar"><div class="pb-fill weekly" id="weekly-progress-bar" style="width:0%"></div></div><div class="ps-sub" id="weekly-progress-sub"></div></div>
+        <div class="ps-row" id="clean-progress-row" style="display:none"><div class="ps-header"><span class="ps-label">🛡 连续戒断</span><span class="ps-value" id="clean-progress-val">--</span></div><div class="progress-bar"><div class="pb-fill clean" id="clean-progress-bar" style="width:0%"></div></div><div class="ps-sub" id="clean-progress-sub"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:6px"><span>最长纪录：<strong id="longest-record">0</strong> 天</span><span id="week-compare-text"></span></div>
       </div>
       <div id="streak-bar" class="hidden"><span class="icon">🔥</span><span id="streak-text"></span></div>
       <div id="quick-stats"></div>
-      <div class="section-title">📋 最近记录</div>
-      <div id="recent-sessions"></div>
+      <div class="section-title">📋 最近记录</div><div id="recent-sessions"></div>
     </div>
 
-    <!-- Record -->
     <div id="view-record" class="view">
-      <div class="section-title">⏱ 记录本次</div>
-      <div id="edit-indicator">✏️ 编辑记录</div>
-      <div class="dur-display" id="record-dur">--:--</div>
-      <div id="record-start-time" style="text-align:center;font-size:13px;color:var(--text2);margin-bottom:8px"></div>
+      <div class="section-title">⏱ 记录本次</div><div id="edit-indicator">✏️ 编辑记录</div>
+      <div class="dur-display" id="record-dur">--:--</div><div id="record-start-time" style="text-align:center;font-size:13px;color:var(--text2);margin-bottom:8px"></div>
       <div class="form-group"><div style="display:flex;gap:10px;align-items:center"><input type="number" id="record-min" placeholder="分钟" inputmode="numeric" min="1" style="flex:1"><span style="color:var(--text2);font-size:14px">分钟</span></div></div>
       <div class="form-group"><div class="form-label">触发场景（可多选）</div><div class="chip-row" id="trigger-chips"></div></div>
       <div class="trigger-tip" id="trigger-tip"></div>
       <div class="form-group"><div class="form-label">备注</div><textarea id="record-notes" placeholder="任何想记录的信息..."></textarea></div>
-      <button class="btn btn-primary" id="save-record-btn">💾 保存记录</button>
-      <button class="btn btn-secondary" id="edit-cancel-btn">取消编辑</button>
+      <button class="btn btn-primary" id="save-record-btn">💾 保存记录</button><button class="btn btn-secondary" id="edit-cancel-btn">取消编辑</button>
     </div>
 
-    <!-- Check-in -->
     <div id="view-checkin" class="view">
-      <div class="section-title">🌅 今日状态</div>
-      <div id="checkin-date" style="color:var(--text2);font-size:13px;margin-bottom:16px"></div>
-      <div id="checkin-form"></div>
+      <div class="section-title">🌅 今日状态</div><div id="checkin-date" style="color:var(--text2);font-size:13px;margin-bottom:16px"></div><div id="checkin-form"></div>
       <button class="btn btn-primary" id="save-checkin-btn" style="margin-top:16px">💾 保存状态</button>
       <div class="section-title" style="margin-top:24px">历史打卡</div><div id="checkin-history"></div>
     </div>
 
-    <!-- Stats -->
     <div id="view-stats" class="view">
-      <div class="section-title">🏆 成就</div>
-      <div class="achievement-grid" id="achievement-grid"></div>
-      <div class="section-title">🗓 日历热力图</div>
-      <div id="calendar"></div>
-      <div class="section-title">📈 频率趋势</div>
-      <div id="chart-container"><canvas id="chart" style="width:100%;height:100%"></canvas></div>
-      <div class="section-title">🔗 相关性分析</div>
-      <div id="correlation-grid"></div>
-      <div class="section-title">📊 数据概览</div>
-      <div id="insights"></div>
+      <div class="section-title">🏆 成就</div><div class="achievement-grid" id="achievement-grid"></div>
+      <div class="section-title">🗓 日历热力图</div><div id="calendar"></div>
+      <div class="section-title">📈 频率趋势</div><div id="chart-container"><canvas id="chart" style="width:100%;height:100%"></canvas></div>
+      <div class="section-title">🔗 相关性分析</div><div id="correlation-grid"></div>
+      <div class="section-title">📊 数据概览</div><div id="insights"></div>
     </div>
 
-    <!-- History -->
     <div id="view-history" class="view">
       <div class="section-title">🔍 筛选</div>
       <div class="filter-bar">
         <div class="filter-row"><input type="text" id="hist-keyword" placeholder="搜索备注或场景..." oninput="updateHistoryFilters()"></div>
         <div class="filter-row"><input type="date" id="hist-from" onchange="updateHistoryFilters()"><span style="color:var(--text3);flex-shrink:0">至</span><input type="date" id="hist-to" onchange="updateHistoryFilters()"></div>
         <div class="hist-chip-row" id="hist-trigger-chips"></div>
-        <div class="filter-row nc" style="justify-content:space-between">
-          <span style="font-size:13px;color:var(--text2);font-weight:600" id="hist-count">0 条记录</span>
-          <label style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="hist-show-hidden" onchange="renderHistory()" style="accent-color:var(--secondary)">显示已隐藏</label>
-        </div>
+        <div class="filter-row nc" style="justify-content:space-between"><span style="font-size:13px;color:var(--text2);font-weight:600" id="hist-count">0 条记录</span><label style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="hist-show-hidden" onchange="renderHistory()" style="accent-color:var(--secondary)">显示已隐藏</label></div>
       </div>
       <div id="history-list"></div>
     </div>
 
-    <!-- Goals -->
     <div id="view-goals" class="view">
-      <div class="section-title">🎯 目标</div>
-      <div class="goal-item"><div class="gi-label">每周上限</div><div class="gi-val"><button class="gi-btn" onclick="adjustGoal(-1)">−</button><span id="goal-weekly">7</span><button class="gi-btn" onclick="adjustGoal(1)">+</button></div></div>
+      <div class="section-title">🎯 目标模式</div>
+      <div class="goal-mode-selector" id="goal-mode-selector">
+        <button class="gms-btn active" data-mode="simple">简单</button>
+        <button class="gms-btn" data-mode="staircase">阶梯递减</button>
+        <button class="gms-btn" data-mode="clean_days">连续戒断</button>
+      </div>
+      <div id="goal-settings-area"></div>
+      <div class="section-title" style="margin-top:8px">⏱ 最小间隔</div>
       <div class="goal-item"><div class="gi-label">最小间隔（天）</div><div class="gi-val"><button class="gi-btn" onclick="adjustMinGap(-1)">−</button><span id="goal-mingap">0</span><button class="gi-btn" onclick="adjustMinGap(1)">+</button></div></div>
       <div id="goal-warning"></div>
 
-      <div class="section-title" style="margin-top:20px">🎁 正向奖励</div>
-      <div id="reward-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
-        <input type="number" id="new-reward-days" placeholder="天数" min="1" max="365" style="width:70px;flex-shrink:0;border-radius:8px">
-        <input type="text" id="new-reward-desc" placeholder="奖励描述，如「吃顿好的」" maxlength="30" style="flex:1;border-radius:8px">
-        <button class="btn btn-secondary" id="add-reward-btn" style="width:auto;font-size:11px;padding:8px 12px;min-height:auto;white-space:nowrap">＋</button>
-      </div>
+      <div class="section-title" style="margin-top:20px">🎁 正向奖励</div><div id="reward-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px;align-items:center"><input type="number" id="new-reward-days" placeholder="天数" min="1" max="365" style="width:70px;flex-shrink:0;border-radius:8px"><input type="text" id="new-reward-desc" placeholder="奖励描述" maxlength="30" style="flex:1;border-radius:8px"><button class="btn btn-secondary" id="add-reward-btn" style="width:auto;font-size:11px;padding:8px 12px;min-height:auto;white-space:nowrap">＋</button></div>
       <button class="btn btn-secondary" id="reset-rewards-btn" style="margin-top:8px;width:auto;font-size:11px;padding:6px 12px;min-height:auto">↺ 恢复默认</button>
 
       <div class="section-title">🔔 冲动干预</div>
-      <div class="goal-item" style="flex-direction:column;align-items:stretch;gap:10px">
-        <label class="toggle-row"><input type="checkbox" id="interception-enabled" onchange="toggleInterception()"> 记录前弹出干预提醒</label>
-        <label class="toggle-row"><input type="checkbox" id="risk-warn-enabled" onchange="toggleRiskWarnings()"> 高危时段提醒</label>
-        <button class="btn btn-secondary" id="notif-perm-btn" style="width:auto;font-size:11px;padding:6px 14px;min-height:auto;display:none">🔔 开启浏览器通知</button>
-      </div>
-
-      <div class="section-title">📝 干预话术</div>
-      <div id="intervention-list"></div>
+      <div class="goal-item" style="flex-direction:column;align-items:stretch;gap:10px"><label class="toggle-row"><input type="checkbox" id="interception-enabled" onchange="toggleInterception()"> 记录前弹出干预提醒</label><label class="toggle-row"><input type="checkbox" id="risk-warn-enabled" onchange="toggleRiskWarnings()"> 高危时段提醒</label><button class="btn btn-secondary" id="notif-perm-btn" style="width:auto;font-size:11px;padding:6px 14px;min-height:auto;display:none">🔔 开启浏览器通知</button></div>
+      <div class="section-title">📝 干预话术</div><div id="intervention-list"></div>
       <button class="btn btn-secondary" id="reset-interventions-btn" style="margin-top:8px;width:auto;font-size:11px;padding:6px 12px;min-height:auto">↺ 恢复默认</button>
-
-      <div class="section-title" style="margin-top:20px">🏷 触发场景</div>
-      <div id="trigger-manage"></div>
+      <div class="section-title" style="margin-top:20px">🏷 触发场景</div><div id="trigger-manage"></div>
       <div style="display:flex;gap:8px;margin-top:8px"><input type="text" id="new-trigger" placeholder="新场景名称" maxlength="10" style="flex:1;border-radius:8px"><button class="btn btn-secondary" id="add-trigger-btn" style="width:auto;font-size:12px;padding:8px 14px;min-height:auto;white-space:nowrap">＋ 添加</button></div>
       <button class="btn btn-secondary" id="reset-triggers-btn" style="margin-top:8px;width:auto;font-size:11px;padding:6px 12px;min-height:auto">↺ 恢复默认</button>
-
       <div class="section-title" style="margin-top:24px">🔐 安全</div>
       <div class="goal-item"><div class="gi-label">修改密码</div><div style="display:flex;gap:8px"><input type="text" id="new-passcode" placeholder="4位数字" maxlength="4" inputmode="numeric" pattern="\d{4}" style="width:120px;border-radius:8px"><button class="btn btn-secondary" id="set-passcode-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">设置</button></div></div>
       <div class="goal-item" style="margin-top:8px"><div class="gi-label">导出数据</div><button class="btn btn-secondary" id="export-btn" style="width:auto;font-size:12px;padding:8px 16px;min-height:auto">📥 导出 JSON</button></div>
@@ -416,197 +352,223 @@ textarea{resize:none;height:80px}
 <div id="toast"></div>
 
 <script>
-// ═══════════════ Database ═══════════════
-const DB_NAME='pulse_db',DB_VER=1;
-let db;
-function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VER);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('sessions'))d.createObjectStore('sessions',{keyPath:'id',autoIncrement:true});if(!d.objectStoreNames.contains('checkins'))d.createObjectStore('checkins',{keyPath:'date'});if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'key'})};req.onsuccess=e=>{db=e.target.result;resolve(db)};req.onerror=e=>reject(e)})}
-function dbPut(store,data){return new Promise(r=>{const t=db.transaction(store,'readwrite').objectStore(store);t.put(data);t.transaction.oncomplete=()=>r()})}
-function dbGetAll(store){return new Promise(r=>{const t=db.transaction(store,'readonly').objectStore(store);t.getAll().onsuccess=e=>r(e.target.result)})}
-function dbGet(store,key){return new Promise(r=>{const t=db.transaction(store,'readonly').objectStore(store);t.get(key).onsuccess=e=>r(e.target.result)})}
-function dbDelete(store,key){return new Promise(r=>{const t=db.transaction(store,'readwrite').objectStore(store);t.delete(key);t.transaction.oncomplete=()=>r()})}
+// ═══════════ Database ═══════════
+const DB_NAME='pulse_db',DB_VER=1;let db;
+function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,DB_VER);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('sessions'))d.createObjectStore('sessions',{keyPath:'id',autoIncrement:true});if(!d.objectStoreNames.contains('checkins'))d.createObjectStore('checkins',{keyPath:'date'});if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'key'})};r.onsuccess=e=>{db=e.target.result;resolve(db)};r.onerror=e=>reject(e)})}
+function dbPut(s,d){return new Promise(r=>{const t=db.transaction(s,'readwrite').objectStore(s);t.put(d);t.transaction.oncomplete=()=>r()})}
+function dbGetAll(s){return new Promise(r=>{const t=db.transaction(s,'readonly').objectStore(s);t.getAll().onsuccess=e=>r(e.target.result)})}
+function dbGet(s,k){return new Promise(r=>{const t=db.transaction(s,'readonly').objectStore(s);t.get(k).onsuccess=e=>r(e.target.result)})}
+function dbDelete(s,k){return new Promise(r=>{const t=db.transaction(s,'readwrite').objectStore(s);t.delete(k);t.transaction.oncomplete=()=>r()})}
 
-// ═══════════════ Helpers ═══════════════
 function vibe(){navigator.vibrate?.(8)}
 
-// ═══════════════ Settings ═══════════════
-let passcode='0000',goalWeekly=7,goalMinGap=0,interceptionEnabled=true,riskWarnEnabled=false;
-let unlockedAchievements=[],rewards=[];
-let nextRiskTimeout=null;
+// ═══════════ Settings ═══════════
+let passcode='0000',goalWeekly=7,goalMinGap=0,goalMode='simple',staircaseGoals=[{week:1,cap:7},{week:2,cap:5},{week:3,cap:3},{week:4,cap:2}],cleanDaysTarget=30,staircaseStartDate=null;
+let interceptionEnabled=true,riskWarnEnabled=false,unlockedAchievements=[],rewards=[];
 
 async function loadSettings(){
-  const s=await dbGet('settings','passcode');if(s)passcode=s.value;
-  const gw=await dbGet('settings','goalWeekly');if(gw)goalWeekly=gw.value;
-  const gm=await dbGet('settings','goalMinGap');if(gm)goalMinGap=gm.value;
-  const tr=await dbGet('settings','triggers');if(tr&&tr.value)triggers=tr.value;
-  const ie=await dbGet('settings','interceptionEnabled');if(ie!==undefined)interceptionEnabled=ie.value!==false;else interceptionEnabled=true;
-  const rw=await dbGet('settings','riskWarnEnabled');if(rw!==undefined)riskWarnEnabled=rw.value===true;else riskWarnEnabled=false;
-  const iv=await dbGet('settings','interventions');if(iv&&iv.value)interventions=iv.value;
-  const ua=await dbGet('settings','achievements');if(ua&&ua.value)unlockedAchievements=ua.value;
-  const rwd=await dbGet('settings','rewards');if(rwd&&rwd.value)rewards=rwd.value;
-  else rewards=[...defaultRewards];
-  document.getElementById('goal-weekly').textContent=goalWeekly;
+  passcode=(await dbGet('settings','passcode'))?.value||'0000';
+  goalWeekly=(await dbGet('settings','goalWeekly'))?.value||7;
+  goalMinGap=(await dbGet('settings','goalMinGap'))?.value||0;
+  goalMode=(await dbGet('settings','goalMode'))?.value||'simple';
+  const sg=await dbGet('settings','staircaseGoals');if(sg&&sg.value)staircaseGoals=sg.value;
+  const ss=await dbGet('settings','staircaseStartDate');if(ss&&ss.value)staircaseStartDate=ss.value;
+  cleanDaysTarget=(await dbGet('settings','cleanDaysTarget'))?.value||30;
+  const tr=(await dbGet('settings','triggers'))?.value;if(tr)triggers=tr;
+  const ie=await dbGet('settings','interceptionEnabled');interceptionEnabled=ie?ie.value!==false:true;
+  const rw=await dbGet('settings','riskWarnEnabled');riskWarnEnabled=rw?rw.value===true:false;
+  const iv=(await dbGet('settings','interventions'))?.value;if(iv)interventions=iv;
+  const ua=(await dbGet('settings','achievements'))?.value;if(ua)unlockedAchievements=ua;
+  const rwd=(await dbGet('settings','rewards'))?.value;if(rwd)rewards=rwd;else rewards=[...defaultRewards];
   document.getElementById('goal-mingap').textContent=goalMinGap;
   document.getElementById('interception-enabled').checked=interceptionEnabled;
   document.getElementById('risk-warn-enabled').checked=riskWarnEnabled;
-  renderTriggerChips();renderHistTriggerChips();renderInterventionList();renderRewardList();renderTriggerManage();
-  updateGoalWarnings();updateNotifPermBtn();
+  renderGoalModeUI();renderGoalSettings();renderTriggerChips();renderHistTriggerChips();
+  renderInterventionList();renderRewardList();renderTriggerManage();updateGoalWarnings();updateNotifPermBtn();
   if(riskWarnEnabled)scheduleRiskCheck();
 }
-async function setSetting(key,value){await dbPut('settings',{key,value});if(key==='passcode')passcode=value;else if(key==='goalWeekly')goalWeekly=value;else if(key==='goalMinGap')goalMinGap=value}
-document.getElementById('interception-enabled').onchange=()=>{interceptionEnabled=document.getElementById('interception-enabled').checked;dbPut('settings',{key:'interceptionEnabled',value:interceptionEnabled})};
-document.getElementById('risk-warn-enabled').onchange=async()=>{riskWarnEnabled=document.getElementById('risk-warn-enabled').checked;await dbPut('settings',{key:'riskWarnEnabled',value:riskWarnEnabled});if(riskWarnEnabled)scheduleRiskCheck()};
+async function setSetting(k,v){await dbPut('settings',{key:k,value:v})}
 
-// ═══════════════ Lock ═══════════════
+// ═══════════ Goal System ═══════════
+function getCurrentWeeklyCap(sessions){
+  if(goalMode==='simple')return goalWeekly;
+  if(goalMode==='clean_days')return Infinity;
+  // staircase
+  const now=new Date();
+  if(!staircaseStartDate){setSetting('staircaseStartDate',now.toISOString().slice(0,10));staircaseStartDate=now.toISOString().slice(0,10)}
+  const start=new Date(staircaseStartDate),cw=Math.floor((now-start)/(7*86400000))+1;
+  const m=staircaseGoals.find(g=>g.week===cw);
+  return m?m.cap:(staircaseGoals.length?staircaseGoals[staircaseGoals.length-1].cap:goalWeekly);
+}
+function getStaircaseInfo(){
+  if(goalMode!=='staircase'||!staircaseStartDate)return null;
+  const now=new Date(),start=new Date(staircaseStartDate),cw=Math.floor((now-start)/(7*86400000))+1;
+  return{currentWeek:cw,currentCap:getCurrentWeeklyCap(),startDate:staircaseStartDate};
+}
+function renderGoalModeUI(){
+  document.querySelectorAll('.gms-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===goalMode));
+}
+function renderGoalSettings(){
+  const area=document.getElementById('goal-settings-area');if(!area)return;
+  if(goalMode==='simple'){
+    area.innerHTML=`<div class="goal-item"><div class="gi-label">每周上限</div><div class="gi-val"><button class="gi-btn" onclick="adjustGoal(-1)">−</button><span id="goal-weekly">${goalWeekly}</span><button class="gi-btn" onclick="adjustGoal(1)">+</button></div></div>`;
+  }else if(goalMode==='staircase'){
+    let html='';
+    const si=getStaircaseInfo();
+    staircaseGoals.sort((a,b)=>a.week-b.week).forEach((g,i)=>{
+      const isActive=si&&g.week===si.currentWeek;
+      html+=`<div class="stair-row"><span class="stair-label${isActive?' active':''}">第${g.week}周</span><input type="number" value="${g.cap}" min="0" max="99" onchange="updateStairCap(${i},this.value)" style="width:52px"><span style="font-size:12px;color:var(--text3)">次</span>${staircaseGoals.length>1?`<button class="stair-del" onclick="removeStairWeek(${i})">×</button>`:''}</div>`;
+    });
+    if(si)html+=`<div style="font-size:11px;color:var(--text3);margin:6px 0">当前：第${si.currentWeek}周（${si.startDate} 开始）</div>`;
+    html+=`<button class="btn btn-secondary" id="add-stair-btn" style="margin-top:4px;width:auto;font-size:11px;padding:6px 14px;min-height:auto">＋ 添加周</button>`;
+    if(staircaseStartDate)html+=`<button class="btn btn-secondary" id="reset-stair-btn" style="margin-top:4px;margin-left:6px;width:auto;font-size:11px;padding:6px 14px;min-height:auto">↺ 重置起点</button>`;
+    area.innerHTML=html;
+    document.getElementById('add-stair-btn')?.addEventListener('click',()=>{staircaseGoals.push({week:staircaseGoals.length+1,cap:staircaseGoals[staircaseGoals.length-1]?.cap||3});saveStaircase()});
+    document.getElementById('reset-stair-btn')?.addEventListener('click',()=>{staircaseStartDate=new Date().toISOString().slice(0,10);setSetting('staircaseStartDate',staircaseStartDate);renderGoalSettings();toast('✅ 起点已重置为今天')});
+  }else if(goalMode==='clean_days'){
+    area.innerHTML=`<div class="goal-item"><div class="gi-label">戒断目标</div><div style="display:flex;align-items:center;gap:10px"><input type="number" id="clean-days-input" value="${cleanDaysTarget}" min="1" max="365" style="width:70px;text-align:center;border-radius:8px" onchange="updateCleanDaysTarget(this.value)"><span style="font-size:14px;color:var(--text2)">天</span></div></div>`;
+  }
+}
+function saveStaircase(){
+  setSetting('staircaseGoals',[...staircaseGoals]);renderGoalSettings();renderHome();toast('✅ 已保存');
+}
+window.updateStairCap=function(i,v){const n=parseInt(v)||0;staircaseGoals[i].cap=Math.max(0,n);saveStaircase()};
+window.removeStairWeek=function(i){staircaseGoals.splice(i,1);saveStaircase()};
+window.updateCleanDaysTarget=function(v){cleanDaysTarget=parseInt(v)||30;setSetting('cleanDaysTarget',cleanDaysTarget);renderHome();toast('✅ 已保存')};
+document.getElementById('goal-mode-selector').onclick=e=>{
+  const btn=e.target.closest('.gms-btn');if(!btn)return;
+  goalMode=btn.dataset.mode;
+  if(goalMode==='staircase'&&!staircaseStartDate){staircaseStartDate=new Date().toISOString().slice(0,10);setSetting('staircaseStartDate',staircaseStartDate)}
+  setSetting('goalMode',goalMode);renderGoalModeUI();renderGoalSettings();renderHome();
+};
+
+// ═══════════ Lock ═══════════
 let passInput='',unlocked=false;
-const dotsEl=document.getElementById('dots'),lockEl=document.getElementById('lock');
 function buildPassPad(){
   const pad=document.getElementById('pad');
   ['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k=>{
-    const btn=document.createElement('div');btn.className='passcode-key'+(k==='del'?' del':'');btn.textContent=k==='del'?'⌫':k;
-    if(k===''){btn.style.visibility='hidden';pad.appendChild(btn);return}
-    btn.onclick=()=>{vibe();if(k==='del')passInput=passInput.slice(0,-1);else passInput+=k;if(passInput.length>4)passInput=passInput.slice(-4);updateDots();if(passInput.length===4){if(passInput===passcode)unlock();else{shakeDots();passInput='';updateDots()}}};
-    pad.appendChild(btn);
+    const b=document.createElement('div');b.className='passcode-key'+(k==='del'?' del':'');b.textContent=k==='del'?'⌫':k;
+    if(k===''){b.style.visibility='hidden';pad.appendChild(b);return}
+    b.onclick=()=>{vibe();if(k==='del')passInput=passInput.slice(0,-1);else passInput+=k;if(passInput.length>4)passInput=passInput.slice(-4);updateDots();if(passInput.length===4){if(passInput===passcode)unlock();else{shakeDots();passInput='';updateDots()}}};
+    pad.appendChild(b);
   });
-  for(let i=0;i<4;i++){const d=document.createElement('div');d.className='passcode-dot';dotsEl.appendChild(d)}
+  for(let i=0;i<4;i++){const d=document.createElement('div');d.className='passcode-dot';document.getElementById('dots').appendChild(d)}
 }
-function updateDots(){dotsEl.querySelectorAll('.passcode-dot').forEach((d,i)=>d.classList.toggle('filled',i<passInput.length))}
-function shakeDots(){dotsEl.querySelectorAll('.passcode-dot').forEach(d=>{d.classList.add('error');setTimeout(()=>d.classList.remove('error'),400)})}
-function unlock(){lockEl.classList.add('hidden');unlocked=true}
-function lock(){lockEl.classList.remove('hidden');unlocked=false;passInput='';updateDots()}
+function updateDots(){document.getElementById('dots').querySelectorAll('.passcode-dot').forEach((d,i)=>d.classList.toggle('filled',i<passInput.length))}
+function shakeDots(){document.getElementById('dots').querySelectorAll('.passcode-dot').forEach(d=>{d.classList.add('error');setTimeout(()=>d.classList.remove('error'),400)})}
+function unlock(){document.getElementById('lock').classList.add('hidden');unlocked=true}
+function lock(){document.getElementById('lock').classList.remove('hidden');unlocked=false;passInput='';updateDots()}
 document.getElementById('lock-btn').onclick=()=>{vibe();lock()};
 
-// ═══════════════ Timer ═══════════════
+// ═══════════ Timer ═══════════
 let timerRunning=false,timerStart=0,timerElapsed=0,timerInterval=null,pendingStartAction=null;
-const timerDisplay=document.getElementById('timer-display'),timerState=document.getElementById('timer-state'),timerProgress=document.getElementById('timer-progress'),timerBtn=document.getElementById('timer-btn'),cancelBtn=document.getElementById('cancel-btn');
-
-function updateTimerDisplay(){
-  const s=Math.floor(timerElapsed/1000),m=Math.floor(s/60),sec=s%60;
-  timerDisplay.textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
-  timerProgress.style.strokeDashoffset=282.7*(1-Math.min(s/1800,1));
-}
-function startTimer(){timerRunning=true;timerStart=Date.now()-timerElapsed;timerBtn.classList.add('running');timerBtn.textContent='⏸';timerState.textContent='计时中...';cancelBtn.classList.add('visible');timerInterval=setInterval(()=>{timerElapsed=Date.now()-timerStart;updateTimerDisplay()},500)}
-function cancelTimer(){timerRunning=false;clearInterval(timerInterval);timerElapsed=0;updateTimerDisplay();timerBtn.classList.remove('running');timerBtn.textContent='▶';cancelBtn.classList.remove('visible');timerState.textContent='已取消';setTimeout(()=>{timerState.textContent='就绪'},2000)}
-function stopTimer(){timerRunning=false;clearInterval(timerInterval);timerElapsed=Date.now()-timerStart;updateTimerDisplay();timerBtn.classList.remove('running');timerBtn.textContent='▶';cancelBtn.classList.remove('visible');timerState.textContent='已完成';navigateTo('record');updateRecordForm()}
+const td=document.getElementById('timer-display'),tsEl=document.getElementById('timer-state'),tp=document.getElementById('timer-progress'),tb=document.getElementById('timer-btn'),cb=document.getElementById('cancel-btn');
+function updateTimerDisplay(){const s=Math.floor(timerElapsed/1000),m=Math.floor(s/60),sec=s%60;td.textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');tp.style.strokeDashoffset=282.7*(1-Math.min(s/1800,1))}
+function startTimer(){timerRunning=true;timerStart=Date.now()-timerElapsed;tb.classList.add('running');tb.textContent='⏸';tsEl.textContent='计时中...';cb.classList.add('visible');timerInterval=setInterval(()=>{timerElapsed=Date.now()-timerStart;updateTimerDisplay()},500)}
+function cancelTimer(){timerRunning=false;clearInterval(timerInterval);timerElapsed=0;updateTimerDisplay();tb.classList.remove('running');tb.textContent='▶';cb.classList.remove('visible');tsEl.textContent='已取消';setTimeout(()=>{tsEl.textContent='就绪'},2000)}
+function stopTimer(){timerRunning=false;clearInterval(timerInterval);timerElapsed=Date.now()-timerStart;updateTimerDisplay();tb.classList.remove('running');tb.textContent='▶';cb.classList.remove('visible');tsEl.textContent='已完成';navigateTo('record');updateRecordForm()}
 function doTimerStart(){pendingStartAction=null;timerElapsed=0;updateTimerDisplay();startTimer()}
-function doManualEntry(){pendingStartAction=null;timerElapsed=0;updateTimerDisplay();timerState.textContent='手动输入';navigateTo('record');updateRecordForm()}
-timerBtn.onclick=()=>{vibe();if(timerRunning){stopTimer();return};if(interceptionEnabled){pendingStartAction='timer';showInterception(doTimerStart);return};doTimerStart()};
-cancelBtn.onclick=()=>{vibe();if(timerRunning){if(confirm('取消本次计时？'))cancelTimer()}};
+function doManualEntry(){pendingStartAction=null;timerElapsed=0;updateTimerDisplay();tsEl.textContent='手动输入';navigateTo('record');updateRecordForm()}
+tb.onclick=()=>{vibe();if(timerRunning){stopTimer();return};if(interceptionEnabled){pendingStartAction='timer';showInterception(doTimerStart);return};doTimerStart()};
+cb.onclick=()=>{vibe();if(timerRunning&&confirm('取消本次计时？'))cancelTimer()};
 document.getElementById('manual-entry-btn').onclick=()=>{vibe();if(interceptionEnabled){pendingStartAction='manual';showInterception(doManualEntry);return};doManualEntry()};
 
-// ═══════════════ Achievements ═══════════════
+// ═══════════ Achievements ═══════════
 const achievements=[
-  {id:'clean_3',name:'第一步',desc:'连续3天无记录',icon:'🌱',days:3},
-  {id:'clean_7',name:'一周坚守',desc:'连续7天无记录',icon:'⭐',days:7},
-  {id:'clean_14',name:'双周突破',desc:'连续14天无记录',icon:'🌟',days:14},
-  {id:'clean_30',name:'月度勇士',desc:'连续30天无记录',icon:'🏅',days:30},
-  {id:'clean_60',name:'双月战神',desc:'连续60天无记录',icon:'👑',days:60},
-  {id:'clean_100',name:'百日传奇',desc:'连续100天无记录',icon:'💎',days:100},
-  {id:'reduce_half',name:'减半达人',desc:'周次数比上周少50%+',icon:'📉',type:'reduction'},
-  {id:'record_breaker',name:'破纪录',desc:'刷新个人最长戒断纪录',icon:'🔝',type:'record'},
+  {id:'clean_3',name:'第一步',desc:'连续3天无记录',icon:'🌱',days:3},{id:'clean_7',name:'一周坚守',desc:'连续7天无记录',icon:'⭐',days:7},
+  {id:'clean_14',name:'双周突破',desc:'连续14天无记录',icon:'🌟',days:14},{id:'clean_30',name:'月度勇士',desc:'连续30天无记录',icon:'🏅',days:30},
+  {id:'clean_60',name:'双月战神',desc:'连续60天无记录',icon:'👑',days:60},{id:'clean_100',name:'百日传奇',desc:'连续100天无记录',icon:'💎',days:100},
+  {id:'reduce_half',name:'减半达人',desc:'周次数比上周少50%+',icon:'📉',type:'reduction'},{id:'record_breaker',name:'破纪录',desc:'刷新个人最长戒断纪录',icon:'🔝',type:'record'},
 ];
 const defaultRewards=[{days:7,reward:'给自己买一本想读的书'},{days:14,reward:'去吃一顿喜欢的餐厅'},{days:30,reward:'买一件心仪已久的装备'}];
 
 function computeProgress(sessions){
-  const now=new Date(),today=now.toISOString().slice(0,10);
-  let daysSince=0,longestGap=0;
-  if(sessions.length>0){
-    const lastDate=new Date(sessions[0].startTime).toISOString().slice(0,10);
-    daysSince=Math.floor((new Date(today)-new Date(lastDate))/86400000);
-  }
+  const now=new Date(),today=now.toISOString().slice(0,10);let daysSince=0,longestGap=0;
+  if(sessions.length>0){const ld=new Date(sessions[0].startTime).toISOString().slice(0,10);daysSince=Math.floor((new Date(today)-new Date(ld))/86400000)}
   const sorted=sessions.map(s=>new Date(s.startTime)).sort((a,b)=>a-b);
-  for(let i=1;i<sorted.length;i++){const gap=Math.floor((sorted[i]-sorted[i-1])/86400000);if(gap>longestGap)longestGap=gap}
-  if(sessions.length>0){const lastGap=Math.floor((now-sorted[sorted.length-1])/86400000);if(lastGap>longestGap)longestGap=lastGap}
-  const getWS=d=>{const s=new Date(d);s.setDate(s.getDate()-s.getDay());s.setHours(0,0,0,0);return s};
-  const thisWS=getWS(now),lastWS=new Date(thisWS);lastWS.setDate(lastWS.getDate()-7);
-  const thisWeek=sessions.filter(s=>new Date(s.startTime)>=thisWS).length;
-  const lastWeek=sessions.filter(s=>{const d=new Date(s.startTime);return d>=lastWS&&d<thisWS}).length;
-  const weekChange=lastWeek>0?Math.round((thisWeek-lastWeek)/lastWeek*100):(thisWeek>0?100:0);
-  const thisMonth=sessions.filter(s=>{const d=new Date(s.startTime);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).length;
-  const lm=new Date(now.getFullYear(),now.getMonth()-1,1);
-  const lastMonth=sessions.filter(s=>{const d=new Date(s.startTime);return d.getMonth()===lm.getMonth()&&d.getFullYear()===lm.getFullYear()}).length;
-  const monthChange=lastMonth>0?Math.round((thisMonth-lastMonth)/lastMonth*100):(thisMonth>0?100:0);
-  return{daysSince,longestGap,thisWeek,lastWeek,weekChange,thisMonth,lastMonth,monthChange};
+  for(let i=1;i<sorted.length;i++){const g=Math.floor((sorted[i]-sorted[i-1])/86400000);if(g>longestGap)longestGap=g}
+  if(sessions.length>0){const lg=Math.floor((now-sorted[sorted.length-1])/86400000);if(lg>longestGap)longestGap=lg}
+  const gws=d=>{const s=new Date(d);s.setDate(s.getDate()-s.getDay());s.setHours(0,0,0,0);return s};
+  const tws=gws(now),lws=new Date(tws);lws.setDate(lws.getDate()-7);
+  const tw=sessions.filter(s=>new Date(s.startTime)>=tws).length,lw=sessions.filter(s=>{const d=new Date(s.startTime);return d>=lws&&d<tws}).length;
+  const wc=lw>0?Math.round((tw-lw)/lw*100):(tw>0?100:0);
+  const lmd=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const tm2=sessions.filter(s=>{const d=new Date(s.startTime);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).length;
+  const lm2=sessions.filter(s=>{const d=new Date(s.startTime);return d.getMonth()===lmd.getMonth()&&d.getFullYear()===lmd.getFullYear()}).length;
+  const mc2=lm2>0?Math.round((tm2-lm2)/lm2*100):(tm2>0?100:0);
+  return{daysSince,longestGap,thisWeek:tw,lastWeek:lw,weekChange:wc,thisMonth:tm2,lastMonth:lm2,monthChange:mc2};
 }
 
 function checkAchievements(progress){
-  const newlyUnlocked=[];
-  const prevRecord=unlockedAchievements.includes('record_breaker')?Infinity:0;
-  achievements.forEach(ach=>{
-    if(unlockedAchievements.includes(ach.id))return;
-    let unlock=false;
-    if(ach.type==='reduction'){if(progress.weekChange<=-50&&progress.lastWeek>=2)unlock=true}
-    else if(ach.type==='record'){if(progress.longestGap>prevRecord&&progress.longestGap>=2)unlock=true}
-    else if(ach.days&&progress.daysSince>=ach.days)unlock=true;
-    if(unlock){unlockedAchievements.push(ach.id);newlyUnlocked.push(ach)}
-  });
-  if(progress.longestGap>prevRecord&&!unlockedAchievements.includes('record_breaker')){
-    unlockedAchievements.push('record_breaker');
-    newlyUnlocked.push(achievements.find(a=>a.id==='record_breaker'));
-  }
-  if(newlyUnlocked.length>0){
-    dbPut('settings',{key:'achievements',value:[...unlockedAchievements]});
-    newlyUnlocked.forEach(ach=>showCelebration(ach));
-  }
-  return newlyUnlocked;
+  const nu=[];const pr=unlockedAchievements.includes('record_breaker')?Infinity:0;
+  achievements.forEach(a=>{if(unlockedAchievements.includes(a.id))return;let u=false;if(a.type==='reduction'){if(progress.weekChange<=-50&&progress.lastWeek>=2)u=true}else if(a.type==='record'){if(progress.longestGap>pr&&progress.longestGap>=2)u=true}else if(a.days&&progress.daysSince>=a.days)u=true;if(u){unlockedAchievements.push(a.id);nu.push(a)}});
+  if(progress.longestGap>pr&&!unlockedAchievements.includes('record_breaker')){unlockedAchievements.push('record_breaker');nu.push(achievements.find(a=>a.id==='record_breaker'))}
+  if(nu.length){dbPut('settings',{key:'achievements',value:[...unlockedAchievements]});nu.forEach(a=>showCelebration(a))}return nu;
 }
-
-function showCelebration(ach){
-  const el=document.getElementById('celebration');
-  el.innerHTML=`<div class="celebration-card"><div class="cel-icon">${ach.icon}</div><div class="cel-title">🏆 ${ach.name} 解锁！</div><div class="cel-desc">${ach.desc}</div></div>`;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),3500);
-}
+function showCelebration(a){const el=document.getElementById('celebration');el.innerHTML=`<div class="celebration-card"><div class="cel-icon">${a.icon}</div><div class="cel-title">🏆 ${a.name} 解锁！</div><div class="cel-desc">${a.desc}</div></div>`;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3500)}
 
 function renderProgress(sessions,checkins){
-  const progress=computeProgress(sessions);
-  const sec=document.getElementById('progress-section');
-  if(sessions.length===0){sec.style.display='none';return}
+  const p=computeProgress(sessions),sec=document.getElementById('progress-section');
+  if(sessions.length===0){sec.style.display='none';return null}
   sec.style.display='block';
-  document.getElementById('days-since').textContent=progress.daysSince;
-  document.getElementById('longest-record').textContent=progress.longestGap;
-  // Next milestone
-  const next=achievements.filter(a=>a.days&&!unlockedAchievements.includes(a.id)&&a.days>progress.daysSince).sort((a,b)=>a.days-b.days)[0];
-  const nextDays=next?next.days:100;
-  const pct=Math.min(100,Math.round(progress.daysSince/nextDays*100));
-  document.getElementById('progress-bar').style.width=pct+'%';
-  // Milestone markers
-  const milestones=[3,7,14,30,60,100];
-  document.getElementById('progress-milestones').innerHTML=milestones.map(m=>`<span class="${progress.daysSince>=m?'reached':''}">${m}天</span>`).join(' ');
+  // Weekly progress bar
+  const cap=getCurrentWeeklyCap(sessions),pctWk=cap===Infinity?0:Math.min(100,Math.round(p.thisWeek/cap*100));
+  const wbar=document.getElementById('weekly-progress-bar'),wval=document.getElementById('weekly-progress-val');
+  wbar.style.width=pctWk+'%';wbar.className='pb-fill weekly'+(pctWk>=100?' danger':pctWk>=80?' warn':'');
+  wval.textContent=cap===Infinity?`${p.thisWeek} 次`:`${p.thisWeek} / ${cap} 次`;
+  document.getElementById('weekly-progress-sub').textContent=cap===Infinity?'':'剩余 '+(Math.max(0,cap-p.thisWeek))+' 次';
+  // Clean days progress
+  const cr=document.getElementById('clean-progress-row'),cleanPct=goalMode==='clean_days'?Math.min(100,Math.round(p.daysSince/cleanDaysTarget*100)):0;
+  if(goalMode==='clean_days'){
+    cr.style.display='block';
+    document.getElementById('clean-progress-bar').style.width=cleanPct+'%';
+    document.getElementById('clean-progress-val').textContent=`${p.daysSince} / ${cleanDaysTarget} 天`;
+    document.getElementById('clean-progress-sub').textContent=p.daysSince>=cleanDaysTarget?'🎉 目标达成！':`距目标还有 ${Math.max(0,cleanDaysTarget-p.daysSince)} 天`;
+  }else{cr.style.display='none'}
+  // Longest record
+  document.getElementById('longest-record').textContent=p.longestGap;
   // Week compare
-  const wv=document.getElementById('week-compare-val'),wc=document.getElementById('week-compare-change');
-  wv.textContent=progress.thisWeek+' vs '+progress.lastWeek;
-  if(progress.lastWeek===0&&progress.thisWeek===0){wc.textContent='--';wc.className='pc-change pc-flat'}
-  else if(progress.weekChange<0){wc.textContent='↓ '+Math.abs(progress.weekChange)+'% 🟢';wc.className='pc-change pc-down'}
-  else if(progress.weekChange>0){wc.textContent='↑ '+progress.weekChange+'%';wc.className='pc-change pc-up'}
-  else{wc.textContent='持平';wc.className='pc-change pc-flat'}
-  // Month compare
-  const mv=document.getElementById('month-compare-val'),mc=document.getElementById('month-compare-change');
-  mv.textContent=progress.thisMonth+' vs '+progress.lastMonth;
-  if(progress.lastMonth===0&&progress.thisMonth===0){mc.textContent='--';mc.className='pc-change pc-flat'}
-  else if(progress.monthChange<0){mc.textContent='↓ '+Math.abs(progress.monthChange)+'% 🟢';mc.className='pc-change pc-down'}
-  else if(progress.monthChange>0){mc.textContent='↑ '+progress.monthChange+'%';mc.className='pc-change pc-up'}
-  else{mc.textContent='持平';mc.className='pc-change pc-flat'}
-  // Reward reminder
-  checkRewardReminder(progress.daysSince);
-  return progress;
+  const wct=document.getElementById('week-compare-text');
+  if(p.lastWeek===0&&p.thisWeek===0)wct.textContent='';
+  else if(p.weekChange<0)wct.innerHTML=`本周 vs 上周 <span style="color:var(--secondary)">↓${Math.abs(p.weekChange)}% 🟢</span>`;
+  else if(p.weekChange>0)wct.innerHTML=`本周 vs 上周 <span style="color:var(--error)">↑${p.weekChange}%</span>`;
+  else wct.textContent='本周 vs 上周 持平';
+  // Reward
+  checkRewardReminder(p.daysSince);
+  // Limit alert
+  if(cap!==Infinity&&p.thisWeek>=cap)document.getElementById('limit-alert').innerHTML='<div>⚠️ 你已达到本周次数上限！请克制。</div>';
+  else if(cap!==Infinity&&pctWk>=80)document.getElementById('limit-alert').innerHTML=`<div>⚠️ 本周已用 ${p.thisWeek}/${cap} 次，接近上限</div>`;
+  else document.getElementById('limit-alert').innerHTML='';
+  document.getElementById('limit-alert').classList.toggle('visible',cap!==Infinity&&(p.thisWeek>=cap||pctWk>=80));
+  return p;
 }
-
 function renderAchievements(){
-  const grid=document.getElementById('achievement-grid');if(!grid)return;
-  grid.innerHTML=achievements.map(a=>{
-    const unlocked=unlockedAchievements.includes(a.id);
-    return`<div class="achievement-item ${unlocked?'unlocked':'locked'}"><div class="ach-icon">${unlocked?a.icon:'🔒'}</div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>`;
-  }).join('');
+  document.getElementById('achievement-grid').innerHTML=achievements.map(a=>{const u=unlockedAchievements.includes(a.id);return`<div class="achievement-item ${u?'unlocked':'locked'}"><div class="ach-icon">${u?a.icon:'🔒'}</div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>`}).join('');
+}
+function checkRewardReminder(ds){const el=document.getElementById('reward-reminder'),r=rewards.find(r=>r.days===ds);if(r){el.textContent=`🎁 你已坚持 ${ds} 天！奖励自己：${r.reward}`;el.classList.add('visible')}else el.classList.remove('visible')}
+
+// Post-save check for limits
+function checkPostSaveLimits(sessions){
+  const p=computeProgress(sessions),cap=getCurrentWeeklyCap(sessions);
+  if(cap!==Infinity&&p.thisWeek>cap){
+    document.getElementById('interception').classList.remove('hidden');
+    document.getElementById('int-stats').innerHTML=`你本周已记录 <strong>${p.thisWeek}</strong> 次，超过上限 <strong>${cap}</strong> 次`;
+    document.getElementById('int-msg').textContent='目标已触发，请认真对待自己的承诺';
+    document.getElementById('int-alt').innerHTML='<div class="alt-label">💡 接下来可以做什么</div><li>本周停止记录，给自己一个机会</li><li>反思是什么触发了这次行为</li><li>调整下周的策略</li>';
+    document.getElementById('int-proceed-btn').onclick=()=>document.getElementById('interception').classList.add('hidden');
+    document.getElementById('int-resist-btn').onclick=()=>{document.getElementById('interception').classList.add('hidden');renderHome()};
+  }
+  // Clean days broken
+  if(goalMode==='clean_days'&&p.daysSince===0){
+    toast('💔 戒断天数已重置。每一次重新开始都是进步。');
+  }
+  // Clean days target reached
+  if(goalMode==='clean_days'&&p.daysSince>=cleanDaysTarget){
+    showCelebration({icon:'🎯',name:`${cleanDaysTarget}天目标达成！`,desc:'你做到了！这是你应得的胜利。'});
+  }
 }
 
-function checkRewardReminder(daysSince){
-  const el=document.getElementById('reward-reminder');
-  const rwd=rewards.find(r=>r.days===daysSince);
-  if(rwd){el.textContent=`🎁 你已坚持 ${daysSince} 天！奖励自己：${rwd.reward}`;el.classList.add('visible')}
-  else el.classList.remove('visible');
-}
-
-// ═══════════════ Interception ═══════════════
+// ═══════════ Interception ═══════════
 const defaultInterventions=[
   {trigger:'压力释放',message:'感到压力时，你其实不需要这个',alternatives:['做10个深呼吸','出门走5分钟','喝一杯水','听一首喜欢的歌']},
   {trigger:'无聊',message:'无聊是大脑在寻找刺激，试试这些',alternatives:['看一部纪录片','整理房间','给朋友发消息','学习一个新技能']},
@@ -624,236 +586,149 @@ function getRandomIntervention(){return interventions.length?interventions[Math.
 async function showInterception(onProceed){
   const sessions=(await dbGetAll('sessions')).filter(s=>!s.hidden);sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
   const checkins=await dbGetAll('checkins'),now=new Date(),today=now.toISOString().slice(0,10);
-  let daysSince=null,streak=0;
-  if(sessions.length>0){const lastDate=new Date(sessions[0].startTime).toISOString().slice(0,10);daysSince=Math.floor((new Date(today)-new Date(lastDate))/86400000)}
-  const cd=new Set(checkins.map(c=>c.date));let d=new Date(today);if(!cd.has(d.toISOString().slice(0,10)))d.setDate(d.getDate()-1);
-  while(cd.has(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}
-  let statsHtml='';if(daysSince!==null&&daysSince>0)statsHtml+=`已戒断 <strong>${daysSince}</strong> 天 · `;if(streak>0)statsHtml+=`连续打卡 <strong>${streak}</strong> 天`;else if(!daysSince||daysSince===0)statsHtml+='这是今天的第一次';
-  document.getElementById('int-stats').innerHTML=statsHtml;
-  const intv=getRandomIntervention();
-  document.getElementById('int-msg').textContent=intv?intv.message:'等一等，你真的需要记录吗？';
-  document.getElementById('int-alt').innerHTML=intv&&intv.alternatives.length?`<div class="alt-label">💡 试试替代行为</div>${intv.alternatives.map(a=>`<li>${a}</li>`).join('')}`:'<div class="alt-label">💡 试试替代行为</div><li>深呼吸，给自己30秒</li><li>问自己：10分钟后我还想做这件事吗？</li>';
+  let daysSince=null,streak=0;if(sessions.length>0){const ld=new Date(sessions[0].startTime).toISOString().slice(0,10);daysSince=Math.floor((new Date(today)-new Date(ld))/86400000)}
+  const cd2=new Set(checkins.map(c=>c.date));let d=new Date(today);if(!cd2.has(d.toISOString().slice(0,10)))d.setDate(d.getDate()-1);
+  while(cd2.has(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}
+  let sh='';if(daysSince!==null&&daysSince>0)sh+=`已戒断 <strong>${daysSince}</strong> 天 · `;if(streak>0)sh+=`连续打卡 <strong>${streak}</strong> 天`;else if(!daysSince||daysSince===0)sh+='这是今天的第一次';
+  document.getElementById('int-stats').innerHTML=sh;
+  const intv=getRandomIntervention();document.getElementById('int-msg').textContent=intv?intv.message:'等一等，你真的需要记录吗？';
+  document.getElementById('int-alt').innerHTML=intv&&intv.alternatives.length?`<div class="alt-label">💡 试试替代行为</div>${intv.alternatives.map(a=>`<li>${a}</li>`).join('')}`:'<div class="alt-label">💡 试试替代行为</div><li>深呼吸，给自己30秒</li>';
   const el=document.getElementById('interception');el.classList.remove('hidden');
   document.getElementById('int-proceed-btn').onclick=()=>{vibe();el.classList.add('hidden');onProceed()};
-  document.getElementById('int-resist-btn').onclick=()=>{vibe();el.classList.add('hidden');const alts=intv?intv.alternatives.join('、'):'深呼吸，转移注意力';toast(`👍 你战胜了一次冲动！试试：${alts.slice(0,30)}...`);dbPut('settings',{key:'last_resist',value:now.toISOString()})};
+  document.getElementById('int-resist-btn').onclick=()=>{vibe();el.classList.add('hidden');toast('👍 你战胜了一次冲动！');dbPut('settings',{key:'last_resist',value:now.toISOString()})};
 }
 
-// ═══════════════ Trigger Tips ═══════════════
+// ═══════════ Trigger Tips ═══════════
 function updateTriggerTip(){
-  const tipEl=document.getElementById('trigger-tip'),selected=[...document.querySelectorAll('#trigger-chips .chip.selected')].map(c=>c.dataset.trigger);
-  if(selected.length===0){tipEl.classList.remove('visible');return}
-  let intv=null;for(const t of selected){intv=getInterventionForTrigger(t);if(intv)break}
-  if(!intv){tipEl.classList.remove('visible');return}
-  tipEl.innerHTML=`<div class="tt-label">💡 ${intv.trigger} · 应对方案</div><div>${intv.message}</div><div class="tt-alt"><ul>${intv.alternatives.map(a=>`<li>${a}</li>`).join('')}</ul></div><button class="tt-resist" onclick="resistFromRecord()">✋ 我决定克制</button>`;
-  tipEl.classList.add('visible');
+  const sel=[...document.querySelectorAll('#trigger-chips .chip.selected')].map(c=>c.dataset.trigger),tip=document.getElementById('trigger-tip');
+  if(!sel.length){tip.classList.remove('visible');return}
+  let intv=null;for(const t of sel){intv=getInterventionForTrigger(t);if(intv)break}
+  if(!intv){tip.classList.remove('visible');return}
+  tip.innerHTML=`<div class="tt-label">💡 ${intv.trigger} · 应对方案</div><div>${intv.message}</div><div class="tt-alt"><ul>${intv.alternatives.map(a=>`<li>${a}</li>`).join('')}</ul></div><button class="tt-resist" onclick="resistFromRecord()">✋ 我决定克制</button>`;tip.classList.add('visible');
 }
-window.resistFromRecord=function(){const alts=document.querySelectorAll('#trigger-tip .tt-alt li');toast(`👍 你战胜了一次冲动！`);cancelEdit();navigateTo('home');dbPut('settings',{key:'last_resist',value:new Date().toISOString()})};
+window.resistFromRecord=()=>{toast('👍 你战胜了一次冲动！');cancelEdit();navigateTo('home');dbPut('settings',{key:'last_resist',value:new Date().toISOString()})};
 
-// ═══════════════ Record ═══════════════
+// ═══════════ Record ═══════════
 const defaultTriggers=['睡前','无聊','压力释放','自然冲动','刺激内容','伴侣相关','早起','运动后','饮酒后'];
 let triggers=[...defaultTriggers],editingId=null;
 function renderTriggerChips(){document.getElementById('trigger-chips').innerHTML=triggers.map(t=>`<div class="chip" data-trigger="${t}">${t}</div>`).join('')}
 document.getElementById('trigger-chips').onclick=e=>{if(e.target.classList.contains('chip')){e.target.classList.toggle('selected');updateTriggerTip()}};
-document.getElementById('record-min').oninput=function(){const m=parseInt(this.value)||0;timerElapsed=m*60000;updateRecordForm()};
+document.getElementById('record-min').oninput=function(){timerElapsed=(parseInt(this.value)||0)*60000;updateRecordForm()};
 function updateRecordForm(){
-  const s=Math.floor(timerElapsed/1000),m=Math.floor(s/60),sec=s%60;
-  document.getElementById('record-dur').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
-  document.getElementById('record-min').value=m||'';const startEl=document.getElementById('record-start-time');
-  if(editingId)startEl.textContent='编辑模式';
-  else if(timerStart>0&&!timerRunning){const st=new Date(timerStart-timerElapsed);startEl.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}`}
-  else if(timerRunning){const st=new Date(timerStart);startEl.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}（计时中）`}
-  else startEl.textContent='';
+  const s=Math.floor(timerElapsed/1000),m=Math.floor(s/60),sec=s%60;document.getElementById('record-dur').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  document.getElementById('record-min').value=m||'';const se=document.getElementById('record-start-time');
+  if(editingId)se.textContent='编辑模式';
+  else if(timerStart>0&&!timerRunning){const st=new Date(timerStart-timerElapsed);se.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}`}
+  else if(timerRunning){const st=new Date(timerStart);se.textContent=`开始 ${st.getHours().toString().padStart(2,'0')}:${st.getMinutes().toString().padStart(2,'0')}（计时中）`}
+  else se.textContent='';
 }
 document.getElementById('save-record-btn').onclick=async()=>{vibe();
-  const minInput=document.getElementById('record-min');let min=parseInt(minInput.value)||0;if(timerElapsed>0&&min===0)min=Math.round(timerElapsed/60000);
-  if(min<=0){toast('请输入时长');return}
+  let m=parseInt(document.getElementById('record-min').value)||0;if(timerElapsed>0&&m===0)m=Math.round(timerElapsed/60000);
+  if(m<=0){toast('请输入时长');return}
   const sel=[...document.querySelectorAll('#trigger-chips .chip.selected')].map(c=>c.dataset.trigger),notes=document.getElementById('record-notes').value.trim();
-  if(editingId){const ss=await dbGetAll('sessions'),s=ss.find(x=>x.id===editingId);if(s){s.duration=min;s.triggers=sel;s.notes=notes;s.startTime=s.startTime||new Date().toISOString();await dbPut('sessions',s);toast('✅ 已更新')}cancelEdit()}
-  else{await dbPut('sessions',{startTime:new Date().toISOString(),duration:min,triggers:sel,notes,hidden:false});toast('✅ 已保存')}
-  timerElapsed=0;updateTimerDisplay();timerState.textContent='就绪';
+  if(editingId){const ss=await dbGetAll('sessions'),s=ss.find(x=>x.id===editingId);if(s){s.duration=m;s.triggers=sel;s.notes=notes;s.startTime=s.startTime||new Date().toISOString();await dbPut('sessions',s);toast('✅ 已更新')}cancelEdit()}
+  else{await dbPut('sessions',{startTime:new Date().toISOString(),duration:m,triggers:sel,notes,hidden:false});toast('✅ 已保存')}
+  timerElapsed=0;updateTimerDisplay();tsEl.textContent='就绪';
   document.querySelectorAll('#trigger-chips .chip.selected').forEach(c=>c.classList.remove('selected'));
   document.getElementById('record-notes').value='';document.getElementById('record-min').value='';
-  document.getElementById('trigger-tip').classList.remove('visible');
-  updateRecordForm();renderHome();renderHistory();
+  document.getElementById('trigger-tip').classList.remove('visible');updateRecordForm();
+  await renderHome();renderHistory();
+  const allS=(await dbGetAll('sessions')).filter(s=>!s.hidden);checkPostSaveLimits(allS);
 };
 function cancelEdit(){editingId=null;document.getElementById('edit-indicator').style.display='none';document.getElementById('edit-cancel-btn').classList.remove('visible');document.getElementById('save-record-btn').textContent='💾 保存记录';document.getElementById('record-start-time').textContent='';document.getElementById('record-notes').value='';document.getElementById('record-min').value='';document.querySelectorAll('#trigger-chips .chip.selected').forEach(c=>c.classList.remove('selected'));document.getElementById('trigger-tip').classList.remove('visible');timerElapsed=0;updateTimerDisplay()}
 document.getElementById('edit-cancel-btn').onclick=()=>{vibe();cancelEdit();navigateTo('history')};
 
-// ═══════════════ Check-in ═══════════════
+// ═══════════ Check-in ═══════════
 const checkinDims=[{key:'energy',label:'精力',emoji:'⚡',color:'var(--primary)'},{key:'focus',label:'专注',emoji:'🎯',color:'var(--secondary)'},{key:'mood',label:'情绪',emoji:'😊',color:'#416363'},{key:'sleep',label:'睡眠',emoji:'😴',color:'var(--primary-container)'}];
-function buildCheckinForm(today){
-  const ex=window._checkinCache?.[today]||{};document.getElementById('checkin-date').textContent='📅 '+today;let html='';
-  checkinDims.forEach(dim=>{html+=`<div class="form-group"><div class="form-label">${dim.emoji} ${dim.label}</div><div class="rating-row">`;for(let i=1;i<=5;i++)html+=`<div class="rating-dot ${ex[dim.key]===i?'selected':''}" data-dim="${dim.key}" data-val="${i}">${i}</div>`;html+='</div></div>'});
-  html+=`<div class="form-group"><div class="form-label">💬 备注</div><textarea id="checkin-notes" placeholder="可选...">${ex.notes||''}</textarea></div>`;
-  document.getElementById('checkin-form').innerHTML=html;
-  document.querySelectorAll('#checkin-form .rating-dot').forEach(dot=>{dot.onclick=function(){this.parentElement.querySelectorAll('.rating-dot').forEach(d=>d.classList.remove('selected'));this.classList.add('selected')}});
-}
-document.getElementById('save-checkin-btn').onclick=async()=>{vibe();const today=new Date().toISOString().slice(0,10),data={date:today};checkinDims.forEach(dim=>{const sel=document.querySelector(`.rating-dot.selected[data-dim="${dim.key}"]`);data[dim.key]=sel?parseInt(sel.dataset.val):null});data.notes=document.getElementById('checkin-notes')?.value?.trim()||'';if(!data.energy&&!data.focus&&!data.mood&&!data.sleep){toast('请至少评一项');return};await dbPut('checkins',data);window._checkinCache=window._checkinCache||{};window._checkinCache[today]=data;toast('✅ 已保存');await renderCheckinHistory()};
-async function renderCheckinHistory(){
-  const checkins=await dbGetAll('checkins');checkins.sort((a,b)=>b.date.localeCompare(a.date));window._checkinCache={};checkins.forEach(c=>window._checkinCache[c.date]=c);
-  const today=new Date().toISOString().slice(0,10),last7=checkins.filter(c=>c.date!==today).slice(0,7);let html='';
-  last7.forEach(c=>{const p=['📅 '+c.date];checkinDims.forEach(d=>{if(c[d.key])p.push(d.emoji+c[d.key])});html+=`<div class="session-item"><div class="si-left"><div class="si-info">${p.join(' · ')}</div></div><button class="del-icon" onclick="deleteCheckin('${c.date}')">✕</button></div>`});
-  document.getElementById('checkin-history').innerHTML=html||'<div class="empty">暂无历史打卡</div>';buildCheckinForm(today);
-}
+function buildCheckinForm(today){const ex=window._checkinCache?.[today]||{};document.getElementById('checkin-date').textContent='📅 '+today;let h='';checkinDims.forEach(d=>{h+=`<div class="form-group"><div class="form-label">${d.emoji} ${d.label}</div><div class="rating-row">`;for(let i=1;i<=5;i++)h+=`<div class="rating-dot ${ex[d.key]===i?'selected':''}" data-dim="${d.key}" data-val="${i}">${i}</div>`;h+='</div></div>'});h+=`<div class="form-group"><div class="form-label">💬 备注</div><textarea id="checkin-notes" placeholder="可选...">${ex.notes||''}</textarea></div>`;document.getElementById('checkin-form').innerHTML=h;document.querySelectorAll('#checkin-form .rating-dot').forEach(d=>{d.onclick=function(){this.parentElement.querySelectorAll('.rating-dot').forEach(x=>x.classList.remove('selected'));this.classList.add('selected')}})}
+document.getElementById('save-checkin-btn').onclick=async()=>{vibe();const td2=new Date().toISOString().slice(0,10),data={date:td2};checkinDims.forEach(d=>{const s=document.querySelector(`.rating-dot.selected[data-dim="${d.key}"]`);data[d.key]=s?parseInt(s.dataset.val):null});data.notes=document.getElementById('checkin-notes')?.value?.trim()||'';if(!data.energy&&!data.focus&&!data.mood&&!data.sleep){toast('请至少评一项');return};await dbPut('checkins',data);window._checkinCache=window._checkinCache||{};window._checkinCache[td2]=data;toast('✅ 已保存');await renderCheckinHistory()};
+async function renderCheckinHistory(){const cs=await dbGetAll('checkins');cs.sort((a,b)=>b.date.localeCompare(a.date));window._checkinCache={};cs.forEach(c=>window._checkinCache[c.date]=c);const td2=new Date().toISOString().slice(0,10),l7=cs.filter(c=>c.date!==td2).slice(0,7);let h='';l7.forEach(c=>{const p=['📅 '+c.date];checkinDims.forEach(d=>{if(c[d.key])p.push(d.emoji+c[d.key])});h+=`<div class="session-item"><div class="si-left"><div class="si-info">${p.join(' · ')}</div></div><button class="del-icon" onclick="deleteCheckin('${c.date}')">✕</button></div>`});document.getElementById('checkin-history').innerHTML=h||'<div class="empty">暂无历史打卡</div>';buildCheckinForm(td2)}
 
-// ═══════════════ Stats ═══════════════
-async function renderStats(){
-  const sessions=(await dbGetAll('sessions')).filter(s=>!s.hidden),checkins=await dbGetAll('checkins');sessions.sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));
-  renderAchievements();renderCalendar(sessions,checkins);renderChart(sessions);renderCorrelation(sessions,checkins);renderInsights(sessions,checkins);
-}
-function renderCalendar(sessions,checkins){
-  const now=new Date(),endDate=new Date(now.getFullYear(),now.getMonth(),now.getDate()),startDate=new Date(endDate);startDate.setDate(startDate.getDate()-83);
-  const dayCount={};sessions.forEach(s=>{const d=s.startTime.slice(0,10);dayCount[d]=(dayCount[d]||0)+1});
-  const cd2=new Set(checkins.map(c=>c.date)),weeks=[];let d=new Date(startDate);d.setDate(d.getDate()-d.getDay());
-  while(d<=endDate){const w=[];for(let i=0;i<7;i++){const ds=d.toISOString().slice(0,10),c=dayCount[ds]||0;let lv=0;if(c>=3)lv=3;else if(c===2)lv=2;else if(c===1)lv=1;w.push({date:ds,level:lv,hasCheckin:cd2.has(ds)});d.setDate(d.getDate()+1)}weeks.push(w)}
-  const days=['日','一','二','三','四','五','六'];let html='<div class="cal-month-labels">';
-  for(let i=0;i<weeks.length;i++){const mid=weeks[i][3];if(mid&&(mid.date.endsWith('-01')||new Date(mid.date).getDate()<=7))html+=`<span>${parseInt(mid.date.slice(5,7))}月</span>`;else html+='<span></span>'}html+='</div>';
-  for(let row=0;row<7;row++){html+=`<div class="cal-row"><span class="cal-label">${days[row]}</span>`;weeks.forEach(w=>{const day=w[row];if(!day){html+='<div class="cal-day" style="visibility:hidden"></div>';return}html+=`<div class="cal-day" data-level="${day.level}"${day.hasCheckin?' data-checkin="1"':''} title="${day.date}"></div>`});html+='</div>'}
-  document.getElementById('calendar').innerHTML=html;
-}
-function renderChart(sessions){
-  const canvas=document.getElementById('chart');if(!canvas)return;const ctx=canvas.getContext('2d'),W=canvas.parentElement.clientWidth-32,dpr=window.devicePixelRatio||1;canvas.width=W*dpr;canvas.height=168*dpr;canvas.style.width=W+'px';canvas.style.height='168px';ctx.scale(dpr,dpr);
-  if(sessions.length===0){ctx.fillStyle='#71787c';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,84);return}
-  const d0=new Date(sessions[0].startTime),dn=new Date(sessions[sessions.length-1].startTime),cur=new Date(d0);cur.setDate(cur.getDate()-cur.getDay());const end=new Date(dn);end.setDate(end.getDate()+6-end.getDay()),wc2=[];
-  while(cur<=end){let c=0;for(let i=0;i<7;i++){const ds=new Date(cur);ds.setDate(ds.getDate()+i);c+=sessions.filter(s=>s.startTime.startsWith(ds.toISOString().slice(0,10))).length}wc2.push(c);cur.setDate(cur.getDate()+7)}
-  const maxV=Math.max(...wc2,goalWeekly),barW=Math.max(8,(W-wc2.length*4)/wc2.length-4),H=168;ctx.clearRect(0,0,W,H);
-  if(goalWeekly>0){const gY=H-20-(goalWeekly/maxV*130);ctx.strokeStyle='#ba1a1a';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,gY);ctx.lineTo(W,gY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ba1a1a';ctx.font='10px sans-serif';ctx.fillText(`目标:${goalWeekly}`,4,gY-4)}
-  wc2.forEach((v,i)=>{const x=4+i*(barW+4),bh=v/maxV*130,y=H-20-bh;ctx.fillStyle=v>goalWeekly?'#ba1a1a':'#2f6378';ctx.beginPath();ctx.roundRect(x,y,barW,bh,3);ctx.fill();if(i%4===0){ctx.fillStyle='#71787c';ctx.font='9px sans-serif';ctx.fillText((i+1),x,170)}});
-}
-function renderCorrelation(sessions,checkins){
-  if(sessions.length<2||checkins.length<2){document.getElementById('correlation-grid').innerHTML='<div class="empty">需要更多数据</div>';return}
-  const dims=checkinDims,res={};dims.forEach(d=>{res[d.key]={hi:[],lo:[]}});const cm=new Map(checkins.map(c=>[c.date,c]));
-  sessions.forEach(s=>{const sd=s.startTime.slice(0,10),nd=new Date(sd);nd.setDate(nd.getDate()+1);const c=cm.get(nd.toISOString().slice(0,10));if(!c)return;const tda=new Date(sd);tda.setDate(tda.getDate()-2);const f=sessions.filter(o=>{const od=o.startTime.slice(0,10);return od>=tda.toISOString().slice(0,10)&&od<=sd}).length;dims.forEach(d=>{if(c[d.key]){if(f>=2)res[d.key].hi.push(c[d.key]);else res[d.key].lo.push(c[d.key])}})});
-  let html='';dims.forEach(d=>{const r=res[d.key],ha=r.hi.length?r.hi.reduce((a,b)=>a+b,0)/r.hi.length:0,la=r.lo.length?r.lo.reduce((a,b)=>a+b,0)/r.lo.length:0,df=ha-la,cl=df>0.5?'#266864':df<-0.5?'#ba1a1a':'#71787c',ins=df>0.5?'高频时 ↑':df<-0.5?'高频时 ↓':'影响不大';html+=`<div class="corr-card"><div class="title">${d.emoji} ${d.label}</div><div class="value" style="color:${cl}">${df>0?'+':''}${df.toFixed(1)}</div><div class="insight" style="color:${cl}">${ins}</div></div>`});
-  document.getElementById('correlation-grid').innerHTML=html;
-}
-function renderInsights(sessions,checkins){
-  if(sessions.length<2){document.getElementById('insights').innerHTML='<div class="empty">需要更多数据</div>';return}
-  const dates=sessions.map(s=>new Date(s.startTime.slice(0,10)));dates.sort((a,b)=>a-b);const ivs=[];for(let i=1;i<dates.length;i++)ivs.push((dates[i]-dates[i-1])/86400000);
-  const ai=ivs.length?ivs.reduce((a,b)=>a+b,0)/ivs.length:0,ad=sessions.reduce((a,b)=>a+(b.duration||0),0)/sessions.length;
-  const tc={};sessions.forEach(s=>{(s.triggers||[]).forEach(t=>{tc[t]=(tc[t]||0)+1})});const tt=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,3);
-  const now=new Date(),wa=new Date(now);wa.setDate(wa.getDate()-6);const wk=sessions.filter(s=>new Date(s.startTime)>=wa).length;
-  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="corr-card"><div class="title">平均间隔</div><div class="value">${ai.toFixed(1)} 天</div></div><div class="corr-card"><div class="title">平均时长</div><div class="value">${Math.round(ad)} 分钟</div></div><div class="corr-card"><div class="title">近7天</div><div class="value" style="color:${wk>goalWeekly?'#ba1a1a':'#2f6378'}">${wk} 次</div></div><div class="corr-card"><div class="title">总计</div><div class="value">${sessions.length} 次</div></div></div>`;
-  if(tt.length)html+=`<div style="margin-top:12px;font-size:13px;color:var(--text2)">常见触发：${tt.map(([t,c])=>`${t}(${c}次)`).join(' · ')}</div>`;
-  document.getElementById('insights').innerHTML=html;
-}
-function computeRiskHours(sessions){
-  if(sessions.length<5)return[];const hc=new Array(24).fill(0);sessions.forEach(s=>{hc[new Date(s.startTime).getHours()]++});
-  const avg=hc.reduce((a,b)=>a+b,0)/24,t=Math.max(avg*1.5,2),rh=[];hc.forEach((c,h)=>{if(c>=t)rh.push(h)});return rh.sort((a,b)=>a-b);
-}
-function scheduleRiskCheck(){
-  if(nextRiskTimeout){clearTimeout(nextRiskTimeout);nextRiskTimeout=null}if(!riskWarnEnabled)return;
-  dbGetAll('sessions').then(sessions=>{const rh=computeRiskHours(sessions.filter(s=>!s.hidden));if(!rh.length)return;
-    const now=new Date(),ch=now.getHours(),cm2=now.getMinutes();let nh=null;for(const h of rh){if(h>ch||(h===ch&&cm2<55)){nh=h;break}}if(nh===null&&rh.length)nh=rh[0];
-    if(nh===null)return;let target=new Date(now);target.setHours(nh,0,0,0);if(target<=now)target.setDate(target.getDate()+1);const delay=target-now;if(delay>86400000)return;
-    nextRiskTimeout=setTimeout(()=>{showRiskWarning(rh);scheduleRiskCheck()},delay);
-  });
-}
-function showRiskWarning(rh){const bar=document.getElementById('risk-bar'),h=new Date().getHours();if(!rh.includes(h))return;bar.textContent=`⚠️ 高频时段（${rh.map(x=>x+'点').join('、')}），提高警惕！`;bar.classList.add('visible');setTimeout(()=>bar.classList.remove('visible'),300000);if('Notification' in window&&Notification.permission==='granted')new Notification('Pulse · 高危时段提醒',{body:`现在是你的高频时段（${rh.map(x=>x+'点').join('、')}）。深呼吸，保持清醒。`,icon:'/pulse/icons/icon-192.png'})}
+// ═══════════ Stats ═══════════
+async function renderStats(){const ss=(await dbGetAll('sessions')).filter(s=>!s.hidden),cs=await dbGetAll('checkins');ss.sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));renderAchievements();renderCalendar(ss,cs);renderChart(ss);renderCorrelation(ss,cs);renderInsights(ss,cs)}
+function renderCalendar(ss,cs){const n=new Date(),ed=new Date(n.getFullYear(),n.getMonth(),n.getDate()),sd=new Date(ed);sd.setDate(sd.getDate()-83);const dc={};ss.forEach(s=>{const d=s.startTime.slice(0,10);dc[d]=(dc[d]||0)+1});const cd3=new Set(cs.map(c=>c.date)),wks=[];let d=new Date(sd);d.setDate(d.getDate()-d.getDay());while(d<=ed){const w=[];for(let i=0;i<7;i++){const ds=d.toISOString().slice(0,10),c=dc[ds]||0;let lv=0;if(c>=3)lv=3;else if(c===2)lv=2;else if(c===1)lv=1;w.push({date:ds,level:lv,hasCheckin:cd3.has(ds)});d.setDate(d.getDate()+1)}wks.push(w)}const days=['日','一','二','三','四','五','六'];let h='<div class="cal-month-labels">';for(let i=0;i<wks.length;i++){const mid=wks[i][3];if(mid&&(mid.date.endsWith('-01')||new Date(mid.date).getDate()<=7))h+=`<span>${parseInt(mid.date.slice(5,7))}月</span>`;else h+='<span></span>'}h+='</div>';for(let row=0;row<7;row++){h+=`<div class="cal-row"><span class="cal-label">${days[row]}</span>`;wks.forEach(w=>{const day=w[row];if(!day){h+='<div class="cal-day" style="visibility:hidden"></div>';return}h+=`<div class="cal-day" data-level="${day.level}"${day.hasCheckin?' data-checkin="1"':''} title="${day.date}"></div>`});h+='</div>'}document.getElementById('calendar').innerHTML=h}
+function renderChart(ss){const cv=document.getElementById('chart');if(!cv)return;const ctx=cv.getContext('2d'),W=cv.parentElement.clientWidth-32,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=168*dpr;cv.style.width=W+'px';cv.style.height='168px';ctx.scale(dpr,dpr);if(!ss.length){ctx.fillStyle='#71787c';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',W/2,84);return}const d0=new Date(ss[0].startTime),dn=new Date(ss[ss.length-1].startTime),cur=new Date(d0);cur.setDate(cur.getDate()-cur.getDay());const end=new Date(dn);end.setDate(end.getDate()+6-end.getDay()),wcs=[];while(cur<=end){let c=0;for(let i=0;i<7;i++){const ds=new Date(cur);ds.setDate(ds.getDate()+i);c+=ss.filter(s=>s.startTime.startsWith(ds.toISOString().slice(0,10))).length}wcs.push(c);cur.setDate(cur.getDate()+7)}const cap=getCurrentWeeklyCap(ss),mv=Math.max(...wcs,cap===Infinity?goalWeekly:cap),bw=Math.max(8,(W-wcs.length*4)/wcs.length-4),H=168;ctx.clearRect(0,0,W,H);if(cap!==Infinity&&cap>0){const gy=H-20-(cap/mv*130);ctx.strokeStyle='#ba1a1a';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#ba1a1a';ctx.font='10px sans-serif';ctx.fillText(`上限:${cap}`,4,gy-4)}wcs.forEach((v,i)=>{const x=4+i*(bw+4),bh=v/mv*130,y=H-20-bh;ctx.fillStyle=v>(cap===Infinity?goalWeekly:cap)?'#ba1a1a':'#2f6378';ctx.beginPath();ctx.roundRect(x,y,bw,bh,3);ctx.fill();if(i%4===0){ctx.fillStyle='#71787c';ctx.font='9px sans-serif';ctx.fillText((i+1),x,170)}})}
+function renderCorrelation(ss,cs){if(ss.length<2||cs.length<2){document.getElementById('correlation-grid').innerHTML='<div class="empty">需要更多数据</div>';return}const dims=checkinDims,res={};dims.forEach(d=>{res[d.key]={hi:[],lo:[]}});const cm=new Map(cs.map(c=>[c.date,c]));ss.forEach(s=>{const sd2=s.startTime.slice(0,10),nd=new Date(sd2);nd.setDate(nd.getDate()+1);const c=cm.get(nd.toISOString().slice(0,10));if(!c)return;const tda=new Date(sd2);tda.setDate(tda.getDate()-2);const f=ss.filter(o=>{const od=o.startTime.slice(0,10);return od>=tda.toISOString().slice(0,10)&&od<=sd2}).length;dims.forEach(d=>{if(c[d.key]){if(f>=2)res[d.key].hi.push(c[d.key]);else res[d.key].lo.push(c[d.key])}})});let h='';dims.forEach(d=>{const r=res[d.key],ha=r.hi.length?r.hi.reduce((a,b)=>a+b,0)/r.hi.length:0,la=r.lo.length?r.lo.reduce((a,b)=>a+b,0)/r.lo.length:0,df=ha-la,cl=df>0.5?'#266864':df<-0.5?'#ba1a1a':'#71787c',ins=df>0.5?'高频时 ↑':df<-0.5?'高频时 ↓':'影响不大';h+=`<div class="corr-card"><div class="title">${d.emoji} ${d.label}</div><div class="value" style="color:${cl}">${df>0?'+':''}${df.toFixed(1)}</div><div class="insight" style="color:${cl}">${ins}</div></div>`});document.getElementById('correlation-grid').innerHTML=h}
+function renderInsights(ss,cs){if(ss.length<2){document.getElementById('insights').innerHTML='<div class="empty">需要更多数据</div>';return}const dates=ss.map(s=>new Date(s.startTime.slice(0,10)));dates.sort((a,b)=>a-b);const ivs=[];for(let i=1;i<dates.length;i++)ivs.push((dates[i]-dates[i-1])/86400000);const ai=ivs.length?ivs.reduce((a,b)=>a+b,0)/ivs.length:0,ad=ss.reduce((a,b)=>a+(b.duration||0),0)/ss.length,tc={};ss.forEach(s=>{(s.triggers||[]).forEach(t=>{tc[t]=(tc[t]||0)+1})});const tt=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,3),n=new Date(),wa=new Date(n);wa.setDate(wa.getDate()-6);const wk=ss.filter(s=>new Date(s.startTime)>=wa).length;let h=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="corr-card"><div class="title">平均间隔</div><div class="value">${ai.toFixed(1)} 天</div></div><div class="corr-card"><div class="title">平均时长</div><div class="value">${Math.round(ad)} 分钟</div></div><div class="corr-card"><div class="title">近7天</div><div class="value" style="color:${wk>(getCurrentWeeklyCap(ss)===Infinity?goalWeekly:getCurrentWeeklyCap(ss))?'#ba1a1a':'#2f6378'}">${wk} 次</div></div><div class="corr-card"><div class="title">总计</div><div class="value">${ss.length} 次</div></div></div>`;if(tt.length)h+=`<div style="margin-top:12px;font-size:13px;color:var(--text2)">常见触发：${tt.map(([t,c])=>`${t}(${c}次)`).join(' · ')}</div>`;document.getElementById('insights').innerHTML=h}
+function computeRiskHours(ss){if(ss.length<5)return[];const hc=new Array(24).fill(0);ss.forEach(s=>{hc[new Date(s.startTime).getHours()]++});const avg=hc.reduce((a,b)=>a+b,0)/24,t=Math.max(avg*1.5,2),rh=[];hc.forEach((c,h)=>{if(c>=t)rh.push(h)});return rh.sort((a,b)=>a-b)}
+function scheduleRiskCheck(){if(nextRiskTimeout){clearTimeout(nextRiskTimeout);nextRiskTimeout=null}if(!riskWarnEnabled)return;dbGetAll('sessions').then(ss=>{const rh=computeRiskHours(ss.filter(s=>!s.hidden));if(!rh.length)return;const n=new Date(),ch=n.getHours(),cm2=n.getMinutes();let nh=null;for(const h of rh){if(h>ch||(h===ch&&cm2<55)){nh=h;break}}if(nh===null&&rh.length)nh=rh[0];if(nh===null)return;let tgt=new Date(n);tgt.setHours(nh,0,0,0);if(tgt<=n)tgt.setDate(tgt.getDate()+1);const delay=tgt-n;if(delay>86400000)return;nextRiskTimeout=setTimeout(()=>{showRiskWarning(rh);scheduleRiskCheck()},delay)})}
+function showRiskWarning(rh){const bar=document.getElementById('risk-bar'),h=new Date().getHours();if(!rh.includes(h))return;bar.textContent=`⚠️ 高频时段（${rh.map(x=>x+'点').join('、')}），提高警惕！`;bar.classList.add('visible');setTimeout(()=>bar.classList.remove('visible'),300000);if('Notification' in window&&Notification.permission==='granted')new Notification('Pulse · 高危时段提醒',{body:`现在是你的高频时段。深呼吸，保持清醒。`,icon:'/pulse/icons/icon-192.png'})}
 
-// ═══════════════ History ═══════════════
+// ═══════════ History ═══════════
 let historyFilters={keyword:'',dateFrom:'',dateTo:'',triggers:[]};
-function renderHistTriggerChips(){const el=document.getElementById('hist-trigger-chips');if(!el)return;el.innerHTML=triggers.map(t=>`<div class="hist-chip" data-trigger="${t}">${t}</div>`).join('');el.onclick=e=>{if(e.target.classList.contains('hist-chip')){e.target.classList.toggle('selected');updateHistoryFilters()}}}
+function renderHistTriggerChips(){const e=document.getElementById('hist-trigger-chips');if(!e)return;e.innerHTML=triggers.map(t=>`<div class="hist-chip" data-trigger="${t}">${t}</div>`).join('');e.onclick=ev=>{if(ev.target.classList.contains('hist-chip')){ev.target.classList.toggle('selected');updateHistoryFilters()}}}
 function updateHistoryFilters(){historyFilters.keyword=(document.getElementById('hist-keyword')?.value||'').trim().toLowerCase();historyFilters.dateFrom=document.getElementById('hist-from')?.value||'';historyFilters.dateTo=document.getElementById('hist-to')?.value||'';historyFilters.triggers=[...document.querySelectorAll('#hist-trigger-chips .hist-chip.selected')].map(c=>c.dataset.trigger);renderHistory()}
-async function renderHistory(){
-  const sessions=await dbGetAll('sessions');sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));const f=historyFilters;
-  const filtered=sessions.filter(s=>{if(f.keyword&&!(s.notes||'').toLowerCase().includes(f.keyword)&&!(s.triggers||[]).some(t=>t.toLowerCase().includes(f.keyword)))return false;if(f.dateFrom&&s.startTime.slice(0,10)<f.dateFrom)return false;if(f.dateTo&&s.startTime.slice(0,10)>f.dateTo)return false;if(f.triggers.length&&!(s.triggers||[]).some(t=>f.triggers.includes(t)))return false;return true});
-  const sh=document.getElementById('hist-show-hidden')?.checked||false,visible=sh?filtered:filtered.filter(s=>!s.hidden);
-  document.getElementById('hist-count').textContent=`${visible.length} 条记录`;let html='';
-  visible.forEach(s=>{const d=new Date(s.startTime),ds=(d.getMonth()+1)+'月'+d.getDate()+'日',ts=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'),et=new Date(d.getTime()+s.duration*60000),es=et.getHours().toString().padStart(2,'0')+':'+et.getMinutes().toString().padStart(2,'0'),txt=(s.triggers||[]).join(' · ')||'未标注',hc2=s.hidden?' hidden-item':'';html+=`<div class="hist-item${hc2}"><div class="hi-left"><div class="hi-date">${ds} · ${ts} → ${es}</div><div class="hi-info">${s.duration}分钟</div><div class="hi-triggers">${txt}</div>${s.notes?`<div class="hi-notes">${s.notes}</div>`:''}</div><div class="hi-actions"><button class="hi-action" onclick="editSession(${s.id})">✏️</button>${s.hidden?`<button class="hi-action" onclick="unhideSession(${s.id})" style="color:var(--secondary)">👁</button>`:`<button class="hi-action" onclick="hideSession(${s.id})">👁</button>`}<button class="hi-action danger" onclick="deleteSession(${s.id})">✕</button></div></div>`});
-  document.getElementById('history-list').innerHTML=html||'<div class="empty">无匹配记录</div>';
-}
+async function renderHistory(){const ss=await dbGetAll('sessions');ss.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));const f=historyFilters;const fl=ss.filter(s=>{if(f.keyword&&!(s.notes||'').toLowerCase().includes(f.keyword)&&!(s.triggers||[]).some(t=>t.toLowerCase().includes(f.keyword)))return false;if(f.dateFrom&&s.startTime.slice(0,10)<f.dateFrom)return false;if(f.dateTo&&s.startTime.slice(0,10)>f.dateTo)return false;if(f.triggers.length&&!(s.triggers||[]).some(t=>f.triggers.includes(t)))return false;return true});const sh=document.getElementById('hist-show-hidden')?.checked||false,vl=sh?fl:fl.filter(s=>!s.hidden);document.getElementById('hist-count').textContent=`${vl.length} 条记录`;let h='';vl.forEach(s=>{const d=new Date(s.startTime),ds=(d.getMonth()+1)+'月'+d.getDate()+'日',ts=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'),et=new Date(d.getTime()+s.duration*60000),es=et.getHours().toString().padStart(2,'0')+':'+et.getMinutes().toString().padStart(2,'0'),txt=(s.triggers||[]).join(' · ')||'未标注',hc2=s.hidden?' hidden-item':'';h+=`<div class="hist-item${hc2}"><div class="hi-left"><div class="hi-date">${ds} · ${ts} → ${es}</div><div class="hi-info">${s.duration}分钟</div><div class="hi-triggers">${txt}</div>${s.notes?`<div class="hi-notes">${s.notes}</div>`:''}</div><div class="hi-actions"><button class="hi-action" onclick="editSession(${s.id})">✏️</button>${s.hidden?`<button class="hi-action" onclick="unhideSession(${s.id})" style="color:var(--secondary)">👁</button>`:`<button class="hi-action" onclick="hideSession(${s.id})">👁</button>`}<button class="hi-action danger" onclick="deleteSession(${s.id})">✕</button></div></div>`});document.getElementById('history-list').innerHTML=h||'<div class="empty">无匹配记录</div>'}
 window.editSession=async function(id){const ss=await dbGetAll('sessions'),s=ss.find(x=>x.id===id);if(!s)return;editingId=id;timerElapsed=s.duration*60000;navigateTo('record');updateRecordForm();document.querySelectorAll('#trigger-chips .chip').forEach(c=>c.classList.remove('selected'));(s.triggers||[]).forEach(t=>{document.querySelectorAll('#trigger-chips .chip').forEach(c=>{if(c.dataset.trigger===t)c.classList.add('selected')})});document.getElementById('record-notes').value=s.notes||'';document.getElementById('record-min').value=s.duration||'';document.getElementById('save-record-btn').textContent='💾 更新记录';document.getElementById('edit-indicator').style.display='block';document.getElementById('edit-cancel-btn').classList.add('visible');document.getElementById('record-start-time').textContent='编辑 · '+(s.startTime||'').slice(0,10);updateTriggerTip()};
 window.hideSession=async function(id){const ss=await dbGetAll('sessions'),s=ss.find(x=>x.id===id);if(!s)return;if(!confirm('隐藏这条记录？'))return;s.hidden=true;await dbPut('sessions',s);toast('已隐藏');renderHome();renderHistory();renderStats()};
 window.unhideSession=async function(id){const ss=await dbGetAll('sessions'),s=ss.find(x=>x.id===id);if(!s)return;s.hidden=false;await dbPut('sessions',s);toast('已恢复');renderHistory();renderStats()};
 
-// ═══════════════ Interventions Editor ═══════════════
-function renderInterventionList(){
-  const el=document.getElementById('intervention-list');if(!el)return;let html='';
-  interventions.forEach((intv,i)=>{const alts=intv.alternatives||[];html+=`<div class="intv-item"><div class="intv-trigger">${intv.trigger}</div><div class="intv-row"><input type="text" id="intv-msg-${i}" value="${(intv.message||'').replace(/"/g,'&quot;')}" placeholder="干预话术..."></div><div class="intv-alt-tags" id="intv-tags-${i}">${alts.map((a,j)=>`<span class="intv-alt-tag">${a}<span class="rm" onclick="removeIntvAlt(${i},${j})">×</span></span>`).join('')}</div><div class="intv-row" style="margin-top:6px"><input type="text" id="intv-newalt-${i}" placeholder="新增替代行为..."><button class="btn btn-secondary" style="width:auto;font-size:11px;padding:6px 12px;min-height:auto;flex-shrink:0" onclick="addIntvAlt(${i})">＋</button></div><button class="btn btn-secondary" style="margin-top:8px;width:auto;font-size:11px;padding:6px 14px;min-height:auto" onclick="saveIntervention(${i})">💾 保存</button></div>`});
-  el.innerHTML=html;
-}
-window.saveIntervention=async function(i){const msg=document.getElementById('intv-msg-'+i).value.trim(),tags=[...document.querySelectorAll('#intv-tags-'+i+' .intv-alt-tag')].map(t=>t.childNodes[0].textContent);interventions[i]={...interventions[i],message:msg||interventions[i].message,alternatives:tags};await dbPut('settings',{key:'interventions',value:[...interventions]});toast('✅ 已保存')};
-window.addIntvAlt=function(i){const v=document.getElementById('intv-newalt-'+i).value.trim();if(!v)return;interventions[i].alternatives.push(v);document.getElementById('intv-newalt-'+i).value='';renderInterventionList();toast('已添加')};
+// ═══════════ Interventions ═══════════
+function renderInterventionList(){const e=document.getElementById('intervention-list');if(!e)return;let h='';interventions.forEach((iv,i)=>{const alts=iv.alternatives||[];h+=`<div class="intv-item"><div class="intv-trigger">${iv.trigger}</div><div class="intv-row"><input type="text" id="intv-msg-${i}" value="${(iv.message||'').replace(/"/g,'&quot;')}"></div><div class="intv-alt-tags" id="intv-tags-${i}">${alts.map((a,j)=>`<span class="intv-alt-tag">${a}<span class="rm" onclick="removeIntvAlt(${i},${j})">×</span></span>`).join('')}</div><div class="intv-row" style="margin-top:6px"><input type="text" id="intv-newalt-${i}" placeholder="新增替代行为..."><button class="btn btn-secondary" style="width:auto;font-size:11px;padding:6px 12px;min-height:auto;flex-shrink:0" onclick="addIntvAlt(${i})">＋</button></div><button class="btn btn-secondary" style="margin-top:8px;width:auto;font-size:11px;padding:6px 14px;min-height:auto" onclick="saveIntervention(${i})">💾 保存</button></div>`});e.innerHTML=h}
+window.saveIntervention=async function(i){const m=document.getElementById('intv-msg-'+i).value.trim(),tags=[...document.querySelectorAll('#intv-tags-'+i+' .intv-alt-tag')].map(t=>t.childNodes[0].textContent);interventions[i]={...interventions[i],message:m||interventions[i].message,alternatives:tags};await dbPut('settings',{key:'interventions',value:[...interventions]});toast('✅ 已保存')};
+window.addIntvAlt=function(i){const v=document.getElementById('intv-newalt-'+i).value.trim();if(!v)return;interventions[i].alternatives.push(v);renderInterventionList();toast('已添加')};
 window.removeIntvAlt=function(i,j){interventions[i].alternatives.splice(j,1);renderInterventionList();toast('已删除')};
 document.getElementById('reset-interventions-btn').onclick=async()=>{if(!confirm('恢复默认干预话术？'))return;interventions=[...defaultInterventions];await dbPut('settings',{key:'interventions',value:[...interventions]});renderInterventionList();toast('✅ 已恢复')};
 
-// ═══════════════ Rewards Editor ═══════════════
-function renderRewardList(){
-  const el=document.getElementById('reward-list');if(!el)return;
-  el.innerHTML=rewards.map((r,i)=>`<div class="reward-item"><div class="rw-info">连续 <strong>${r.days}</strong> 天 → ${r.reward}</div><button class="del-icon" onclick="removeReward(${i})" style="margin-left:8px">✕</button></div>`).join('')||'<div class="empty" style="padding:16px">暂无奖励规则</div>';
-}
+// ═══════════ Rewards ═══════════
+function renderRewardList(){const e=document.getElementById('reward-list');if(!e)return;e.innerHTML=rewards.map((r,i)=>`<div class="reward-item"><div class="rw-info">连续 <strong>${r.days}</strong> 天 → ${r.reward}</div><button class="del-icon" onclick="removeReward(${i})">✕</button></div>`).join('')||'<div class="empty" style="padding:16px">暂无奖励规则</div>'}
 window.addReward=function(){const d=parseInt(document.getElementById('new-reward-days').value),desc=document.getElementById('new-reward-desc').value.trim();if(!d||d<1){toast('请输入有效天数');return};if(!desc){toast('请输入奖励描述');return};rewards.push({days:d,reward:desc});rewards.sort((a,b)=>a.days-b.days);dbPut('settings',{key:'rewards',value:[...rewards]});document.getElementById('new-reward-days').value='';document.getElementById('new-reward-desc').value='';renderRewardList();toast('✅ 已添加')};
 window.removeReward=function(i){rewards.splice(i,1);dbPut('settings',{key:'rewards',value:[...rewards]});renderRewardList();toast('已删除')};
 document.getElementById('add-reward-btn').onclick=()=>addReward();
 document.getElementById('reset-rewards-btn').onclick=async()=>{if(!confirm('恢复默认奖励规则？'))return;rewards=[...defaultRewards];await dbPut('settings',{key:'rewards',value:[...rewards]});renderRewardList();toast('✅ 已恢复')};
 
-// ═══════════════ Goals ═══════════════
+// ═══════════ Goals ═══════════
 function renderTriggerManage(){document.getElementById('trigger-manage').innerHTML=triggers.map((t,i)=>`<div class="session-item" style="margin-bottom:4px"><div class="si-left"><div class="si-info">${t}</div></div><button class="del-icon" onclick="removeTrigger(${i})">✕</button></div>`).join('')}
 window.removeTrigger=async function(i){triggers.splice(i,1);await setSetting('triggers',[...triggers]);renderTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('已删除')};
 document.getElementById('add-trigger-btn').onclick=async()=>{const v=document.getElementById('new-trigger').value.trim();if(!v){toast('请输入名称')};if(triggers.includes(v)){toast('已存在');return};if(triggers.length>=20){toast('最多20个');return};triggers.push(v);await setSetting('triggers',[...triggers]);document.getElementById('new-trigger').value='';renderTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('✅ 已添加')};
 document.getElementById('reset-triggers-btn').onclick=async()=>{if(!confirm('恢复默认触发场景？'))return;triggers=[...defaultTriggers];await setSetting('triggers',[...triggers]);renderTriggerChips();renderHistTriggerChips();renderTriggerManage();toast('✅ 已恢复')};
-async function updateGoalWarnings(){const ss=(await dbGetAll('sessions')).filter(s=>!s.hidden),now=new Date(),wa=new Date(now);wa.setDate(wa.getDate()-6);const wk=ss.filter(s=>new Date(s.startTime)>=wa).length;let w='';if(wk>goalWeekly)w=`⚠️ 本周已 ${wk} 次，超过目标 ${goalWeekly} 次`;document.getElementById('goal-warning').innerHTML=w?`<div class="goal-warn">${w}</div>`:''}
+async function updateGoalWarnings(){const ss=(await dbGetAll('sessions')).filter(s=>!s.hidden),n=new Date(),wa=new Date(n);wa.setDate(wa.getDate()-6);const wk=ss.filter(s=>new Date(s.startTime)>=wa).length;const cap=getCurrentWeeklyCap(ss);let w='';if(cap!==Infinity&&wk>cap)w=`⚠️ 本周已 ${wk} 次，超过目标 ${cap} 次`;document.getElementById('goal-warning').innerHTML=w?`<div class="goal-warn">${w}</div>`:''}
 window.adjustGoal=async function(d){goalWeekly=Math.max(0,goalWeekly+d);document.getElementById('goal-weekly').textContent=goalWeekly;await setSetting('goalWeekly',goalWeekly);updateGoalWarnings();renderStats()};
 window.adjustMinGap=async function(d){goalMinGap=Math.max(0,goalMinGap+d);document.getElementById('goal-mingap').textContent=goalMinGap;await setSetting('goalMinGap',goalMinGap)};
 document.getElementById('set-passcode-btn').onclick=async()=>{const v=document.getElementById('new-passcode').value;if(!/^\d{4}$/.test(v)){toast('请输入4位数字密码');return};await setSetting('passcode',v);document.getElementById('new-passcode').value='';toast('✅ 密码已更新')};
-document.getElementById('export-btn').onclick=async()=>{const ss=await dbGetAll('sessions'),cs=await dbGetAll('checkins'),data=JSON.stringify({sessions:ss,checkins:cs,exportedAt:new Date().toISOString()},null,2),blob=new Blob([data],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pulse_export_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ 已下载')};
+document.getElementById('export-btn').onclick=async()=>{const ss=await dbGetAll('sessions'),cs=await dbGetAll('checkins'),d=JSON.stringify({sessions:ss,checkins:cs,exportedAt:new Date().toISOString()},null,2),bl=new Blob([d],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='pulse_export_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ 已下载')};
 window.deleteSession=async function(id){if(!confirm('确认永久删除？'))return;await dbDelete('sessions',id);toast('🗑 已删除');renderHome();renderStats();renderHistory()};
-window.deleteCheckin=async function(date){if(!confirm('确认删除 '+date+' 的打卡？'))return;await dbDelete('checkins',date);toast('🗑 已删除');renderCheckinHistory()};
-function updateNotifPermBtn(){const btn=document.getElementById('notif-perm-btn');if(!('Notification' in window)){btn.style.display='none';return};if(Notification.permission==='granted')btn.style.display='none';else{btn.style.display='inline-block';btn.textContent=Notification.permission==='denied'?'⚠ 通知权限已被拒绝':'🔔 开启浏览器通知'}}
+window.deleteCheckin=async function(d){if(!confirm('确认删除 '+d+' 的打卡？'))return;await dbDelete('checkins',d);toast('🗑 已删除');renderCheckinHistory()};
+function updateNotifPermBtn(){const b=document.getElementById('notif-perm-btn');if(!('Notification' in window)){b.style.display='none';return};if(Notification.permission==='granted')b.style.display='none';else{b.style.display='inline-block';b.textContent=Notification.permission==='denied'?'⚠ 通知权限已被拒绝':'🔔 开启浏览器通知'}}
 document.getElementById('notif-perm-btn').onclick=async()=>{if(!('Notification' in window)){toast('浏览器不支持通知');return};const p=await Notification.requestPermission();if(p==='granted'){toast('✅ 通知已开启');updateNotifPermBtn()}else toast('❌ 通知权限被拒绝');updateNotifPermBtn()};
 document.getElementById('import-btn').onclick=()=>document.getElementById('import-file').click();
 document.getElementById('import-file').onchange=async function(){const f=this.files[0];if(!f)return;try{const t=await f.text(),d=JSON.parse(t);if(!d.sessions||!d.checkins){toast('❌ 格式无效');return};const ex=await dbGetAll('sessions'),ks=new Set(ex.map(s=>s.startTime+'|'+s.duration+'|'+(s.triggers||[]).join(',')));let sa=0,ca=0;for(const s of d.sessions){const k=s.startTime+'|'+(s.duration||0)+'|'+(s.triggers||[]).join(',');if(ks.has(k))continue;if(s.hidden===undefined)s.hidden=false;await dbPut('sessions',s);ks.add(k);sa++}for(const c of d.checkins){await dbPut('checkins',c);ca++}toast(`✅ 导入：${sa}条, ${ca}条打卡`);this.value='';renderHome();renderStats();renderCheckinHistory();renderHistory()}catch(e){toast('❌ 读取失败：'+e.message);this.value=''}};
 
-// ═══════════════ Home ═══════════════
+// ═══════════ Home ═══════════
 async function renderHome(){
-  const allSessions=await dbGetAll('sessions'),sessions=allSessions.filter(s=>!s.hidden);sessions.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
-  const checkins=await dbGetAll('checkins'),cd=new Set(checkins.map(c=>c.date));
-  // Progress section
-  const progress=renderProgress(sessions,checkins);
-  // Check & unlock achievements
-  if(progress)checkAchievements(progress);
-  // Streak
-  const today=new Date();let streak=0;const d=new Date(today);if(!cd.has(d.toISOString().slice(0,10)))d.setDate(d.getDate()-1);
-  while(cd.has(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}
+  const as2=await dbGetAll('sessions'),ss=as2.filter(s=>!s.hidden);ss.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+  const cs=await dbGetAll('checkins'),cd4=new Set(cs.map(c=>c.date));
+  const p=renderProgress(ss,cs);if(p)checkAchievements(p);
+  const td2=new Date();let streak=0;const d=new Date(td2);if(!cd4.has(d.toISOString().slice(0,10)))d.setDate(d.getDate()-1);
+  while(cd4.has(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}
   const se=document.getElementById('streak-bar'),st=document.getElementById('streak-text');
   if(streak>0){se.classList.remove('hidden');st.textContent=`连续打卡 ${streak} 天`}else se.classList.add('hidden');
-  // Quick stats
-  const now=new Date(),wa=new Date(now);wa.setDate(wa.getDate()-6);
-  const wk=sessions.filter(s=>new Date(s.startTime)>=wa).length;
-  const mc=sessions.filter(s=>{const d2=new Date(s.startTime);return d2.getMonth()===now.getMonth()&&d2.getFullYear()===now.getFullYear()}).length;
-  const ad2=sessions.length?Math.round(sessions.reduce((a,b)=>a+(b.duration||0),0)/sessions.length):0;
-  document.getElementById('quick-stats').innerHTML=`<div class="qs-card"><div class="val">${wk}</div><div class="label">本周</div></div><div class="qs-card"><div class="val">${mc}</div><div class="label">本月</div></div><div class="qs-card"><div class="val">${ad2}min</div><div class="label">平均时长</div></div>`;
-  // Recent
-  const recent=sessions.slice(0,5);let html='';
-  recent.forEach(s=>{const dd=new Date(s.startTime),ds=(dd.getMonth()+1)+'月'+dd.getDate()+'日',ts=dd.getHours().toString().padStart(2,'0')+':'+dd.getMinutes().toString().padStart(2,'0'),et=new Date(dd.getTime()+s.duration*60000),es=et.getHours().toString().padStart(2,'0')+':'+et.getMinutes().toString().padStart(2,'0'),txt=(s.triggers||[]).join(' · ')||'未标注';html+=`<div class="session-item"><div class="si-left"><div class="si-date">${ds}</div><div class="si-info">${ts} → ${es} · ${s.duration}分钟</div><div style="font-size:12px;color:var(--text3)">${txt}</div></div><button class="del-icon" onclick="deleteSession(${s.id})">✕</button></div>`});
-  document.getElementById('recent-sessions').innerHTML=html||'<div class="empty">暂无记录，点击 ▶ 开始</div>';
-  // Risk bar
-  if(riskWarnEnabled){const rh=computeRiskHours(sessions),nh=new Date().getHours(),bar=document.getElementById('risk-bar');if(rh.includes(nh)){bar.textContent=`⚠️ 高频时段（${rh.map(x=>x+'点').join('、')}），提高警惕！`;bar.classList.add('visible')}else bar.classList.remove('visible')}
+  const n=new Date(),wa=new Date(n);wa.setDate(wa.getDate()-6);
+  const wk=ss.filter(s=>new Date(s.startTime)>=wa).length,mc3=ss.filter(s=>{const d2=new Date(s.startTime);return d2.getMonth()===n.getMonth()&&d2.getFullYear()===n.getFullYear()}).length,ad2=ss.length?Math.round(ss.reduce((a,b)=>a+(b.duration||0),0)/ss.length):0;
+  document.getElementById('quick-stats').innerHTML=`<div class="qs-card"><div class="val">${wk}</div><div class="label">本周</div></div><div class="qs-card"><div class="val">${mc3}</div><div class="label">本月</div></div><div class="qs-card"><div class="val">${ad2}min</div><div class="label">平均时长</div></div>`;
+  const recent=ss.slice(0,5);let h='';recent.forEach(s=>{const dd=new Date(s.startTime),ds=(dd.getMonth()+1)+'月'+dd.getDate()+'日',ts=dd.getHours().toString().padStart(2,'0')+':'+dd.getMinutes().toString().padStart(2,'0'),et=new Date(dd.getTime()+s.duration*60000),es=et.getHours().toString().padStart(2,'0')+':'+et.getMinutes().toString().padStart(2,'0'),txt=(s.triggers||[]).join(' · ')||'未标注';h+=`<div class="session-item"><div class="si-left"><div class="si-date">${ds}</div><div class="si-info">${ts} → ${es} · ${s.duration}分钟</div><div style="font-size:12px;color:var(--text3)">${txt}</div></div><button class="del-icon" onclick="deleteSession(${s.id})">✕</button></div>`});
+  document.getElementById('recent-sessions').innerHTML=h||'<div class="empty">暂无记录，点击 ▶ 开始</div>';
+  if(riskWarnEnabled){const rh=computeRiskHours(ss),nh=new Date().getHours(),bar=document.getElementById('risk-bar');if(rh.includes(nh)){bar.textContent=`⚠️ 高频时段（${rh.map(x=>x+'点').join('、')}），提高警惕！`;bar.classList.add('visible')}else bar.classList.remove('visible')}
 }
 
-// ═══════════════ Navigation ═══════════════
+// ═══════════ Navigation ═══════════
 function navigateTo(view){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-'+view).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const ni=document.querySelector('[data-view="'+view+'"]');if(ni)ni.classList.add('active');
-  if(view==='home')renderHome();else if(view==='stats')renderStats();else if(view==='checkin')renderCheckinHistory();else if(view==='history'){renderHistTriggerChips();renderHistory();if(!editingId)cancelEdit()}else if(view==='goals'){updateGoalWarnings();renderTriggerManage();renderInterventionList();renderRewardList();updateNotifPermBtn()};
+  if(view==='home')renderHome();else if(view==='stats')renderStats();else if(view==='checkin')renderCheckinHistory();else if(view==='history'){renderHistTriggerChips();renderHistory();if(!editingId)cancelEdit()}else if(view==='goals'){renderGoalModeUI();renderGoalSettings();updateGoalWarnings();renderTriggerManage();renderInterventionList();renderRewardList();updateNotifPermBtn()};
 }
 document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>{vibe();navigateTo(item.dataset.view)}});
 
-// ═══════════════ Toast ═══════════════
-let toastTimer;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2000)}
+let ttmr;function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(ttmr);ttmr=setTimeout(()=>e.classList.remove('show'),2000)}
 
-// ═══════════════ Init ═══════════════
 async function init(){
   await openDB();await loadSettings();buildPassPad();
   if(passcode==='0000')document.getElementById('lock-info').textContent='🔑 默认密码：0000（可在设置中修改）';else document.getElementById('lock-info').style.display='none';
-  await renderHome();
-  if(riskWarnEnabled)scheduleRiskCheck();
+  await renderHome();if(riskWarnEnabled)scheduleRiskCheck();
   let la=Date.now();['click','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e,()=>la=Date.now(),{passive:true}));
   setInterval(()=>{if(unlocked&&Date.now()-la>300000)lock()},30000);
 }
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/pulse/sw.js');
-init();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/pulse/sw.js');init();
 </script>
 </body>
 </html>
