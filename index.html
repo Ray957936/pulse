@@ -124,6 +124,24 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .template-chips{display:flex;gap:6px;flex-wrap:wrap}
 .template-chip{font-size:12px;padding:5px 12px;border-radius:var(--radius-pill);border:1.5px dashed var(--outline);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500}
 .template-chip:active{background:var(--secondary-container);color:var(--secondary);border-color:var(--secondary)}
+
+/* Quick action buttons */
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.qa-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:var(--surface);border:1.5px solid var(--outline);border-radius:var(--radius);cursor:pointer;transition:all .15s;box-shadow:var(--shadow);text-align:center}
+.qa-btn:active{background:var(--surface2);transform:scale(.97)}
+.qa-btn .qa-icon{font-size:24px}
+.qa-btn .qa-label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.02em}
+/* Swipe to delete on session items */
+.session-item{position:relative;overflow:hidden}
+.session-item .si-swipe-bg{position:absolute;right:0;top:0;bottom:0;width:80px;background:var(--error);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;border-radius:0 var(--radius-sm) var(--radius-sm) 0;opacity:0;transition:opacity .2s}
+.session-item.swiped .si-swipe-bg{opacity:1}
+.session-item .si-inner{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;width:100%;transition:transform .2s;background:var(--surface);border-radius:var(--radius-sm);padding:16px}
+.session-item.swiped .si-inner{transform:translateX(-80px)}
+.session-item .si-inner:active{background:var(--surface2)}
+/* Long press edit hint */
+.session-item .lp-hint{position:absolute;top:6px;right:6px;font-size:10px;color:var(--text3);opacity:0;transition:opacity .3s;pointer-events:none}
+.session-item .lp-hint.show{opacity:1}
+
 /* Progress Section */
 .progress-section{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:18px 16px;margin:16px 0;box-shadow:var(--shadow)}
 .progress-section .ps-row{margin-bottom:16px}.progress-section .ps-row:last-child{margin-bottom:0}
@@ -269,6 +287,11 @@ textarea{resize:none;height:80px}
       <div id="quick-record-section">
         <button class="btn btn-secondary" id="qr-toggle" style="width:100%">⚡ 快速记录</button>
         <div id="qr-form"><div class="chip-row" id="qr-trigger-chips"></div><div class="qr-row"><input type="number" id="qr-duration" placeholder="分钟" min="1"><div class="template-chips" id="qr-template-chips"></div></div><textarea id="qr-notes" placeholder="备注..."></textarea><div style="display:flex;gap:10px"><button class="btn btn-primary" id="qr-save-btn" style="min-height:40px;font-size:14px;flex:1">💾 保存</button><button class="btn btn-secondary" id="qr-save-template-btn" style="width:auto;font-size:12px;padding:10px 16px;min-height:40px">📌 存为模板</button></div></div>
+      </div>
+      <div class="quick-actions">
+        <div class="qa-btn" id="qa-start-btn"><div class="qa-icon">▶</div><div class="qa-label">开始计时</div></div>
+        <div class="qa-btn" id="qa-quick-btn"><div class="qa-icon">⚡</div><div class="qa-label">快速记录</div></div>
+        <div class="qa-btn" id="qa-checkin-btn"><div class="qa-icon">☀️</div><div class="qa-label">今日状态</div></div>
       </div>
       <div id="limit-alert"></div><div id="reward-reminder" class="reward-reminder"></div>
       <div id="progress-section" class="progress-section" style="display:none">
@@ -609,8 +632,22 @@ document.getElementById('notif-perm-btn').onclick=async()=>{if(!('Notification' 
 document.getElementById('import-btn').onclick=()=>document.getElementById('import-file').click();
 document.getElementById('import-file').onchange=async function(){const f=this.files[0];if(!f)return;try{const t=await f.text(),d=JSON.parse(t);if(!d.sessions||!d.checkins){toast('❌ 格式无效');return};const ex=await dbGetAll('sessions'),ks=new Set(ex.map(s=>s.startTime+'|'+s.duration+'|'+(s.triggers||[]).join(',')));let sa=0,ca=0;for(const s of d.sessions){const k=s.startTime+'|'+(s.duration||0)+'|'+(s.triggers||[]).join(',');if(ks.has(k))continue;if(s.hidden===undefined)s.hidden=false;await dbPut('sessions',s);ks.add(k);sa++}for(const c of d.checkins){await dbPut('checkins',c);ca++}toast(`✅ 导入：${sa}条, ${ca}条打卡`);this.value='';renderHome();renderStats();renderCheckinHistory();renderHistory()}catch(e){toast('❌ 读取失败：'+e.message);this.value=''}};
 
-async function renderHome(){const as2=await dbGetAll('sessions'),ss=as2.filter(s=>!s.hidden);ss.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));const cs=await dbGetAll('checkins'),cd4=new Set(cs.map(c=>c.date));const p=renderProgress(ss,cs);if(p)checkAchievements(p);const td3=new Date();let streak=0;const d=new Date(td3);if(!cd4.has(d.toISOString().slice(0,10)))d.setDate(d.getDate()-1);while(cd4.has(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}const se=document.getElementById('streak-bar'),st=document.getElementById('streak-text');if(streak>0){se.classList.remove('hidden');st.textContent=`连续打卡 ${streak} 天`}else se.classList.add('hidden');const n=new Date(),wa=new Date(n);wa.setDate(wa.getDate()-6);const wk=ss.filter(s=>new Date(s.startTime)>=wa).length,mc3=ss.filter(s=>{const d2=new Date(s.startTime);return d2.getMonth()===n.getMonth()&&d2.getFullYear()===n.getFullYear()}).length,ad2=ss.length?Math.round(ss.reduce((a,b)=>a+(b.duration||0),0)/ss.length):0;document.getElementById('quick-stats').innerHTML=`<div class="qs-card"><div class="val">${wk}</div><div class="label">本周</div></div><div class="qs-card"><div class="val">${mc3}</div><div class="label">本月</div></div><div class="qs-card"><div class="val">${ad2}min</div><div class="label">平均时长</div></div>`;const recent=ss.slice(0,5);let h='';recent.forEach(s=>{const dd=new Date(s.startTime),ds=(dd.getMonth()+1)+'月'+dd.getDate()+'日',ts=dd.getHours().toString().padStart(2,'0')+':'+dd.getMinutes().toString().padStart(2,'0'),et=new Date(dd.getTime()+s.duration*60000),es=et.getHours().toString().padStart(2,'0')+':'+et.getMinutes().toString().padStart(2,'0'),txt=(s.triggers||[]).join(' · ')||'未标注';h+=`<div class="session-item"><div class="si-left"><div class="si-date">${ds}</div><div class="si-info">${ts} → ${es} · ${s.duration}分钟</div><div style="font-size:13px;color:var(--text3);margin-top:2px">${txt}</div></div><button class="del-icon" onclick="deleteSession(${s.id})">✕</button></div>`});document.getElementById('recent-sessions').innerHTML=h||'<div class="empty">暂无记录，点击 ▶ 开始</div>';if(riskWarnEnabled){const rh=computeRiskHours(ss),nh=new Date().getHours(),bar=document.getElementById('risk-bar');if(rh.includes(nh)){bar.textContent=`⚠️ 高频时段（${rh.map(x=>x+'点').join('、')}），提高警惕！`;bar.classList.add('visible')}else bar.classList.remove('visible')}renderQRtemplates();renderTemplateChips()}
+async function renderHome(){const as2=await dbGetAll('sessions'),ss=as2.filter(s=>!s.hidden);ss.sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));const cs=await dbGetAll('checkins'),cd4=new Set(cs.map(c=>c.date));const p=renderProgress(ss,cs);if(p)checkAchievements(p);const td3=new Date();let streak=0;const d=new Date(td3);if(!cd4.has(d.toISOString().slice(0,10)))d.setDate(d.getDate()-1);while(cd4.has(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}const se=document.getElementById('streak-bar'),st=document.getElementById('streak-text');if(streak>0){se.classList.remove('hidden');st.textContent=`连续打卡 ${streak} 天`}else se.classList.add('hidden');const n=new Date(),wa=new Date(n);wa.setDate(wa.getDate()-6);const wk=ss.filter(s=>new Date(s.startTime)>=wa).length,mc3=ss.filter(s=>{const d2=new Date(s.startTime);return d2.getMonth()===n.getMonth()&&d2.getFullYear()===n.getFullYear()}).length,ad2=ss.length?Math.round(ss.reduce((a,b)=>a+(b.duration||0),0)/ss.length):0;document.getElementById('quick-stats').innerHTML=`<div class="qs-card"><div class="val">${wk}</div><div class="label">本周</div></div><div class="qs-card"><div class="val">${mc3}</div><div class="label">本月</div></div><div class="qs-card"><div class="val">${ad2}min</div><div class="label">平均时长</div></div>`;const recent=ss.slice(0,5);let h='';recent.forEach(s=>{const dd=new Date(s.startTime),ds=(dd.getMonth()+1)+'月'+dd.getDate()+'日',ts=dd.getHours().toString().padStart(2,'0')+':'+dd.getMinutes().toString().padStart(2,'0'),et=new Date(dd.getTime()+s.duration*60000),es=et.getHours().toString().padStart(2,'0')+':'+et.getMinutes().toString().padStart(2,'0'),txt=(s.triggers||[]).join(' · ')||'未标注';h+=`<div class="session-item" data-sid="${s.id}"><div class="si-swipe-bg">删除</div><div class="si-inner"><div class="si-left"><div class="si-date">${ds}</div><div class="si-info">${ts} → ${es} · ${s.duration}分钟</div><div style="font-size:13px;color:var(--text3);margin-top:2px">${txt}</div></div><button class="del-icon" onclick="deleteSession(${s.id})">✕</button></div></div>`});document.getElementById('recent-sessions').innerHTML=h||'<div class="empty">暂无记录，点击 ▶ 开始</div>';setTimeout(()=>initSwipeAndLongPress(),100);if(riskWarnEnabled){const rh=computeRiskHours(ss),nh=new Date().getHours(),bar=document.getElementById('risk-bar');if(rh.includes(nh)){bar.textContent=`⚠️ 高频时段（${rh.map(x=>x+'点').join('、')}），提高警惕！`;bar.classList.add('visible')}else bar.classList.remove('visible')}renderQRtemplates();renderTemplateChips()}
 
+// Quick action buttons
+document.getElementById('qa-start-btn').onclick=()=>{vibe();document.getElementById('timer-area').scrollIntoView({behavior:'smooth'});tb.onclick()};
+document.getElementById('qa-quick-btn').onclick=()=>{vibe();document.getElementById('qr-toggle').onclick();document.getElementById('qr-toggle').scrollIntoView({behavior:'smooth'})};
+document.getElementById('qa-checkin-btn').onclick=()=>{vibe();navigateTo('checkin')};
+// Swipe-to-delete & long-press-edit init
+function initSwipeAndLongPress(){
+  document.querySelectorAll('.session-item').forEach(el=>{
+    let sx=0, lpTimer=null, swiped=false;
+    el.querySelector('.si-inner').addEventListener('touchstart',e=>{sx=e.touches[0].clientX;swiped=false;lpTimer=setTimeout(()=>{vibe();const sid=parseInt(el.dataset.sid);if(sid)editSession(sid);lpTimer=null},600)}, {passive:true});
+    el.querySelector('.si-inner').addEventListener('touchmove',e=>{if(lpTimer){clearTimeout(lpTimer);lpTimer=null}const dx=sx-e.touches[0].clientX;if(dx>30){el.classList.add('swiped');swiped=true}else{el.classList.remove('swiped')}}, {passive:true});
+    el.querySelector('.si-inner').addEventListener('touchend',()=>{if(lpTimer)clearTimeout(lpTimer);if(!swiped)el.classList.remove('swiped')});
+    el.querySelector('.si-swipe-bg').addEventListener('click',()=>{const sid=parseInt(el.dataset.sid);if(sid)deleteSession(sid)});
+  });
+}
 function navigateTo(view){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-'+view).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const ni=document.querySelector('[data-view="'+view+'"]');if(ni)ni.classList.add('active');if(view==='home')renderHome();else if(view==='stats')renderStats();else if(view==='checkin')renderCheckinHistory();else if(view==='history'){renderHistTriggerChips();renderHistory();if(!editingId)cancelEdit()}else if(view==='goals'){renderGoalModeUI();renderGoalSettings();updateGoalWarnings();renderTriggerManage();renderInterventionList();renderRewardList();renderTemplateChips();renderTemplateList();updateNotifPermBtn()}else if(view==='record')renderTemplateChips()}
 document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>{vibe();navigateTo(item.dataset.view)}});
 
