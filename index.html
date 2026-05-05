@@ -30,8 +30,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .passcode-dot.filled{background:var(--primary);border-color:var(--primary)}
 .passcode-dot.error{background:var(--error);border-color:var(--error);animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.passcode-pad{display:grid;grid-template-columns:repeat(3,68px);gap:16px 24px;justify-content:center}
-.passcode-key{width:68px;height:68px;border-radius:50%;border:1px solid var(--outline);background:var(--surface);color:var(--text);font-size:24px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.passcode-pad{display:grid;grid-template-columns:repeat(3,76px);gap:18px 28px;justify-content:center}
+.passcode-key{width:76px;height:76px;border-radius:50%;border:2px solid var(--outline);background:var(--surface);color:var(--text);font-size:26px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
 .passcode-key:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary);transform:scale(.94)}
 .passcode-key.del{font-size:18px;color:var(--text3);border:none;background:none;box-shadow:none}
 #lock-info{font-size:14px;color:var(--text2);margin-bottom:12px;font-weight:500}
@@ -85,7 +85,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 #content{flex:1;overflow-y:auto;padding:0 20px 110px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
 #content::-webkit-scrollbar{width:0}
 #nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--outline);display:flex;padding:6px 0 var(--safe-bottom);z-index:50;border-radius:20px 20px 0 0;box-shadow:0 -2px 20px rgba(0,0,0,.05)}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;letter-spacing:.03em;transition:all .2s;white-space:nowrap}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;min-height:52px;cursor:pointer;color:var(--text3);font-size:10px;font-weight:600;letter-spacing:.03em;transition:all .2s;white-space:nowrap}
 .nav-item.active{color:var(--primary)}.nav-item .nicon{font-size:22px}
 .view{display:none}.view.active{display:block}
 /* Timer — LARGE */
@@ -102,7 +102,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .timer-time .unit{font-size:14px;color:var(--text2);margin-top:6px;font-weight:500}
 /* Timer buttons row */
 .timer-btns{display:flex;gap:10px;align-items:center}
-#timer-btn{width:68px;height:68px;border-radius:50%;border:none;background:var(--primary);color:var(--on-primary);font-size:20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(30,77,92,.25)}
+#timer-btn{width:72px;height:72px;border-radius:50%;border:none;background:var(--primary);color:var(--on-primary);font-size:22px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(30,77,92,.25)}
 #timer-btn:active{transform:scale(.93)}
 #timer-btn.running{background:var(--error);box-shadow:0 4px 20px rgba(212,81,61,.3)}
 #pause-btn{display:none;width:52px;height:52px;border-radius:50%;border:2px solid var(--outline);background:var(--surface);color:var(--text2);font-size:14px;cursor:pointer;transition:all .15s;align-items:center;justify-content:center;box-shadow:var(--shadow)}
@@ -192,13 +192,13 @@ input[type="text"],input[type="number"],textarea{width:100%;background:var(--sur
 input:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(30,77,92,.1)}
 textarea{resize:none;height:80px}
 .dur-display{font-size:44px;font-weight:400;color:var(--primary);text-align:center;padding:24px;letter-spacing:-.03em}
-.chip-row{display:flex;flex-wrap:wrap;gap:10px}
-.chip{padding:9px 18px;border-radius:var(--radius-pill);border:1.5px solid var(--outline);background:var(--surface);color:var(--text2);font-size:14px;cursor:pointer;transition:all .15s;font-weight:500}
+.chip-row{display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:4px 0;scrollbar-width:none}.chip-row::-webkit-scrollbar{display:none}
+.chip{padding:10px 20px;border-radius:var(--radius-pill);border:1.5px solid var(--outline);background:var(--surface);color:var(--text2);font-size:14px;cursor:pointer;transition:all .15s;font-weight:500;white-space:nowrap;flex-shrink:0;min-height:44px;display:flex;align-items:center}
 .chip.selected{border-color:var(--secondary);background:var(--secondary-container);color:var(--secondary);box-shadow:0 1px 4px rgba(61,107,92,.1)}
 .chip.smart-suggest{border-color:var(--primary);background:rgba(30,77,92,.06);color:var(--primary);font-weight:600}
 .chip:active{transform:scale(.96)}
 .rating-row{display:flex;gap:14px;justify-content:center}
-.rating-dot{width:46px;height:46px;border-radius:50%;border:2px solid var(--outline);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all .2s;font-weight:500}
+.rating-dot{width:48px;height:48px;border-radius:50%;border:2px solid var(--outline);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .2s;font-weight:500}
 .rating-dot.selected{border-color:var(--primary);background:var(--primary);color:var(--on-primary);box-shadow:0 2px 8px rgba(30,77,92,.2)}
 #calendar{display:flex;flex-direction:column;gap:2px;overflow-x:auto;padding:8px 0}
 .cal-row{display:flex;gap:2px;align-items:center}
@@ -220,14 +220,14 @@ textarea{resize:none;height:80px}
 .corr-card .title{font-size:12px;color:var(--text2)}.corr-card .value{font-size:20px;font-weight:600;margin-top:6px}.corr-card .insight{font-size:12px;margin-top:6px}
 .goal-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:18px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow)}
 .gi-label{font-size:15px;color:var(--text)}.gi-val{font-size:26px;font-weight:500;display:flex;align-items:center;gap:14px}
-.gi-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--outline);background:var(--surface);color:var(--text);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.gi-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--outline);background:var(--surface);color:var(--text);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .gi-btn:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .goal-warn{background:var(--error-light);border:1.5px solid rgba(212,81,61,.25);border-radius:var(--radius-sm);padding:14px;margin-top:10px;font-size:14px;color:var(--error);font-weight:500}
 .btn{padding:14px 22px;border-radius:var(--radius-sm);border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;width:100%;text-align:center;letter-spacing:.01em}
 .btn-primary{background:var(--primary);color:var(--on-primary);min-height:50px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 2px 12px rgba(30,77,92,.2)}
 .btn-primary:active{opacity:.88;transform:scale(.98)}
 .btn-secondary{background:var(--surface);color:var(--text);border:1.5px solid var(--outline)}.btn-secondary:active{background:var(--surface2)}
-.del-icon{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--outline);background:none;color:var(--text3);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;margin-left:10px}
+.del-icon{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--outline);background:none;color:var(--text3);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;margin-left:8px}
 .del-icon:active{background:var(--error);color:#fff;border-color:var(--error)}
 .filter-bar{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
 .filter-row{display:flex;gap:10px;margin-bottom:10px;align-items:center}.filter-row:last-child,.filter-row.nc{margin-bottom:0}
@@ -240,7 +240,7 @@ textarea{resize:none;height:80px}
 .hist-item .hi-date{font-size:13px;color:var(--text3)}.hist-item .hi-info{font-size:15px;font-weight:500;margin:3px 0}
 .hist-item .hi-triggers{font-size:13px;color:var(--text2)}.hist-item .hi-notes{font-size:12px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hist-item .hi-actions{display:flex;gap:6px;flex-shrink:0;margin-left:10px}
-.hi-action{width:32px;height:32px;border-radius:10px;border:1.5px solid var(--outline);background:var(--surface);color:var(--text3);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.hi-action{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--outline);background:var(--surface);color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .hi-action:active{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 .hi-action.danger:active{background:var(--error);color:#fff;border-color:var(--error)}
 .intv-item{background:var(--surface);border:1px solid var(--outline);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
@@ -255,6 +255,12 @@ textarea{resize:none;height:80px}
 .achievement-item{background:var(--surface);border:1.5px solid var(--outline);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;transition:all .3s;box-shadow:var(--shadow)}
 .achievement-item.locked{opacity:.3;filter:grayscale(1)}.achievement-item.unlocked{border-color:var(--secondary);background:var(--secondary-container)}
 .achievement-item .ach-icon{font-size:30px;margin-bottom:4px}.achievement-item .ach-name{font-size:12px;font-weight:600}.achievement-item .ach-desc{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* PWA install banner */
+#pwa-banner{display:none;background:var(--primary);color:var(--on-primary);padding:14px 18px;font-size:14px;font-weight:600;text-align:center;position:fixed;top:0;left:0;right:0;z-index:300;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:slideDown .4s ease}
+@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+#pwa-banner button{background:var(--on-primary);color:var(--primary);border:none;padding:8px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:700;cursor:pointer;margin-left:12px;min-height:36px}
+#pwa-banner .pwa-close{background:none;color:var(--on-primary);border:1px solid rgba(255,255,255,.3);padding:6px 14px;font-size:12px;margin-left:8px}
 #toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--on-primary);padding:12px 24px;border-radius:var(--radius-pill);font-size:14px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;box-shadow:var(--shadow-lg)}
 #toast.show{opacity:1}
 .empty{text-align:center;padding:36px;color:var(--text3);font-size:14px}
@@ -263,7 +269,7 @@ textarea{resize:none;height:80px}
 .toggle-row{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);cursor:pointer;padding:4px 0}
 .toggle-row input[type="checkbox"]{accent-color:var(--secondary);width:20px;height:20px}
 /* Voice button */
-.voice-btn{position:absolute;right:10px;bottom:10px;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--outline);background:var(--surface);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:2}
+.voice-btn{position:absolute;right:10px;bottom:10px;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--outline);background:var(--surface);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:2}
 .voice-btn:active{background:var(--surface2)}
 .voice-btn.listening{background:var(--error);color:#fff;border-color:var(--error);animation:voicePulse 1s infinite}
 @keyframes voicePulse{0%,100%{box-shadow:0 0 0 0 rgba(212,81,61,.4)}50%{box-shadow:0 0 0 10px rgba(212,81,61,0)}}
@@ -285,6 +291,7 @@ textarea{resize:none;height:80px}
 </style>
 </head>
 <body>
+<div id="pwa-banner">📲 一键安装到桌面<button id="pwa-install-btn">安装</button><button class="pwa-close" id="pwa-close-btn">✕</button></div>
 <div id="app">
   <div id="lock"><div id="lock-hero"><div id="lock-icon">🔒</div><div id="lock-title">输入密码</div><div id="lock-subtitle">数据本地加密，仅你可见</div></div><div id="lock-info">🔑 默认密码：0000</div><div class="passcode-dots" id="dots"></div><div class="passcode-pad" id="pad"></div></div>
   <div id="interception" class="hidden"><div class="interception-card"><div class="int-icon">⏳</div><div class="int-stats" id="int-stats"></div><div class="int-msg" id="int-msg">等一等，你真的需要记录吗？</div><div class="int-alt" id="int-alt"></div><div class="int-btns"><button class="int-proceed" id="int-proceed-btn">继续记录</button><button class="int-resist" id="int-resist-btn">✋ 我决定克制</button></div></div></div>
@@ -756,6 +763,14 @@ function navigateTo(view){document.querySelectorAll('.view').forEach(v=>v.classL
 document.querySelectorAll('.nav-item').forEach(item=>{item.onclick=()=>{vibe();navigateTo(item.dataset.view)}});
 
 let ttmr;function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(ttmr);ttmr=setTimeout(()=>e.classList.remove('show'),2000)}
+
+
+// PWA install prompt
+let pwaDeferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();pwaDeferredPrompt=e;document.getElementById('pwa-banner').style.display='block'});
+document.getElementById('pwa-install-btn').onclick=async()=>{if(!pwaDeferredPrompt)return;pwaDeferredPrompt.prompt();const res=await pwaDeferredPrompt.userChoice;if(res.outcome==='accepted')toast('✅ 安装成功！');pwaDeferredPrompt=null;document.getElementById('pwa-banner').style.display='none'};
+document.getElementById('pwa-close-btn').onclick=()=>{document.getElementById('pwa-banner').style.display='none'};
+window.addEventListener('appinstalled',()=>{document.getElementById('pwa-banner').style.display='none';toast('✅ 已安装到桌面')});
 
 async function init(){initVoice();await openDB();await loadSettings();buildPassPad();if(passcode==='0000')document.getElementById('lock-info').textContent='🔑 默认密码：0000（可在设置中修改）';else document.getElementById('lock-info').style.display='none';await renderHome();if(riskWarnEnabled)scheduleRiskCheck();let la=Date.now();['click','touchstart','keydown','scroll'].forEach(e=>document.addEventListener(e,()=>la=Date.now(),{passive:true}));setInterval(()=>{if(unlocked&&Date.now()-la>300000)lock()},30000)}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/pulse/sw.js');init();
